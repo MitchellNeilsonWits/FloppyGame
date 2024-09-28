@@ -1,16 +1,18 @@
-import State from "./State";
+import State from "../State";
 
-class WalkState extends State {
+class TurningRightState extends State {
     constructor(parent) {
         super(parent);
     }
 
     get_name() {
-        return 'walk';
+        return 'turning_right';
     }
 
     enter(prev_state){ 
-        const curr_action = this._parent._proxy._animations['walk'].action;
+        const curr_action = this._parent._proxy._animations['turning_right'].action;
+        console.log("here within turning state");
+        curr_action.play();
    
         if (prev_state) {
             const prev_state_name = prev_state.get_name();
@@ -18,15 +20,12 @@ class WalkState extends State {
             
             curr_action.enabled = true;
 
-            if (prev_state_name == 'run' || prev_state_name == 'turning_left' || prev_state_name == 'turning_right') {
-                const ratio = curr_action.getClip().duration / prev_action.getClip().duration;
-                curr_action.time = prev_action.time * ratio;
-            } else {
-                curr_action.time = 0.0;
-                curr_action.setEffectiveTimeScale(1.0);
-                curr_action.setEffectiveWeight(1.0);
-            }
-
+            const ratio = curr_action.getClip().duration / prev_action.getClip().duration;
+            curr_action.time = prev_action.time * ratio;
+            curr_action.time = 0.0;
+            curr_action.setEffectiveTimeScale(1.0);
+            curr_action.setEffectiveWeight(1.0);
+      
             
             curr_action.crossFadeFrom(prev_action, 0.1, true);
             curr_action.play();
@@ -44,24 +43,22 @@ class WalkState extends State {
             if (input._keys.shift) {
                 if (character_is_turning === "turning_left") {
                     this._parent.set_state('run_turning_left');
-                    return; 
-                } else if (character_is_turning === "turning_right") {
+                    return;
+                }  else if (character_is_turning === "turning_right") {
                     this._parent.set_state('run_turning_right');
                     return; 
                 }
-            
+
                 this._parent.set_state('run');
-                return;
             } else {
                 if (character_is_turning === "turning_left") {
                     this._parent.set_state('turning_left');
-                    return; 
-                } else if (character_is_turning === "turning_right") {
-                    this._parent.set_state('turning_right');
+                    return;
+                }  else if (character_is_turning === "turning_right") {
                     return; 
                 }
-
-                return; 
+                
+                this._parent.set_state('walk');
             }
         } else {
             this._parent.set_state('idle');
@@ -69,4 +66,4 @@ class WalkState extends State {
     }
 }
 
-export default WalkState
+export default TurningRightState

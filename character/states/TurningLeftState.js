@@ -1,27 +1,34 @@
-import State from "./State";
+import State from "../State";
 
-class IdleState extends State {
+class TurningLeftState extends State {
     constructor(parent) {
         super(parent);
     }
 
     get_name() {
-        return 'idle';
+        return 'turning_left';
     }
 
     enter(prev_state){ 
-        const idle_action = this._parent._proxy._animations['idle'].action;
-        
+        const curr_action = this._parent._proxy._animations['turning_left'].action;
+        console.log("here within turning state");
+        curr_action.play();
+   
         if (prev_state) {
             const prev_action = this._parent._proxy._animations[prev_state.get_name()].action;
-            idle_action.time = 0.0;
-            idle_action.enabled = true;
-            idle_action.setEffectiveTimeScale(1.0);
-            idle_action.setEffectiveWeight(1.0);
-            idle_action.crossFadeFrom(prev_action, 0.2, true);
-            idle_action.play();
+            
+            curr_action.enabled = true;
+
+            const ratio = curr_action.getClip().duration / prev_action.getClip().duration;
+            curr_action.time = prev_action.time * ratio;
+            curr_action.setEffectiveTimeScale(1.0);
+            curr_action.setEffectiveWeight(1.0);
+
+            
+            curr_action.crossFadeFrom(prev_action, 0.1, true);
+            curr_action.play();
         } else {
-            idle_action.play();
+            curr_action.play();
         }
     }
 
@@ -34,30 +41,26 @@ class IdleState extends State {
             if (input._keys.shift) {
                 if (character_is_turning === "turning_left") {
                     this._parent.set_state('run_turning_left');
-                    return; 
-                } else if (character_is_turning === "turning_right") {
+                    return;
+                }  else if (character_is_turning === "turning_right") {
                     this._parent.set_state('run_turning_right');
                     return; 
                 }
-            
+
                 this._parent.set_state('run');
-                return;
             } else {
                 if (character_is_turning === "turning_left") {
-                    this._parent.set_state('turning_left');
-                    return; 
-                } else if (character_is_turning === "turning_right") {
+                    return;
+                }  else if (character_is_turning === "turning_right") {
                     this._parent.set_state('turning_right');
                     return; 
                 }
-
                 this._parent.set_state('walk');
-                return; 
             }
         } else {
-            return;
+            this._parent.set_state('idle');
         }
     }
 }
 
-export default IdleState
+export default TurningLeftState

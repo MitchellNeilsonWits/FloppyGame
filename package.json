@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cannon": "^0.6.2",
     "three": "^0.168.0"
   },
   "devDependencies": {

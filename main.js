@@ -6,6 +6,6 @@
  *  Will render the scene and contents
  */
 
-import GameController from './controllers/GameController.js';
+import GameController from './game/GameController.js';
 
 new GameController();

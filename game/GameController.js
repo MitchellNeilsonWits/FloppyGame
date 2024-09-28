@@ -6,17 +6,19 @@
  */
 
 import * as THREE from 'three';
-import CharacterController from "../movement/CharacterController";
+import CharacterController from "../character/CharacterController";
 import camera from '../camera/camera';
 import light from '../lighting/point_lights';
 import directional_light from '../lighting/directional_lights';
 import plane from '../components/sample_plane';
-import CameraController from './CameraController';
-import MouseListener from './MouseListener';
+import CameraController from '../camera/CameraController';
+import MouseListener from '../listeners/MouseListener';
+import LevelController from '../level/LevelController';
 
 class GameController {
     constructor(camera, scene) {
         this._init();
+        this._playing_game = false;
     }
 
     /* Init function */
@@ -28,24 +30,31 @@ class GameController {
         document.body.appendChild(this._threejs.domElement);
 
         this._threejs.domElement.addEventListener("click", async () => {
-            await this._threejs.domElement.requestPointerLock({
+            this._threejs.domElement.requestPointerLock({
                 unadjustedMovement: true
             });
         });
 
+        this._mouse_listener = new MouseListener();
         document.addEventListener('pointerlockchange', (e) => {
-            // document.addEventListener('mousemove', (event) => this._mouse_move(this, event), false);
             if (document.pointerLockElement === this._threejs.domElement) {
-                this._mouse_listener = new MouseListener();
+                this._mouse_listener.set_listener();
+                this._playing_game = true;
+            } else {
+                this._mouse_listener.remove_listener();
+                document.exitPointerLock();
+                this._playing_game = false;
             }
         })
 
         // CAMERA
         this._camera = new CameraController(this._threejs);
-
         
         // SCENE
         this._scene = new THREE.Scene();
+
+        // LEVEL CONTROLLER
+        this._level_controller = new LevelController(this._scene);
 
         // ADD "STATIC" OBJECTS TO SCENE
         this._scene.add(light);
@@ -98,28 +107,31 @@ class GameController {
 
     /* Step to update important rendering information */
     _step(time_elapsed) {
-        // CONVERT TIME TO SECONDS
-        const time_elapsed_in_seconds = time_elapsed * 0.001;
-        
-        // UPDATE MIXERS
-        if (this._mixers) {
-            this._mixers.map(mixer => {
-                mixer.update(time_elapsed_in_seconds);
-            })
-        }
-
-        // UPDATE CHARACTER CONTROLLER
-        if (this._controls) {
-            if (this._mouse_listener) {
-                this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
+        if (this._playing_game) {
+            // CONVERT TIME TO SECONDS
+            const time_elapsed_in_seconds = time_elapsed * 0.001;
+            
+            // UPDATE MIXERS
+            if (this._mixers) {
+                this._mixers.map(mixer => {
+                    mixer.update(time_elapsed_in_seconds);
+                })
             }
-        }
 
-        // UPDATE CAMERA
-        if (this._camera) {
-            if (this._mouse_listener) {
-                this._camera.update(this._mouse_listener._mouse_movement_x, this._mouse_listener._mouse_movement_y);
-                this._mouse_listener._decelerate_mouse_movement(); // decellerate the mouse movement to stop continuous rotations
+            // UPDATE CHARACTER CONTROLLER
+            if (this._controls) {
+                if (this._mouse_listener) {
+                    console.log(this._mouse_listener._mouse_movement_x);
+                    this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
+                }
+            }
+
+            // UPDATE CAMERA
+            if (this._camera) {
+                if (this._mouse_listener) {
+                    this._camera.update(this._mouse_listener._mouse_movement_x, this._mouse_listener._mouse_movement_y);
+                    this._mouse_listener._decelerate_mouse_movement(); // decellerate the mouse movement to stop continuous rotations
+                }
             }
         }
     }

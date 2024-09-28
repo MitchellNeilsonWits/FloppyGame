@@ -1,21 +1,21 @@
-import State from "./State";
+import State from "../State";
 
-class RunTurningLeftState extends State {
+class RunTurningRightState extends State {
     constructor(parent) {
         super(parent);
     }
 
     get_name() {
-        return 'run_turning_left';
+        return 'run_turning_right';
     }
 
     enter(prev_state){ 
-        const curr_action = this._parent._proxy._animations['run_turning_left'].action;
-        
+        const curr_action = this._parent._proxy._animations['run_turning_right'].action;
         curr_action.play();
    
         if (prev_state) {
-            const prev_action = this._parent._proxy._animations[prev_state.get_name()].action;
+            const prev_state_name = prev_state.get_name();
+            const prev_action = this._parent._proxy._animations[prev_state_name].action;
             
             curr_action.enabled = true;
 
@@ -40,9 +40,9 @@ class RunTurningLeftState extends State {
         if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right) {
             if (input._keys.shift) {
                 if (character_is_turning === "turning_left") {
+                    this._parent.set_state('run_turning_left');
                     return;
                 }  else if (character_is_turning === "turning_right") {
-                    this._parent.set_state('run_turning_right');
                     return; 
                 }
 
@@ -63,4 +63,4 @@ class RunTurningLeftState extends State {
     }
 }
 
-export default RunTurningLeftState
+export default RunTurningRightState

@@ -42,7 +42,7 @@ class CharacterController {
     _load_models() {
         // LOAD INITIAL CHARACTER MODEL
         const gltfLoader = new GLTFLoader();
-        gltfLoader.setPath('../character/')
+        gltfLoader.setPath('../models/')
 
         gltfLoader.load('floppy_with_reader_idle.glb', (gltf) => {  
             
@@ -75,7 +75,7 @@ class CharacterController {
 
             // LOADER WITH MANAGER AS MEDIATOR
             const loader = new GLTFLoader(this._manager);
-            loader.setPath('../character/');
+            loader.setPath('../models/');
             loader.load('floppy_with_reader_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
             loader.load('floppy_with_reader_animated_v4.glb', (a) => {_on_load('walk', a);}); // walk animation
             loader.load('floppy_with_reader_turning_left.glb', (a) => {_on_load('turning_left', a);}); // turn left animation
@@ -211,7 +211,7 @@ class CharacterController {
         const acc = this._acceleration.clone();
 
         if (this._input._keys.shift) {
-            acc.multiplyScalar(10.0);
+            acc.multiplyScalar(8.0);
         }
 
         // UPDATES BASED ON DIRECTIONAL INPUT
@@ -222,7 +222,7 @@ class CharacterController {
             const euler = new THREE.Euler();
             const angle_y_camera_direction = camera_info.yaw_y;
 
-
+            // ROTATION APPLICATION
             var direction_of_offset = this._direction_of_offset();
             rotate_quaternion.setFromAxisAngle(rotate_angle, angle_y_camera_direction + direction_of_offset);
             control_object.quaternion.rotateTowards(rotate_quaternion, 0.08);
@@ -249,7 +249,6 @@ class CharacterController {
             control_object.position.add(forward);
             control_object.position.add(sideways);
 
-            // this._params.camera.move_camera(control_object.position.x, control_object.position.y, control_object.position.z, forward.x, forward.z);
             const v = new THREE.Vector3();
             control_object.getWorldPosition(v);
             this._params.camera.move_pivot(v);
