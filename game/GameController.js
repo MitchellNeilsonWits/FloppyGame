@@ -30,9 +30,7 @@ class GameController {
         document.body.appendChild(this._threejs.domElement);
 
         this._threejs.domElement.addEventListener("click", async () => {
-            this._threejs.domElement.requestPointerLock({
-                unadjustedMovement: true
-            });
+            this._threejs.domElement.requestPointerLock();
         });
 
         this._mouse_listener = new MouseListener();
