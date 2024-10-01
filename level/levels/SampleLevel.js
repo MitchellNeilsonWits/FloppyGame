@@ -3,14 +3,14 @@ import Level from "../Level";
 import PushableBox from '../../components/pushable_box/PushableBox';
 
 class SampleLevel extends Level {
-    constructor() {
+    constructor(meshes) {
         super();
-        this.set_level();
+        this.set_level(meshes);
     }
     
-    set_level() {
-        this._box_a = new PushableBox();
-        this._level = this._box_a.get_object();
+    set_level(meshes) {
+        this._level = new THREE.Group();
+        this._level.add(meshes);
         console.log(this._level)
     }
 

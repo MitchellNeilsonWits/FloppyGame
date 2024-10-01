@@ -14,6 +14,11 @@ import plane from '../components/sample_plane';
 import CameraController from '../camera/CameraController';
 import MouseListener from '../listeners/MouseListener';
 import LevelController from '../level/LevelController';
+import physic from '../engine/physic';
+import loader from '../engine/loader';
+import World from '../engine/world';
+import Player from '../engine/player';
+
 
 class GameController {
     constructor(camera, scene) {
@@ -22,7 +27,7 @@ class GameController {
     }
 
     /* Init function */
-    _init() {
+    async _init() {
 
         // THREE JS RENDERER
         this._threejs = new THREE.WebGLRenderer({antialias: true});
@@ -44,6 +49,8 @@ class GameController {
                 this._playing_game = false;
             }
         })
+        //load meshes
+        const meshes = await loader('assets/test5.glb');
 
         // CAMERA
         this._camera = new CameraController(this._threejs);
@@ -51,17 +58,23 @@ class GameController {
         // SCENE
         this._scene = new THREE.Scene();
 
-        // LEVEL CONTROLLER
-        this._level_controller = new LevelController(this._scene);
-
+        
         // ADD "STATIC" OBJECTS TO SCENE
         this._scene.add(light);
         this._scene.add(directional_light);
-        this._scene.add(plane);
-
         // this._scene.add(this._camera.get_camera());
         this._scene.add(this._camera.get_pivot());
-
+        
+        //WORLD
+        this._world = new World(meshes.visuals, meshes.colliders, physic);
+        this._scene.add(this._world); //add world to scene
+        
+        //PLAYER -> FOR TESTING
+        const player = new Player(meshes.players[0], physic);
+        this._scene.add(player);
+        
+        // LEVEL CONTROLLER
+        this._level_controller = new LevelController(this._scene);
         // INITALIZE MIXERS
         this._mixers = [];
 
@@ -95,6 +108,9 @@ class GameController {
 
             // RECURSIVE CALL
             this._raf();
+
+            //step for physics
+            physic.step();
 
             // RENDER AND STEP
             this._threejs.render(this._scene, this._camera.get_camera());

@@ -1,4 +1,8 @@
 import SampleLevel from "./levels/SampleLevel";
+import World from "../engine/world";
+import Player from "../engine/player";
+import loader from "../engine/loader";
+import physic from "../engine/physic";
 
 class LevelController {
     constructor(scene) {
@@ -8,9 +12,14 @@ class LevelController {
         this._init();
     }
 
-    _init() {
-        const sample_level = new SampleLevel(); 
+    async _init() { //make async
+        const meshes = await loader('assets/test5.glb');
+        const sample_level = new SampleLevel(meshes); 
         this._levels.push(sample_level);
+
+        //WORLD + PLAYER
+        this._world = new World(meshes.visuals, meshes.colliders, physic);
+        this._player = new Player(meshes.players[0], physic);
 
         this._render_scene();
     }
@@ -18,6 +27,8 @@ class LevelController {
     _render_scene() {
         console.log(this._levels[0].get_level())
         this._scene.add(this._levels[this._current_level].get_level());
+        this._scene.add(this._world);
+        this._scene.add(this._player);
     }
 }
 
