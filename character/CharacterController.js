@@ -46,7 +46,7 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
-        gltfLoader.load('box.glb', (gltf) => {  
+        gltfLoader.load('floppy_with_reader_remastered.glb', (gltf) => {  
             
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
@@ -219,19 +219,11 @@ class CharacterController {
         );
 
         // DECCELERATION CALCULATIONS
-        // frame_decceleration.multiplyScalar(time_in_seconds);
-        // frame_decceleration.x = Math.sign(frame_decceleration.x) * Math.min( Math.abs(frame_decceleration.x), Math.abs(velocity.x));
         frame_decceleration.z = Math.sign(frame_decceleration.z) * Math.min( Math.abs(frame_decceleration.z), Math.abs(velocity.z));
         velocity.add(frame_decceleration);
-        // console.log("frame_dec = ",frame_decceleration);
-        console.log("velocity frame_dec = ",velocity)
 
         // GET CONTROL OBJECT AS THE CURRENT TARGET
         const control_object = this._target;
-
-        const _q = new THREE.Quaternion();
-        const _a = new THREE.Vector3();
-        const _r = control_object.quaternion.clone();
 
         // ROTATION ANGLE INFORMATION
         const walk_direction = new THREE.Vector3();
@@ -241,9 +233,10 @@ class CharacterController {
 
         // ACCELERATION INITIALIZATION
         const acc = this._acceleration.clone();
+        var acceleration = acc.z;
 
         if (this._input._keys.shift) {
-            acc.multiplyScalar(8.0);
+            acceleration *= 3;
         }
         
         var forward = new THREE.Vector3(velocity.x, velocity.y, velocity.z);
@@ -251,9 +244,10 @@ class CharacterController {
         // UPDATES BASED ON DIRECTIONAL INPUT
         if (this._input._keys.forward || this._input._keys.backward || this._input._keys.left || this._input._keys.right) {
 
+            const speed = 2.0*acceleration;
+
             // CAMERA POSITION CONSIDERATIONS
             const camera_info = this._params.camera.get_camera_information();
-            const euler = new THREE.Euler();
             const angle_y_camera_direction = camera_info.yaw_y;
 
             // ROTATION APPLICATION
@@ -265,43 +259,22 @@ class CharacterController {
             this._character_is_turning = this._is_turning(control_object.quaternion, rotate_quaternion, mouse_movement_x);
 
             // MOVE THE MODEL
-            // velocity.x += acc.x;
-            velocity.z += acc.z;
-
-            // velocity.z = 1;
-            const old_position = new THREE.Vector3();
-            old_position.copy(control_object.position);
-
             forward = new THREE.Vector3(0, 0, 1);
             forward.applyQuaternion(control_object.quaternion);
             forward.normalize();
             console.log(forward);
 
-            const sideways = new THREE.Vector3(1,0,0);
-            sideways.applyQuaternion(control_object.quaternion);
-            sideways.normalize();
-
-            // sideways.multiplyScalar(velocity.x * time_in_seconds);
-            // forward.multiplyScalar(velocity.z * time_in_seconds);
-
-            // forward.x *= (velocity.z);
-            // forward.z *= (velocity.z);
-            console.log(velocity.z);
-            forward.multiplyScalar(acc.z);
-
-            // control_object.position.add(forward);
-            // control_object.position.add(sideways);
+            forward.x *= speed;
+            forward.z *= speed;
+            // forward.multiplyScalar(speed);
 
             const v = new THREE.Vector3();
             control_object.getWorldPosition(v);
             this._params.camera.move_pivot(v);
-
-            old_position.copy(control_object.position);
         }
         
-        // console.log("vel = ",velocity)
         console.log(forward);
-        this._target.update(forward.x, forward.y, forward.z);
+        this._target.update(forward.x, this._target.rigidBody.linvel().y, forward.z);
         
         // this._target.update(0, 0, 0);
 

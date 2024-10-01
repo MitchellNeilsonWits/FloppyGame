@@ -18,7 +18,7 @@ class CameraController {
         
         
         this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT);
-        this._camera.position.set(0, 0.5, 15);
+        this._camera.position.set(0, 0.5, 5);
         this._camera_target = new THREE.Vector3();
 
         this._yaw = new THREE.Object3D();

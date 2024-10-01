@@ -15,7 +15,7 @@ class LevelController {
     }
 
     async _init(params) { //make async
-        const meshes = await loader('assets/plane.glb');
+        const meshes = await loader('assets/test5.glb');
         const sample_level = new SampleLevel(meshes); 
         this._levels.push(sample_level);
 
