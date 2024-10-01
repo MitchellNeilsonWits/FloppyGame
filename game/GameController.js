@@ -72,10 +72,6 @@ class GameController {
         this._world = new World(meshes.visuals, meshes.colliders, physic);
         this._scene.add(this._world); //add world to scene
         
-        //PLAYER -> FOR TESTING
-        this._player = new Player(meshes.players[0], physic);
-        this._scene.add(this._player );
-        
         // LEVEL CONTROLLER
         this._level_controller = new LevelController(this._scene);
         // INITALIZE MIXERS
@@ -137,8 +133,8 @@ class GameController {
             //step for physics
             physic.step();
 
-            if (this._player) {
-                this._player.update();
+            if (this._level_controller._player) {
+                this._level_controller._player.update();
             }
 
             // UPDATE CHARACTER CONTROLLER
