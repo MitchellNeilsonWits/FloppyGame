@@ -16,24 +16,26 @@ function createColliderBall(radius, rigidBody, physic) {
 function createColliderGeo(geo, rigidBody, physic, mesh) {
   // console.log(position);
   const vertices = new Float32Array(geo.attributes.position.array)
-  
   const indices = new Float32Array(geo.index.array)
-  const colliderDesc = ColliderDesc.trimesh(vertices, indices)
-  colliderDesc.translation = mesh.position;
-  console.log(mesh);
-  colliderDesc.rotation.w = 1;
 
+  // SET SCALE
+  for (let i = 0; i < vertices.length; i += 3) {
+    vertices[i] *= mesh.scale.x;     // Scale X
+    vertices[i + 1] *= mesh.scale.y; // Scale Y
+    vertices[i + 2] *= mesh.scale.z; // Scale Z
+  }
+  
+  // CREATE COLLIDER
+  const colliderDesc = ColliderDesc.trimesh(vertices, indices)
+  
+  // SET POSITION
+  colliderDesc.translation = mesh.position;
+
+  // SET ROTATATION
   const quaternion = new THREE.Quaternion();
   quaternion.setFromEuler(mesh.rotation);
   colliderDesc.rotation = quaternion;
 
-  // colliderDesc.rotation.x = mesh.rotation.x;
-  // colliderDesc.rotation.y = mesh.rotation.y;
-  // colliderDesc.rotation.z = mesh.rotation.z;
-
-  // colliderDesc.rotation = {w:1, x: mesh.rotation.x, y: mesh.rotation.y, z: mesh.rotation.z} ;
-
-  console.log("colliderDesc = ",colliderDesc)
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
