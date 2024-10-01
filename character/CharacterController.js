@@ -21,7 +21,7 @@ class CharacterController {
         // SET IMPORTANT VARIABLES
         this._params = params;
         this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
-        this._acceleration = new THREE.Vector3(50.0, 0.25, 85.0);
+        this._acceleration = new THREE.Vector3(50.0, 0.25, 5.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._character_is_turning = false; // note when the character is turning
 
@@ -47,7 +47,7 @@ class CharacterController {
         gltfLoader.load('floppy_with_reader_idle.glb', (gltf) => {  
             
             // SET SCALE OF CHARACTER
-            gltf.scene.scale.setScalar(0.5);
+            gltf.scene.scale.setScalar(0.02);
 
             // SET SCENE INFORMATION
             this._target = gltf.scene;

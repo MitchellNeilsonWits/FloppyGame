@@ -32,7 +32,9 @@ export default class Player extends Object3D {
   }
 
   updatePhysic() {
+    const x = this.rigidBody.linvel().x 
     const y = this.rigidBody.linvel().y
+    const z = this.rigidBody.linvel().z
     this.rigidBody.setLinvel({ x, y, z }, true)
   }
 

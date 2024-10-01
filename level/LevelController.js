@@ -20,6 +20,7 @@ class LevelController {
         //WORLD + PLAYER
         this._world = new World(meshes.visuals, meshes.colliders, physic);
         this._player = new Player(meshes.players[0], physic);
+        // console.log(this._player);
 
         this._render_scene();
     }

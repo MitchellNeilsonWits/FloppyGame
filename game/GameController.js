@@ -66,12 +66,15 @@ class GameController {
         this._scene.add(this._camera.get_pivot());
         
         //WORLD
+        console.log(meshes.visuals)
+        console.log(meshes.colliders)
+
         this._world = new World(meshes.visuals, meshes.colliders, physic);
         this._scene.add(this._world); //add world to scene
         
         //PLAYER -> FOR TESTING
-        const player = new Player(meshes.players[0], physic);
-        this._scene.add(player);
+        this._player = new Player(meshes.players[0], physic);
+        this._scene.add(this._player );
         
         // LEVEL CONTROLLER
         this._level_controller = new LevelController(this._scene);
@@ -109,8 +112,7 @@ class GameController {
             // RECURSIVE CALL
             this._raf();
 
-            //step for physics
-            physic.step();
+            
 
             // RENDER AND STEP
             this._threejs.render(this._scene, this._camera.get_camera());
@@ -130,6 +132,13 @@ class GameController {
                 this._mixers.map(mixer => {
                     mixer.update(time_elapsed_in_seconds);
                 })
+            }
+
+            //step for physics
+            physic.step();
+
+            if (this._player) {
+                this._player.update();
             }
 
             // UPDATE CHARACTER CONTROLLER

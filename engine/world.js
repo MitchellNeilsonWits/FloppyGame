@@ -9,6 +9,7 @@ export default class World extends Object3D {
   }
 
   initPhysic(meshes, physic) {
+    console.log(meshes)
     for (const mesh of meshes) {
       console.log("Property of mesh:",mesh)
       createRigidBodyFixed(mesh, physic)

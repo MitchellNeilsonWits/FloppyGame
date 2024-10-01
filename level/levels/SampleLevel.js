@@ -10,8 +10,25 @@ class SampleLevel extends Level {
     
     set_level(meshes) {
         this._level = new THREE.Group();
-        this._level.add(meshes);
-        console.log(this._level)
+        console.log(meshes)
+        for (const mesh of meshes.colliders) {
+            // for (const mesh of mesh_group) {
+                console.log(mesh)
+                this._level.add(mesh);
+            // }
+        }
+        for (const mesh of meshes.players) {
+            // for (const mesh of mesh_group) {
+                console.log(mesh)
+                this._level.add(mesh);
+            // }
+        }
+        for (const mesh of meshes.visuals) {
+            // for (const mesh of mesh_group) {
+                console.log(mesh)
+                this._level.add(mesh);
+            // }
+        }
     }
 
     get_level() {
