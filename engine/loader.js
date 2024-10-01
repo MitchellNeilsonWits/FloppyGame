@@ -10,13 +10,8 @@ export default async function loadAssets(path) {
 
   for (const mesh of glb.scene.children) {
     const name = mesh.name
-    if (name.includes('visual')) {
-      visuals.push(mesh)
-    } else if (name.includes('collider')) {
-      colliders.push(mesh)
-    } else if (name.includes('player')) {
-      players.push(mesh)
-    }
+    visuals.push(mesh)
+    colliders.push(mesh)
   }
   console.log("Visuals:",visuals)
   console.log("Colliders:",colliders)
