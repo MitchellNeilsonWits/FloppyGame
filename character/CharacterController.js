@@ -268,11 +268,13 @@ class CharacterController {
             forward.z *= speed;
             // forward.multiplyScalar(speed);
 
-            const v = new THREE.Vector3();
-            control_object.getWorldPosition(v);
-            this._params.camera.move_pivot(v);
+            
         }
         
+        const v = new THREE.Vector3();
+        control_object.getWorldPosition(v);
+        this._params.camera.move_pivot(v);
+
         console.log(forward);
         this._target.update(forward.x, this._target.rigidBody.linvel().y, forward.z);
         

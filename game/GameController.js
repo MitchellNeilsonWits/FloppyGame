@@ -50,6 +50,7 @@ class GameController {
             }
         })
         
+        
         // CAMERA
         this._camera = new CameraController(this._threejs);
         
@@ -62,9 +63,6 @@ class GameController {
         this._scene.add(directional_light);
         // this._scene.add(this._camera.get_camera());
         this._scene.add(this._camera.get_pivot());
-
-        // this._world = new World(meshes.visuals, meshes.colliders, physic);
-        // this._scene.add(this._world); //add world to scene
         
         // INITALIZE MIXERS
         this._mixers = [];
