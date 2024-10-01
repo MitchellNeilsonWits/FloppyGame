@@ -69,11 +69,9 @@ class GameController {
         console.log(meshes.visuals)
         console.log(meshes.colliders)
 
-        this._world = new World(meshes.visuals, meshes.colliders, physic);
-        this._scene.add(this._world); //add world to scene
+        // this._world = new World(meshes.visuals, meshes.colliders, physic);
+        // this._scene.add(this._world); //add world to scene
         
-        // LEVEL CONTROLLER
-        this._level_controller = new LevelController(this._scene);
         // INITALIZE MIXERS
         this._mixers = [];
 
@@ -81,7 +79,9 @@ class GameController {
         this._previousRAF = null;
 
         // LOAD ANIMATED MODEL(S)
-        this._load_animated_model();
+        this._load_animated_model()
+
+        this._load_level()
         
         // REQUEST ANIMATION FRAME
         this._raf();
@@ -90,12 +90,43 @@ class GameController {
     /* Load in animated models */
     _load_animated_model() {
         // CREATE A BASIC CHARACTER CONTROLLER
+        // const params = {
+        //     camera: this._camera, 
+        //     scene: this._scene,
+        //     mixers: this._mixers
+        // }
+        // this._controls = new CharacterController(params);
+    }
+
+    /* Load in level */
+    async _load_level() {
+        // LEVEL CONTROLLER
+        
+        // var children = await this._controls.get_children();
+        // console.log(children);
+        // let timer = 0;
+
+        // while ((timer < 10000) || (!children)) {
+        //     console.log(timer);
+        //     if (timer === 9999) {
+        //         children = this._controls.get_children();
+        //         if (!children) {
+        //             timer = 0;
+        //         }
+        //     } else {
+        //         timer += 1;
+        //     }
+        // }
+
         const params = {
             camera: this._camera, 
             scene: this._scene,
-            mixers: this._mixers
+            mixers: this._mixers,
+            mouse_listener: this._mouse_listener,
+            physic: physic
         }
-        this._controls = new CharacterController(params);
+
+        this._level_controller = new LevelController(this._scene, params);
     }
 
     /* Request animation frame function */
@@ -133,17 +164,17 @@ class GameController {
             //step for physics
             physic.step();
 
-            if (this._level_controller._player) {
-                this._level_controller._player.update();
+            if (this._level_controller) {
+                this._level_controller.update(time_elapsed_in_seconds);
             }
 
             // UPDATE CHARACTER CONTROLLER
-            if (this._controls) {
-                if (this._mouse_listener) {
-                    console.log(this._mouse_listener._mouse_movement_x);
-                    this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
-                }
-            }
+            // if (this._controls) {
+            //     if (this._mouse_listener) {
+            //         console.log(this._mouse_listener._mouse_movement_x);
+            //         this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
+            //     }
+            // }
 
             // UPDATE CAMERA
             if (this._camera) {

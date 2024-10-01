@@ -10,18 +10,20 @@ import CharacterControllerInput from "./CharacterControllerInput"
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import CharacterFSM from './CharacterFSM';
 import BasicCharacterControllerProxy from './CharacterControllerProxy';
+import Player from '../engine/player';
 
 class CharacterController {
     constructor(params) {
         this._init(params);
+        
     }
 
     /* Initialization function */
     _init(params) {
         // SET IMPORTANT VARIABLES
         this._params = params;
-        this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
-        this._acceleration = new THREE.Vector3(50.0, 0.25, 5.0);
+        this._decceleration = new THREE.Vector3(-0.5, -0.0001, -0.5);
+        this._acceleration = new THREE.Vector3(1.0, 0.25, 1.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._character_is_turning = false; // note when the character is turning
 
@@ -44,13 +46,22 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
-        gltfLoader.load('floppy_with_reader_idle.glb', (gltf) => {  
+        gltfLoader.load('box.glb', (gltf) => {  
             
             // SET SCALE OF CHARACTER
-            gltf.scene.scale.setScalar(0.02);
+            // gltf.scene.scale.setScalar(0.002);
+            gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
+            gltf.scene.children[0].position.y = 5;
+
+            // gltf.scene.
 
             // SET SCENE INFORMATION
-            this._target = gltf.scene;
+            // this._target = gltf.scene;
+            
+            this._target = new Player(gltf.scene.children[0], this._params.physic);
+
+            // console.log(this._player)
+            // this._params.scene.add(this._player);
             this._params.scene.add(this._target);
 
             // MIXER INFORMATION FOR ANIMATIONS
@@ -84,7 +95,20 @@ class CharacterController {
             loader.load('floppy_with_reader_running_turning_left.glb', (a) => {_on_load('run_turning_left', a);}); // turn left animation
             loader.load('floppy_with_reader_running_turning_right.glb', (a) => {_on_load('run_turning_right', a);}); // turn right animation
             
+            console.log("loaded all models")
+            return "done";
         })
+
+    }
+
+    get_target() {
+        return this._target;
+    }
+
+    async get_children() {
+        // return this._target_children;
+        console.log(this._target)
+        return this._target.children;
     }
 
     /* Function to determine direction of offset based on key input */
@@ -182,6 +206,12 @@ class CharacterController {
 
         // VELOCITY INITIALIZATION
         const velocity = this._velocity;
+        velocity.x = this._target.rigidBody.linvel().x;
+        velocity.y = this._target.rigidBody.linvel().y;
+        velocity.z = this._target.rigidBody.linvel().z;
+
+        console.log("vel = ",velocity)
+        
         const frame_decceleration = new THREE.Vector3(
             velocity.x * this._decceleration.x,
             velocity.y * this._decceleration.y,
@@ -189,10 +219,12 @@ class CharacterController {
         );
 
         // DECCELERATION CALCULATIONS
-        frame_decceleration.multiplyScalar(time_in_seconds);
-        frame_decceleration.x = Math.sign(frame_decceleration.x) * Math.min( Math.abs(frame_decceleration.x), Math.abs(velocity.x));
+        // frame_decceleration.multiplyScalar(time_in_seconds);
+        // frame_decceleration.x = Math.sign(frame_decceleration.x) * Math.min( Math.abs(frame_decceleration.x), Math.abs(velocity.x));
         frame_decceleration.z = Math.sign(frame_decceleration.z) * Math.min( Math.abs(frame_decceleration.z), Math.abs(velocity.z));
         velocity.add(frame_decceleration);
+        // console.log("frame_dec = ",frame_decceleration);
+        console.log("velocity frame_dec = ",velocity)
 
         // GET CONTROL OBJECT AS THE CURRENT TARGET
         const control_object = this._target;
@@ -213,6 +245,8 @@ class CharacterController {
         if (this._input._keys.shift) {
             acc.multiplyScalar(8.0);
         }
+        
+        var forward = new THREE.Vector3(velocity.x, velocity.y, velocity.z);
 
         // UPDATES BASED ON DIRECTIONAL INPUT
         if (this._input._keys.forward || this._input._keys.backward || this._input._keys.left || this._input._keys.right) {
@@ -225,29 +259,38 @@ class CharacterController {
             // ROTATION APPLICATION
             var direction_of_offset = this._direction_of_offset();
             rotate_quaternion.setFromAxisAngle(rotate_angle, angle_y_camera_direction + direction_of_offset);
-            control_object.quaternion.rotateTowards(rotate_quaternion, 0.08);
+            control_object.quaternion.rotateTowards(rotate_quaternion, 0.1);
 
             // UPDATE TURNING INFORMATION OF CHARACTER
             this._character_is_turning = this._is_turning(control_object.quaternion, rotate_quaternion, mouse_movement_x);
 
             // MOVE THE MODEL
-            velocity.z += acc.z * time_in_seconds;
+            // velocity.x += acc.x;
+            velocity.z += acc.z;
 
+            // velocity.z = 1;
             const old_position = new THREE.Vector3();
             old_position.copy(control_object.position);
 
-            const forward = new THREE.Vector3(0, 0, 1);
+            forward = new THREE.Vector3(0, 0, 1);
             forward.applyQuaternion(control_object.quaternion);
+            forward.normalize();
+            console.log(forward);
 
             const sideways = new THREE.Vector3(1,0,0);
             sideways.applyQuaternion(control_object.quaternion);
             sideways.normalize();
 
-            sideways.multiplyScalar(velocity.x * time_in_seconds);
-            forward.multiplyScalar(velocity.z * time_in_seconds);
+            // sideways.multiplyScalar(velocity.x * time_in_seconds);
+            // forward.multiplyScalar(velocity.z * time_in_seconds);
 
-            control_object.position.add(forward);
-            control_object.position.add(sideways);
+            // forward.x *= (velocity.z);
+            // forward.z *= (velocity.z);
+            console.log(velocity.z);
+            forward.multiplyScalar(acc.z);
+
+            // control_object.position.add(forward);
+            // control_object.position.add(sideways);
 
             const v = new THREE.Vector3();
             control_object.getWorldPosition(v);
@@ -255,6 +298,13 @@ class CharacterController {
 
             old_position.copy(control_object.position);
         }
+        
+        // console.log("vel = ",velocity)
+        console.log(forward);
+        this._target.update(forward.x, forward.y, forward.z);
+        
+        // this._target.update(0, 0, 0);
+
 
         // UPDATE MIXER (ANIMATION) FOR CHARACTER
         if (this._mixer) {
