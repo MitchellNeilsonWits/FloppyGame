@@ -20,6 +20,8 @@ import World from '../engine/world';
 import Player from '../engine/player';
 
 
+
+//TODO: Either add proxRender from engine/proxRender.js here or IN level controller -> need to decide which is best
 class GameController {
     constructor(camera, scene) {
         this._init();
