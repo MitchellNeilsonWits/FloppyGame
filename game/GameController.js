@@ -74,7 +74,6 @@ class GameController {
         this._load_animated_model()
 
         this._load_level()
-        
         // REQUEST ANIMATION FRAME
         this._raf();
     }

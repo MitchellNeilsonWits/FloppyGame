@@ -15,7 +15,7 @@ class LevelController {
     }
 
     async _init(params) { //make async
-        const meshes = await loader('assets/new_platform.glb');
+        const meshes = await loader('assets/lobby.glb');
         const sample_level = new SampleLevel(meshes); 
         this._levels.push(sample_level);
 
@@ -24,9 +24,6 @@ class LevelController {
         this._scene.add(this._world);
         console.log(params);
         this._controls = new CharacterController(params);
-
-        // this._player = new Player(meshes.players[0], physic);
-        // console.log(this._player);
 
         this._render_scene();
     }
