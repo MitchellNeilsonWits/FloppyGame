@@ -1,10 +1,16 @@
 import * as THREE from 'three';
 import Level from "../Level";
 import PushableBox from '../../components/pushable_box/PushableBox';
+import ProximityScreenRenderer from '../../engine/proxRender';
 
 class SampleLevel extends Level {
-    constructor(meshes) {
+    constructor(meshes, character_controller, scene) {
         super();
+
+        // CREATE THE PROXIMITY RENDERER
+        // -- finds position of character to load screen
+        this._prox = new ProximityScreenRenderer(character_controller, scene );
+        
         this.set_level(meshes);
     }
     
@@ -33,6 +39,13 @@ class SampleLevel extends Level {
 
     get_level() {
         return this._level;
+    }
+
+    update() {
+        // Update proximity of player to screen
+        if (this._prox) {
+            this._prox.update();
+        }
     }
 }
 

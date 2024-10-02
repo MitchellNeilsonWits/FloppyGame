@@ -3,6 +3,7 @@ import World from "../engine/world";
 import Player from "../engine/player";
 import loader from "../engine/loader";
 import physic from "../engine/physic";
+import ProximityScreenRenderer from '../engine/proxRender'
 import CharacterController from "../character/CharacterController";
 
 class LevelController {
@@ -15,24 +16,23 @@ class LevelController {
     }
 
     async _init(params) { //make async
+        this._controls = new CharacterController(params);
+        
+        // CREATE SAMPLE LEVEL
         const meshes = await loader('assets/lobby.glb');
-        const sample_level = new SampleLevel(meshes); 
+        const sample_level = new SampleLevel(meshes, this._controls, this._scene); 
         this._levels.push(sample_level);
 
         //WORLD + PLAYER
         this._world = new World(meshes.visuals, meshes.colliders, physic);
         this._scene.add(this._world);
         console.log(params);
-        this._controls = new CharacterController(params);
 
         this._render_scene();
     }
 
     _render_scene() {
-        console.log(this._levels[0].get_level())
-        // this._scene.add(this._levels[this._current_level].get_level());
         this._scene.add(this._world);
-        // this._scene.add(this._controls._player);
     }
 
     update(time_elapsed_in_seconds) {
@@ -44,6 +44,12 @@ class LevelController {
                 this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
             }
         }
+
+        if (this._levels[this._current_level]) {
+            this._levels[this._current_level].update();
+        }
+
+        
     }
 }
 
