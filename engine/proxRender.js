@@ -99,16 +99,15 @@ class ProximityScreenRenderer {
         const screenMesh = this.scene.getObjectByName(this.screenName);
     
         if (screenMesh) {
-            // Reset to the original material or a simple color
-            const originalMaterial = screenMesh.material; // Keep the original material
-            originalMaterial.map = null; // Remove the video texture
-            originalMaterial.color.set(0xffffff); // Set to white or any color you want
-            originalMaterial.needsUpdate = true; // Notify Three.js that the material needs updating
+            const originalMaterial = screenMesh.material; 
+            originalMaterial.map = null; 
+            originalMaterial.color.set(0xffffff); 
+            originalMaterial.needsUpdate = true; 
             
-            this.video.pause(); // Pause the video
-            this.video.currentTime = 0; // Reset the video to the start
+            this.video.pause(); 
+            this.video.currentTime = 0; 
         } else {
-            console.log("Screen mesh not found for removal"); // Log if not found
+            console.log("Screen mesh not found for removal"); 
         }
     }
 }
