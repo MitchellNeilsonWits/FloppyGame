@@ -1,17 +1,17 @@
 import { Object3D } from 'three'
-import { createRigidBodyFixed } from './function'
+import { createRigidBodyDynamic, createRigidBodyFixed } from './function'
 
 export default class World extends Object3D {
-  constructor(visuals, colliders, physic) {
+  constructor(visuals, colliders, visuals_dynamic, colliders_dynamic, physic) {
     super()
     this.initPhysic(colliders, physic)
     this.initVisual(visuals)
+    // this.initPhysicDynamic(colliders_dynamic, physic);
+    // this.initVisualDynamic(visuals_dynamic);
   }
 
   initPhysic(meshes, physic) {
-    console.log(meshes)
     for (const mesh of meshes) {
-      console.log("Property of mesh:",mesh)
       createRigidBodyFixed(mesh, physic)
     }
   }
@@ -23,4 +23,19 @@ export default class World extends Object3D {
       this.add(mesh)
     }
   }
+
+  // initPhysicDynamic(meshes, physic) {
+  //   for (const mesh of meshes) {
+  //     // createRigidBodyDynamic(mesh, physic)
+  //     // createRigidBodyFixed(mesh, physic)  
+  //   }
+  // }
+
+  // initVisualDynamic(meshes) {
+  //   for (const mesh of meshes) {
+  //     mesh.receiveShadow = true
+  //     mesh.castShadow = true
+  //     this.add(mesh)
+  //   }
+  // }
 }

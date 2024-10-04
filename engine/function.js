@@ -13,7 +13,8 @@ function createColliderBall(radius, rigidBody, physic) {
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
-function createColliderGeo(geo, rigidBody, physic, mesh) {
+function createColliderGeo(rigidBody, physic, mesh) {
+  const geo = mesh.geometry;
   // console.log(position);
   const vertices = new Float32Array(geo.attributes.position.array)
   const indices = new Float32Array(geo.index.array)
@@ -26,10 +27,10 @@ function createColliderGeo(geo, rigidBody, physic, mesh) {
   }
   
   // CREATE COLLIDER
-  const colliderDesc = ColliderDesc.trimesh(vertices, indices)
+  const colliderDesc = ColliderDesc.trimesh(vertices, indices).setMass(0.5)
   
   // SET POSITION
-  colliderDesc.translation = mesh.position;
+  // colliderDesc.translation = mesh.position;
 
   // SET ROTATATION
   const quaternion = new THREE.Quaternion();
@@ -40,15 +41,28 @@ function createColliderGeo(geo, rigidBody, physic, mesh) {
 }
 
 export function createRigidBodyFixed(mesh, physic) {
+  console.log(`Creating fixed rigid body for mesh ${mesh.name}`)
   const position = mesh.position;
   const rigidBodyDesc = RigidBodyDesc.fixed()
+  rigidBodyDesc.setTranslation(...position);
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  console.log("rigid_body = ",rigidBody)
-  createColliderGeo(mesh.geometry, rigidBody, physic, mesh)
+  // console.log("rigid_body = ",rigidBody)
+  createColliderGeo(rigidBody, physic, mesh)
+}
+
+export function createRigidBodyDynamic(mesh, physic) {
+  console.log("creating rigid dynamic body")
+  console.log(mesh)
+  const position = mesh.position;
+  const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(0);
+  rigidBodyDesc.setTranslation(...position)
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+  const collider = createColliderGeo(rigidBody, physic, mesh)
+  return { rigidBody, collider }
 }
 
 export function createRigidBodyEntity(position, physic) {
-  const rigidBodyDesc = RigidBodyDesc.dynamic()
+  const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(1)
   console.log("Position:",position)
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)

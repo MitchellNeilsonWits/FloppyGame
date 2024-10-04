@@ -7,6 +7,8 @@ export default async function loadAssets(path) {
 
   const visuals = []
   const colliders = []
+  const visuals_dynamic = []
+  const colliders_dynamic = []
   const pointLights = []
   const players = []
 
@@ -14,10 +16,15 @@ export default async function loadAssets(path) {
     if (mesh.type === 'PointLight') {
       pointLights.push(mesh);
     } else if (mesh.type === 'Mesh') {
-      visuals.push(mesh)
-      colliders.push(mesh)
+      if (!mesh.name.includes("dynamic")) {
+        visuals.push(mesh)
+        colliders.push(mesh)
+      } else {
+        visuals_dynamic.push(mesh);
+        colliders_dynamic.push(mesh);
+      }
     }
   }
   
-  return { visuals, colliders, pointLights, players }
+  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players }
 }

@@ -8,30 +8,40 @@ import World from '../../engine/world';
 import loadAssets from '../../engine/loader';
 import light from '../../lighting/point_lights';
 import directional_light from '../../lighting/directional_lights';
+import DynamicObject from '../../engine/dynamicObject';
 
 class LobbyLevel extends Level {
 
     constructor(scene) {
         super();
         this._scene = scene;
+        
     }
 
     // Function to set the components for the scene
     async _set_components(character_controller, scene) {
         // Load the meshes for the lobby
-        const meshes = await loadAssets('assets/lobby_lights.glb');
+        const meshes = await loadAssets('assets/lobby_interactive.glb');
 
         // Create the physics for the world
-        this._world = new World(meshes.visuals, meshes.colliders, physic);
+        this._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
 
         // CREATE THE PROXIMITY RENDERER
         // -- finds position of character to load screen
         this._prox = new ProximityScreenRenderer(character_controller, scene );
 
-        // Set meshes
         this._level = new THREE.Group();
-        for (const mesh of meshes.colliders) {
+        // Set rigid body meshes
+        for (const mesh of meshes.visuals) {
             this._level.add(mesh);
+        }
+        // Set dynamic body meshes
+        this._dynamic_objects = [];
+        for (const mesh of meshes.colliders_dynamic) {
+            console.log("Creating dynamic object for ",mesh)
+            const object = new DynamicObject(mesh, physic);
+            this._dynamic_objects.push(object);
+            this._level.add(object);
         }
 
         // Set lighting
@@ -53,6 +63,10 @@ class LobbyLevel extends Level {
         await this._set_components(character_controller, this._scene);
     }
 
+    get_dynamic_objects() {
+        return this._dynamic_objects;
+    }
+
     render_level() {
         // Render the level's components
         this._scene.add(this._level);
@@ -67,6 +81,10 @@ class LobbyLevel extends Level {
         // Update proximity of player to screen
         if (this._prox) {
             this._prox.update();
+        }
+
+        for (const object of this._dynamic_objects) {
+            object.update();
         }
     }
 }
