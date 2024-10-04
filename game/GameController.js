@@ -18,14 +18,40 @@ import physic from '../engine/physic';
 import loader from '../engine/loader';
 import World from '../engine/world';
 import Player from '../engine/player';
+import MenuController from '../menu/MenuController';
 
 
 
 //TODO: Either add proxRender from engine/proxRender.js here or IN level controller -> need to decide which is best
 class GameController {
-    constructor(camera, scene) {
+    constructor() {
         this._init();
         this._playing_game = false;
+        // this.play_game();
+    }
+
+    // Play game: sets the mouse listener, sets playing game to true, and hides the pause menu
+    play_game() {
+        this._mouse_listener.set_listener();
+        this._playing_game = true;
+        this._menu.hide_menu();
+    }
+
+    // Pause game: removes the mouse listener, sets playing game to false, and shows the pause menu
+    pause_game() {
+        this._mouse_listener.remove_listener();
+        this._playing_game = false;
+        this._menu.show_menu();
+    }
+
+    _setup_first_pointer_lock() {
+        document.addEventListener('pointerlockchange', (e) => {
+            if (document.pointerLockElement === this._threejs.domElement) {
+                this.play_game();
+            } else {
+                this.pause_game();
+            }
+        })
     }
 
     /* Init function */
@@ -38,20 +64,18 @@ class GameController {
 
         this._threejs.domElement.addEventListener("click", async () => {
             this._threejs.domElement.requestPointerLock();
+            this._threejs.domElement.removeEventListener('click',this);
+            this.play_game();
         });
 
+        // PAUSE MENU
+        this._menu = new MenuController(this._threejs.domElement);
+
+        // MOUSE LISTENER
         this._mouse_listener = new MouseListener();
-        document.addEventListener('pointerlockchange', (e) => {
-            if (document.pointerLockElement === this._threejs.domElement) {
-                this._mouse_listener.set_listener();
-                this._playing_game = true;
-            } else {
-                this._mouse_listener.remove_listener();
-                document.exitPointerLock();
-                this._playing_game = false;
-            }
-        })
-        
+
+        // Setup the first pointer lock (may not be needed in final release)
+        this._setup_first_pointer_lock();
         
         // CAMERA
         this._camera = new CameraController(this._threejs);
@@ -72,45 +96,14 @@ class GameController {
         // INITIALIZE REQUEST ANIMATION FRAME VARIABLE
         this._previousRAF = null;
 
-        // LOAD ANIMATED MODEL(S)
-        this._load_animated_model()
-
         this._load_level()
         // REQUEST ANIMATION FRAME
         this._raf();
     }
 
-    /* Load in animated models */
-    _load_animated_model() {
-        // CREATE A BASIC CHARACTER CONTROLLER
-        // const params = {
-        //     camera: this._camera, 
-        //     scene: this._scene,
-        //     mixers: this._mixers
-        // }
-        // this._controls = new CharacterController(params);
-    }
-
     /* Load in level */
     async _load_level() {
         // LEVEL CONTROLLER
-        
-        // var children = await this._controls.get_children();
-        // console.log(children);
-        // let timer = 0;
-
-        // while ((timer < 10000) || (!children)) {
-        //     console.log(timer);
-        //     if (timer === 9999) {
-        //         children = this._controls.get_children();
-        //         if (!children) {
-        //             timer = 0;
-        //         }
-        //     } else {
-        //         timer += 1;
-        //     }
-        // }
-
         const params = {
             camera: this._camera, 
             scene: this._scene,

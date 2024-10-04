@@ -25,7 +25,7 @@ class LevelController {
 
         //WORLD + PLAYER
         this._world = new World(meshes.visuals, meshes.colliders, physic);
-        this._scene.add(this._world);
+        // this._scene.add(this._world);
         console.log(params);
 
         this._render_scene();
