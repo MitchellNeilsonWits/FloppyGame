@@ -27,7 +27,6 @@ class GameController {
     constructor() {
         this._init();
         this._playing_game = false;
-        // this.play_game();
     }
 
     // Play game: sets the mouse listener, sets playing game to true, and hides the pause menu
@@ -45,12 +44,19 @@ class GameController {
     }
 
     _setup_first_pointer_lock() {
+        this._threejs.domElement.addEventListener("click", async () => {
+            this._threejs.domElement.requestPointerLock();
+            this._threejs.domElement.removeEventListener('click',this);
+            this.play_game();
+        });
+        
         document.addEventListener('pointerlockchange', (e) => {
             if (document.pointerLockElement === this._threejs.domElement) {
                 this.play_game();
             } else {
                 this.pause_game();
             }
+            document.removeEventListener('pointerlockchange',this);
         })
     }
 
@@ -62,12 +68,6 @@ class GameController {
         this._threejs.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this._threejs.domElement);
 
-        this._threejs.domElement.addEventListener("click", async () => {
-            this._threejs.domElement.requestPointerLock();
-            this._threejs.domElement.removeEventListener('click',this);
-            this.play_game();
-        });
-
         // PAUSE MENU
         this._menu = new MenuController(this._threejs.domElement);
 
@@ -77,26 +77,19 @@ class GameController {
         // Setup the first pointer lock (may not be needed in final release)
         this._setup_first_pointer_lock();
         
-        // CAMERA
-        this._camera = new CameraController(this._threejs);
-        
         // SCENE
         this._scene = new THREE.Scene();
 
-        
-        // ADD "STATIC" OBJECTS TO SCENE
-        this._scene.add(light);
-        this._scene.add(directional_light);
-        // this._scene.add(this._camera.get_camera());
+        // CAMERA
+        this._camera = new CameraController(this._threejs);
         this._scene.add(this._camera.get_pivot());
-        
-        // INITALIZE MIXERS
-        this._mixers = [];
 
         // INITIALIZE REQUEST ANIMATION FRAME VARIABLE
         this._previousRAF = null;
 
+        // Load the level
         this._load_level()
+
         // REQUEST ANIMATION FRAME
         this._raf();
     }
@@ -112,7 +105,7 @@ class GameController {
             physic: physic
         }
 
-        this._level_controller = new LevelController(this._scene, params);
+        this._level_controller = new LevelController(params);
     }
 
     /* Request animation frame function */
@@ -124,8 +117,6 @@ class GameController {
 
             // RECURSIVE CALL
             this._raf();
-
-            
 
             // RENDER AND STEP
             this._threejs.render(this._scene, this._camera.get_camera());
@@ -139,13 +130,6 @@ class GameController {
         if (this._playing_game) {
             // CONVERT TIME TO SECONDS
             const time_elapsed_in_seconds = time_elapsed * 0.001;
-            
-            // UPDATE MIXERS
-            if (this._mixers) {
-                this._mixers.map(mixer => {
-                    mixer.update(time_elapsed_in_seconds);
-                })
-            }
 
             //step for physics
             physic.step();
@@ -153,14 +137,6 @@ class GameController {
             if (this._level_controller) {
                 this._level_controller.update(time_elapsed_in_seconds);
             }
-
-            // UPDATE CHARACTER CONTROLLER
-            // if (this._controls) {
-            //     if (this._mouse_listener) {
-            //         console.log(this._mouse_listener._mouse_movement_x);
-            //         this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
-            //     }
-            // }
 
             // UPDATE CAMERA
             if (this._camera) {

@@ -4,16 +4,20 @@ const loaderGlb = new GLTFLoader()
 
 export default async function loadAssets(path) {
   const glb = await loaderGlb.loadAsync(path)
+
   const visuals = []
   const colliders = []
+  const pointLights = []
   const players = []
 
   for (const mesh of glb.scene.children) {
-    const name = mesh.name
-    visuals.push(mesh)
-    colliders.push(mesh)
+    if (mesh.type === 'PointLight') {
+      pointLights.push(mesh);
+    } else if (mesh.type === 'Mesh') {
+      visuals.push(mesh)
+      colliders.push(mesh)
+    }
   }
-  console.log("Visuals:",visuals)
-  console.log("Colliders:",colliders)
-  return { visuals, colliders, players }
+  
+  return { visuals, colliders, pointLights, players }
 }
