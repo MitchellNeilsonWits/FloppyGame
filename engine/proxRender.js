@@ -9,7 +9,8 @@ class ProximityScreenRenderer {
         this.proximityThreshold = 5; 
         this.platformOffset = new THREE.Vector3(0, 0.5, 0); 
         this.isScreenActive = false; 
-
+        this.isPlayerNear = false; //pLAYER IS NEAR [PL;ATFORM]
+        this.videoPlaying = false; // This will change to whatever we want to do -> video is just a place holder for now
 
         // Create video element
         this.video = document.createElement('video');
@@ -19,11 +20,34 @@ class ProximityScreenRenderer {
         this.video.crossOrigin = 'anonymous'; 
         this.video.style.display = 'none';
 
-        // Create video texture initially
+        // Create video texture
         this.videoTexture = new THREE.VideoTexture(this.video);
-        this.videoTexture.minFilter = THREE.LinearFilter; // smooth rendering?
+        this.videoTexture.minFilter = THREE.LinearFilter; 
         this.videoTexture.magFilter = THREE.LinearFilter;
-        this.videoTexture.format = THREE.RGBAFormat; //RGBA format
+        this.videoTexture.format = THREE.RGBAFormat;
+
+        // E interact message popup making
+        this.interactMessage = document.createElement('div');
+        this.interactMessage.style.position = 'absolute';
+        this.interactMessage.style.bottom = '20px';
+        this.interactMessage.style.left = '50%';
+        this.interactMessage.style.transform = 'translateX(-50%)';
+        this.interactMessage.style.padding = '10px 20px';
+        this.interactMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        this.interactMessage.style.color = 'white';
+        this.interactMessage.style.fontSize = '16px';
+        this.interactMessage.style.display = 'none'; //Want it hidden first only want to show when on platofrm
+        this.interactMessage.innerHTML = 'Press E to interact';
+        document.body.appendChild(this.interactMessage);
+
+        //listender for the above key and element we just kmade
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'e' || event.key === 'E') {
+                if (this.isPlayerNear && !this.videoPlaying) {
+                    this.playVideo();
+                }
+            }
+        });
     }
 
     update() {
@@ -32,39 +56,38 @@ class ProximityScreenRenderer {
             const platformMesh = this.scene.getObjectByName(this.platformName);
 
             if (platformMesh) {
-                const platformPos = platformMesh.position.clone().add(this.platformOffset); // Adjust the platform position for height
+                const platformPos = platformMesh.position.clone().add(this.platformOffset); 
                 
                 // Check proximity
                 const xDiff = Math.abs(playerPos.x - platformPos.x);
                 const zDiff = Math.abs(playerPos.z - platformPos.z);
                 
-                console.log("Platform pos:", platformPos);
-
-                //BASCIALLY A BOX COLLIDER
                 const areaWidth = 5;
                 const areaDepth = 5;
 
                 if (xDiff < areaWidth / 2 && zDiff < areaDepth / 2) {
-                    if (!this.isScreenActive) { 
-                        console.log("Player is near the platform");
-                        this.renderOnScreen();
-                        this.isScreenActive = true; 
+                    if (!this.isPlayerNear) { 
+                        console.log("Player is near the platform, press 'E' to play the video");
+                        this.showInteractMessage();
+                        this.isPlayerNear = true; //PLayer near the platform run what we want to run
                     }
                 } else {
-                    if (this.isScreenActive) { //derender when move away
-                        this.removeFromScreen();
-                        this.isScreenActive = false;
+                    if (this.isPlayerNear) {
+                        this.hideInteractMessage(); //simislar to hiding the video but jsut removes the key poppup and video now
+                        this.isPlayerNear = false;
+                        if (this.videoPlaying) {
+                            this.stopVideo(); // Stop video if they move away
+                        }
                     }
                 }
             }
         }
     }
 
-    renderOnScreen() {
+    playVideo() {
         const screenMesh = this.scene.getObjectByName(this.screenName);
         
         if (screenMesh) {
-            // Access the existing material
             const existingMaterial = screenMesh.material;
     
             if (existingMaterial.map) {
@@ -76,26 +99,19 @@ class ProximityScreenRenderer {
             this.videoTexture.magFilter = THREE.LinearFilter;
             this.videoTexture.format = THREE.RGBAFormat;
     
-    
             existingMaterial.map = this.videoTexture;
-            existingMaterial.needsUpdate = true;//need to update the material
+            existingMaterial.needsUpdate = true;
     
-            // Set video texture repeat to (1, 1) to prevent stretching
-            // this.videoTexture.repeat.set(1, 1);
-            
-
-            this.videoTexture.offset.set(0, 0); // Center the video
-    
-            // Play the video
             this.video.muted = false; 
             this.video.play(); 
+            this.videoPlaying = true;
+            this.hideInteractMessage(); // Hide the message after you press E
         } else {
-            console.log("Screen mesh not found"); 
+            console.log("Screen mesh not found");
         }
     }
-    
-    
-    removeFromScreen() {
+
+    stopVideo() {
         const screenMesh = this.scene.getObjectByName(this.screenName);
     
         if (screenMesh) {
@@ -105,10 +121,20 @@ class ProximityScreenRenderer {
             originalMaterial.needsUpdate = true; 
             
             this.video.pause(); 
-            this.video.currentTime = 0; 
+            this.video.currentTime = 0;
+            this.videoPlaying = false; 
         } else {
-            console.log("Screen mesh not found for removal"); 
+            console.log("Screen mesh not found for stopping the video");
         }
+    }
+
+    showInteractMessage() {
+        this.interactMessage.style.display = 'block';
+    }
+
+
+    hideInteractMessage() {
+        this.interactMessage.style.display = 'none';
     }
 }
 
