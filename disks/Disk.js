@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import { Object3D } from 'three';
 import { createRigidBodyDynamic, createRigidBodyDynamicDisk, createRigidBodyEntity } from '../engine/function';
+import physic from '../engine/physic';
 // import physic from '../engine/physic';
 
 class Disk extends Object3D {
@@ -55,23 +56,23 @@ class Disk extends Object3D {
             this.add(this._light);
 
             this.position.copy(this._disk_mesh.position);
-            this.initPhysic(this._disk_mesh, physic);
-            this.initVisual(this._disk_mesh);
+            this.initPhysic();
+            this.initVisual();
         })    //.then(gltf => gltf.scene.children[0])
         
     }
 
-    initPhysic(mesh, physic) {
-        const { rigidBody, collider } = createRigidBodyDynamicDisk(mesh, physic);
+    initPhysic() {
+        const { rigidBody, collider } = createRigidBodyDynamicDisk(this._disk_mesh, physic);
         // rigidBody.
         this.rigidBody = rigidBody;
         this.collider = collider;
     }
 
-    initVisual(mesh) {
-        mesh.position.set(0, 0, 0);
-        mesh.castShadow = true;
-        this.add(mesh);
+    initVisual() {
+        this._disk_mesh.position.set(0, 0, 0);
+        this._disk_mesh.castShadow = true;
+        this.add(this._disk_mesh);
     }
 
     update(time_in_seconds) {

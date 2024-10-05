@@ -1,6 +1,9 @@
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import interactableObject from "../engine/interactableObject";
 import * as THREE from 'three';
+import physic from "../engine/physic";
+import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
+import { create_collider_for_disk } from "../engine/function";
 
 class InteractableDisk extends interactableObject {
     constructor(interaction_display, object, distance_threshold) {
@@ -14,6 +17,9 @@ class InteractableDisk extends interactableObject {
     start_interaction(controls, object_interacted_with, level) {
         console.log(object_interacted_with);
         
+        // object_interacted_with.object.collider.setActiveCollisionTypes(ActiveCollisionTypes.FIXED_FIXED);
+        physic.removeCollider(object_interacted_with.object.collider);
+        // physic.removeRigidBody(object_interacted_with.object.rigidBody);
         level.remove(object_interacted_with.object);
 
         controls._holding_disk = object_interacted_with;
@@ -67,6 +73,13 @@ class InteractableDisk extends interactableObject {
         }
 
 
+        const new_collider = create_collider_for_disk(physic, object_to_drop.object.rigidBody);
+        object_to_drop.object.collider = new_collider;
+        // physic.removeCollider(object_interacted_with.object.collider);
+
+        // object_to_drop.object.collider.setActiveCollisionTypes(ActiveCollisionTypes.DEFAULT | ActiveCollisionTypes.KINEMATIC_FIXED);
+        // object_to_drop.object.initPhysic();
+        object_to_drop.object.rigidBody.setAdditionalMass(100);
         object_to_drop.object.position.copy(drop_position);
         object_to_drop.object.rigidBody.setTranslation(drop_position);
 
