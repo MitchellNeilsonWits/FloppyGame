@@ -63,7 +63,7 @@ class LevelController {
 
         // Update the level that is currently active
         if (this._levels[this._current_level]) {
-            this._levels[this._current_level].update();
+            this._levels[this._current_level].update(time_elapsed_in_seconds);
         }
 
         if (this._controls._interaction_controller) {
