@@ -11,6 +11,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import CharacterFSM from './CharacterFSM';
 import BasicCharacterControllerProxy from './CharacterControllerProxy';
 import Player from '../engine/player';
+import CharacterInteractionController from './CharacterInteractionController';
 
 class CharacterController {
     constructor(params) {
@@ -52,6 +53,7 @@ class CharacterController {
             // gltf.scene.scale.setScalar(0.002);
             gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
             gltf.scene.children[0].position.y = 5;
+            gltf.scene.children[0].position.z = 25;
 
             // gltf.scene.
 
@@ -59,6 +61,9 @@ class CharacterController {
             // this._target = gltf.scene;
             
             this._target = new Player(gltf.scene.children[0], this._params.physic);
+
+            // Create interaction controller to handle interactions with objects
+            this._interaction_controller = new CharacterInteractionController(this._target, this._input);
 
             // console.log(this._player)
             // this._params.scene.add(this._player);
@@ -107,7 +112,6 @@ class CharacterController {
 
     async get_children() {
         // return this._target_children;
-        console.log(this._target)
         return this._target.children;
     }
 
@@ -164,7 +168,6 @@ class CharacterController {
             } else {
                 /* Character is busy turning: decide which direction based on cartesian quadrant */
                 if (rotation_current < 0) {
-                    console.log("negative")
                     if (angle_goal < angle_curr) {
                         return "turning_left";
                     } else {
@@ -195,8 +198,12 @@ class CharacterController {
         }
     }
 
+    async set_dynamic_objects(objects) {
+        this._interaction_controller.set_dynamic_objects(objects);
+    }
+
     /* Function to update states, movement information and animations */
-    update(time_in_seconds, mouse_movement_x) {
+    update(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         if (!this._target) {
             return;
         }
@@ -209,8 +216,6 @@ class CharacterController {
         velocity.x = this._target.rigidBody.linvel().x;
         velocity.y = this._target.rigidBody.linvel().y;
         velocity.z = this._target.rigidBody.linvel().z;
-
-        console.log("vel = ",velocity)
         
         const frame_decceleration = new THREE.Vector3(
             velocity.x * this._decceleration.x,
@@ -262,7 +267,6 @@ class CharacterController {
             forward = new THREE.Vector3(0, 0, 1);
             forward.applyQuaternion(control_object.quaternion);
             forward.normalize();
-            console.log(forward);
 
             forward.x *= speed;
             forward.z *= speed;
@@ -275,7 +279,6 @@ class CharacterController {
         control_object.getWorldPosition(v);
         this._params.camera.move_pivot(v);
 
-        console.log(forward);
         this._target.update(forward.x, this._target.rigidBody.linvel().y, forward.z);
         
         // this._target.update(0, 0, 0);
@@ -285,6 +288,8 @@ class CharacterController {
         if (this._mixer) {
             this._mixer.update(time_in_seconds);
         }
+
+        this._interaction_controller.update();
     }
 }
 

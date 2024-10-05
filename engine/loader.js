@@ -4,16 +4,42 @@ const loaderGlb = new GLTFLoader()
 
 export default async function loadAssets(path) {
   const glb = await loaderGlb.loadAsync(path)
+
   const visuals = []
   const colliders = []
+  const visuals_dynamic = []
+  const colliders_dynamic = []
+  const pointLights = []
   const players = []
+  const interactable = {}
 
   for (const mesh of glb.scene.children) {
-    const name = mesh.name
-    visuals.push(mesh)
-    colliders.push(mesh)
+    if (mesh.type === 'PointLight') {
+      pointLights.push(mesh);
+    } else if (mesh.type === 'Mesh') {
+      if (!mesh.name.includes("dynamic")) {
+        if (mesh.name.includes("interactable")) {
+          interactable[mesh.name] = {
+            mesh: mesh,
+            type: "static"
+          };
+        }
+        visuals.push(mesh)
+        colliders.push(mesh)
+      } else {
+        if (mesh.name.includes("interactable")) {
+          interactable[mesh.name] = {
+            mesh: mesh,
+            type: "dynamic"
+          };
+        }
+        visuals_dynamic.push(mesh);
+        colliders_dynamic.push(mesh);
+      }
+    }
+
+    
   }
-  console.log("Visuals:",visuals)
-  console.log("Colliders:",colliders)
-  return { visuals, colliders, players }
+  
+  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable }
 }

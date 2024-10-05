@@ -39,7 +39,6 @@ export default class Player extends Object3D {
   }
 
   updateVisual() {
-    console.log("Position:", this.rigidBody.translation());
     this.position.copy(this.rigidBody.translation());
   }
 }

@@ -18,12 +18,46 @@ import physic from '../engine/physic';
 import loader from '../engine/loader';
 import World from '../engine/world';
 import Player from '../engine/player';
+import MenuController from '../menu/MenuController';
 
 
+
+//TODO: Either add proxRender from engine/proxRender.js here or IN level controller -> need to decide which is best
 class GameController {
-    constructor(camera, scene) {
+    constructor() {
         this._init();
         this._playing_game = false;
+    }
+
+    // Play game: sets the mouse listener, sets playing game to true, and hides the pause menu
+    play_game() {
+        this._mouse_listener.set_listener();
+        this._playing_game = true;
+        this._menu.hide_menu();
+    }
+
+    // Pause game: removes the mouse listener, sets playing game to false, and shows the pause menu
+    pause_game() {
+        this._mouse_listener.remove_listener();
+        this._playing_game = false;
+        this._menu.show_menu();
+    }
+
+    _setup_first_pointer_lock() {
+        this._threejs.domElement.addEventListener("click", async () => {
+            this._threejs.domElement.requestPointerLock();
+            this._threejs.domElement.removeEventListener('click',this);
+            this.play_game();
+        });
+        
+        document.addEventListener('pointerlockchange', (e) => {
+            if (document.pointerLockElement === this._threejs.domElement) {
+                this.play_game();
+            } else {
+                this.pause_game();
+            }
+            document.removeEventListener('pointerlockchange',this);
+        })
     }
 
     /* Init function */
@@ -34,81 +68,35 @@ class GameController {
         this._threejs.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this._threejs.domElement);
 
-        this._threejs.domElement.addEventListener("click", async () => {
-            this._threejs.domElement.requestPointerLock();
-        });
+        // PAUSE MENU
+        this._menu = new MenuController(this._threejs.domElement);
 
+        // MOUSE LISTENER
         this._mouse_listener = new MouseListener();
-        document.addEventListener('pointerlockchange', (e) => {
-            if (document.pointerLockElement === this._threejs.domElement) {
-                this._mouse_listener.set_listener();
-                this._playing_game = true;
-            } else {
-                this._mouse_listener.remove_listener();
-                document.exitPointerLock();
-                this._playing_game = false;
-            }
-        })
-        
-        
-        // CAMERA
-        this._camera = new CameraController(this._threejs);
+
+        // Setup the first pointer lock (may not be needed in final release)
+        this._setup_first_pointer_lock();
         
         // SCENE
         this._scene = new THREE.Scene();
 
-        
-        // ADD "STATIC" OBJECTS TO SCENE
-        this._scene.add(light);
-        this._scene.add(directional_light);
-        // this._scene.add(this._camera.get_camera());
+        // CAMERA
+        this._camera = new CameraController(this._threejs);
         this._scene.add(this._camera.get_pivot());
-        
-        // INITALIZE MIXERS
-        this._mixers = [];
 
         // INITIALIZE REQUEST ANIMATION FRAME VARIABLE
         this._previousRAF = null;
 
-        // LOAD ANIMATED MODEL(S)
-        this._load_animated_model()
-
+        // Load the level
         this._load_level()
+
         // REQUEST ANIMATION FRAME
         this._raf();
-    }
-
-    /* Load in animated models */
-    _load_animated_model() {
-        // CREATE A BASIC CHARACTER CONTROLLER
-        // const params = {
-        //     camera: this._camera, 
-        //     scene: this._scene,
-        //     mixers: this._mixers
-        // }
-        // this._controls = new CharacterController(params);
     }
 
     /* Load in level */
     async _load_level() {
         // LEVEL CONTROLLER
-        
-        // var children = await this._controls.get_children();
-        // console.log(children);
-        // let timer = 0;
-
-        // while ((timer < 10000) || (!children)) {
-        //     console.log(timer);
-        //     if (timer === 9999) {
-        //         children = this._controls.get_children();
-        //         if (!children) {
-        //             timer = 0;
-        //         }
-        //     } else {
-        //         timer += 1;
-        //     }
-        // }
-
         const params = {
             camera: this._camera, 
             scene: this._scene,
@@ -117,7 +105,7 @@ class GameController {
             physic: physic
         }
 
-        this._level_controller = new LevelController(this._scene, params);
+        this._level_controller = new LevelController(params);
     }
 
     /* Request animation frame function */
@@ -129,8 +117,6 @@ class GameController {
 
             // RECURSIVE CALL
             this._raf();
-
-            
 
             // RENDER AND STEP
             this._threejs.render(this._scene, this._camera.get_camera());
@@ -144,13 +130,6 @@ class GameController {
         if (this._playing_game) {
             // CONVERT TIME TO SECONDS
             const time_elapsed_in_seconds = time_elapsed * 0.001;
-            
-            // UPDATE MIXERS
-            if (this._mixers) {
-                this._mixers.map(mixer => {
-                    mixer.update(time_elapsed_in_seconds);
-                })
-            }
 
             //step for physics
             physic.step();
@@ -158,14 +137,6 @@ class GameController {
             if (this._level_controller) {
                 this._level_controller.update(time_elapsed_in_seconds);
             }
-
-            // UPDATE CHARACTER CONTROLLER
-            // if (this._controls) {
-            //     if (this._mouse_listener) {
-            //         console.log(this._mouse_listener._mouse_movement_x);
-            //         this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x);
-            //     }
-            // }
 
             // UPDATE CAMERA
             if (this._camera) {

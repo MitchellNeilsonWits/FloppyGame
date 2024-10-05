@@ -18,7 +18,10 @@ class CameraController {
         
         
         this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT);
-        this._camera.position.set(0, 0.5, 5);
+
+        const fov = 5;
+
+        this._camera.position.set(0, 0.5, fov);
         this._camera_target = new THREE.Vector3();
 
         this._yaw = new THREE.Object3D();
@@ -59,10 +62,11 @@ class CameraController {
     }
 
     update(mouse_movement_x, mouse_movement_y) {
+        const mouse_sensitivity = 0.5;
 
 
-        this._yaw.rotation.y -= mouse_movement_x * 0.002;
-        const v = this._pitch.rotation.x - mouse_movement_y * 0.002;
+        this._yaw.rotation.y -= mouse_movement_x * mouse_sensitivity/1000;
+        const v = this._pitch.rotation.x - mouse_movement_y * mouse_sensitivity/1000;
         if (v > -1 && v < 0.1) {
             this._pitch.rotation.x = v;
         }
