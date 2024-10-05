@@ -1,15 +1,14 @@
 import * as THREE from 'three';
 
 class CharacterInteractionController {
-    constructor(target) {
-        this._target = target; // the player 
+    constructor(target, input) {
+        this._target = target; // the player
+        this._input = input; // input keys 
         this._raycaster = new THREE.Raycaster();
         this._distance_threshold = 2.5;
 
 
-        this._showing_message = false;
-
-
+        this.can_interact = false;
 
         // E interact message popup making
         this.interactMessage = document.createElement('div');
@@ -24,14 +23,28 @@ class CharacterInteractionController {
         this.interactMessage.style.fontSize = '16px';
         // this.interactMessage.style.display = 'none'; //Want it hidden first only want to show when on platofrm
         this.interactMessage.innerHTML = 'Press E to interact';
+
+
+
+        // initialize a "start interaction" function to not do anything
+        this._start_interaction = () => {console.log("no interaction")};
     }
 
-    _show_interact_message() {
-        document.body.appendChild(this.interactMessage);        
+    _show_interact_message(interactable_object) {
+        console.log(interactable_object);
+        this._start_interaction = interactable_object.start_interaction;
+        this.interactMessage.innerHTML = `${interactable_object.interaction_display}`;
+        document.body.appendChild(this.interactMessage);  
     }
 
     _hide_interact_message() {
-        document.body.removeChild(document.getElementById('interact_display'));
+
+        this._start_interaction = () => {console.log("no interaction")};
+        const el = document.getElementById('interact_message');
+        if (el) {
+            document.body.removeChild(el);
+        }
+        // document.body.removeChild(document.getElementById('interact_display'));
     }
 
     _distance_to_object(object) {
@@ -82,9 +95,6 @@ class CharacterInteractionController {
     }
 
     _check_angle_range(desired_angle, current_angle) {
-        // if (((desired_angle - Math.PI/100) % 2*Math.PI) <= current_angle <= ((desired_angle + Math.PI/100) % 2*Math.PI)) {
-            // return true;
-        // }
 
         const view_range = Math.PI/6;
 
@@ -98,7 +108,6 @@ class CharacterInteractionController {
                 // Look from [lower_view_range, 2*PI] and [0, upper_view_range]
                 if (lower_view_range <= current_angle ) {
                     if (current_angle <= upper_view_range) {
-                        console.log("case 1");
                         return true;
                     }
                 }
@@ -106,15 +115,6 @@ class CharacterInteractionController {
             }
         } else {
             if (lower_view_range <= current_angle && current_angle <= upper_view_range) {
-                console.log("case 2");
-                return true;
-            }
-        }
-
-        return false;
-
-        if (current_angle >= (desired_angle -  view_range)) {
-            if (current_angle <= (desired_angle + view_range)) {
                 return true;
             }
         }
@@ -122,13 +122,27 @@ class CharacterInteractionController {
         return false;
     }
 
-    update(dynamic_objects) {
-        if (dynamic_objects) {
+    update(interactable_objects) {
+
+        if (this.can_interact) {
+            console.log(this._target)
+            if (this._input) {
+                if (this._input._keys) {
+                    if (this._input._keys.interact) {
+                        this._start_interaction();
+                    }
+                }
+            }
+        }
+
+        if (interactable_objects) {
             if (this._target) {
-                
                 // Go through each dynamic object to find if we are close enough and looking at it
-                for (const object of dynamic_objects) {
-                    
+                for (var key in interactable_objects) {
+
+                    // Get the object of the interactable object
+                    const object = interactable_objects[key].object;
+
                     // Calculate the euclidean distance from the object
                     const distance = this._distance_to_object(object);
 
@@ -141,25 +155,27 @@ class CharacterInteractionController {
 
                         // Check if the current angle is within range of the desired angle
                         const in_range = this._check_angle_range(desired_angle, current_angle);
-                        console.log(`Distance to ${object.children[0].name} is ${distance} with angle ${desired_angle}, so ${in_range}`)
 
-                        if (!this._showing_message) {
-                            this._showing_message = true;
-                            this._show_interact_message();
+                        if (in_range) {
+                            if (!this.can_interact) {
+                                this.can_interact = true;
+                                this._show_interact_message(interactable_objects[key].interactable_object);
+                            }
+                            return;
                         }
-                        return;
                     }
                     // this._raycaster.set(this._target.position, this._target.rotation);
                     // const intersects = this._raycaster.intersectObjects( dynamic_objects, true );
                     // console.log(intersects);
                 }
 
-                if (this._showing_message) {
-                    const el = document.getElementById('interact_message');
-                    if (el) {
-                        document.body.removeChild(el);
-                    }
-                    this._showing_message = false;
+                if (this.can_interact) {
+                    this.can_interact = false;
+                    this._hide_interact_message();
+                    // const el = document.getElementById('interact_message');
+                    // if (el) {
+                    //     document.body.removeChild(el);
+                    // }
                 }
             }
         }

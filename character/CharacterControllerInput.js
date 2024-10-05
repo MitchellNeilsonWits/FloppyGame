@@ -10,7 +10,8 @@ class CharacterControllerInput {
             left: false,
             right: false,
             space: false,
-            shift: false
+            shift: false,
+            interact: false
         };
 
         document.addEventListener('keydown', (e) => this._on_key_down(e), false);
@@ -43,6 +44,10 @@ class CharacterControllerInput {
             case 16: // SHIFT
                 this._keys.shift = true;
                 break;
+
+            case 69: // E
+                this._keys.interact = true;
+                break;
         }
     }
 
@@ -70,6 +75,10 @@ class CharacterControllerInput {
 
             case 16: // SHIFT
                 this._keys.shift = false;
+                break;
+
+            case 69: // E
+                this._keys.interact = false;
                 break;
         }
     }

@@ -63,7 +63,7 @@ class CharacterController {
             this._target = new Player(gltf.scene.children[0], this._params.physic);
 
             // Create interaction controller to handle interactions with objects
-            this._interaction_controller = new CharacterInteractionController(this._target);
+            this._interaction_controller = new CharacterInteractionController(this._target, this._input);
 
             // console.log(this._player)
             // this._params.scene.add(this._player);

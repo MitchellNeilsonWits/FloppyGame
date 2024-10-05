@@ -43,6 +43,7 @@ class LevelController {
         this._levels[this._current_level].render_level();
         // Get the dynamic objects of the level
         this._dynamic_objects = this._levels[this._current_level].get_dynamic_objects();
+        this._interactable_objects = this._levels[this._current_level].get_interactable_objects();
 
     }
 
@@ -66,7 +67,7 @@ class LevelController {
         }
 
         if (this._controls._interaction_controller) {
-            this._controls._interaction_controller.update(this._dynamic_objects);
+            this._controls._interaction_controller.update(this._interactable_objects);
         }
 
         
