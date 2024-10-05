@@ -10,6 +10,8 @@ import light from '../../lighting/point_lights';
 import directional_light from '../../lighting/directional_lights';
 import DynamicObject from '../../engine/dynamicObject';
 import InteractableBox from './InteractableBox';
+import Disk from '../../disks/Disk';
+import InteractableDisk from '../../disks/InteractableDisk';
 
 class LobbyLevel extends Level {
 
@@ -22,7 +24,25 @@ class LobbyLevel extends Level {
     _create_interactable_objects() {
         // console.log()
        
-        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object);
+        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5);
+    }
+
+    async _create_disks() {
+        const sample_disk = new Disk();
+        await sample_disk.set_disk('', physic);
+        this._disks = {
+            sample_disk: sample_disk
+        };
+        this._level.add(sample_disk);
+        this._dynamic_objects.push(sample_disk);
+
+        this._interactable_objects['sample_disk'] = {
+            object: sample_disk,
+            type: 'dynamic'
+        }
+        this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5);
+
+        // this._dynamic_objects.push(sample_disk);
     }
 
     // Function to set the components for the scene
@@ -82,7 +102,7 @@ class LobbyLevel extends Level {
         }
 
         this._create_interactable_objects()
-
+        await this._create_disks();
     }
     
     async set_level(character_controller) {
@@ -97,6 +117,10 @@ class LobbyLevel extends Level {
         return this._interactable_objects;
     }
 
+    get_level() {
+        return this._level;
+    }
+
     render_level() {
         // Render the level's components
         this._scene.add(this._level);
@@ -105,9 +129,14 @@ class LobbyLevel extends Level {
         for (const light of this._lights) {
             this._scene.add(light);
         }
+
+        // for (const key of Object.keys(this._disks)) {
+        //     console.log(`Adding ${key}`)
+        //     this._scene.add(this._disks[key]);
+        // }
     }
 
-    update() {
+    update(time_elapsed_in_seconds) {
         // Update proximity of player to screen
         if (this._prox) {
             this._prox.update();
@@ -115,8 +144,12 @@ class LobbyLevel extends Level {
 
         // Update the dynamic objects
         for (const object of this._dynamic_objects) {
-            object.update();
+            object.update(time_elapsed_in_seconds);
         }
+
+        // for (const key in ) {
+
+        // }
     }
 }
 

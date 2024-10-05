@@ -43,8 +43,10 @@ class LevelController {
         this._levels[this._current_level].render_level();
         // Get the dynamic objects of the level
         this._dynamic_objects = this._levels[this._current_level].get_dynamic_objects();
+        
         this._interactable_objects = this._levels[this._current_level].get_interactable_objects();
 
+        this._controls.set_level(this._levels[this._current_level].get_level());
     }
 
     change_level(level_number) {
@@ -63,7 +65,7 @@ class LevelController {
 
         // Update the level that is currently active
         if (this._levels[this._current_level]) {
-            this._levels[this._current_level].update();
+            this._levels[this._current_level].update(time_elapsed_in_seconds);
         }
 
         if (this._controls._interaction_controller) {

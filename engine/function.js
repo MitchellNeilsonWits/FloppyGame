@@ -69,3 +69,30 @@ export function createRigidBodyEntity(position, physic) {
   const collider = createColliderBall(0.25, rigidBody, physic)
   return { rigidBody, collider }
 }
+
+function createColliderDisk(physic, rigidBody) {
+  const colliderDesc = ColliderDesc.cuboid(0.4,0.3,0.4).setMass(0);
+  return physic.createCollider(colliderDesc, rigidBody)
+}
+
+export function create_rigid_body_for_disk(mesh, physic) {
+  const position = mesh.position;
+  const rigidBodyDesc = RigidBodyDesc.dynamic()
+  rigidBodyDesc.setTranslation(...position)
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+  rigidBody.setAdditionalMass(100);
+  return rigidBody;
+}
+
+export function create_collider_for_disk(physic, rigidBody) {
+  return createColliderDisk(physic, rigidBody);
+}
+
+export function createRigidBodyDynamicDisk(mesh, physic) {
+  
+  const rigidBody = create_rigid_body_for_disk(mesh, physic);
+
+  const collider = create_collider_for_disk(physic, rigidBody);
+
+  return { rigidBody, collider }
+}
