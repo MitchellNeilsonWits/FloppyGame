@@ -11,6 +11,8 @@ class CharacterControllerInput {
             right: false,
             space: false,
             shift: false,
+            drop: false,
+            use: false,
             interact: false
         };
 
@@ -48,6 +50,14 @@ class CharacterControllerInput {
             case 69: // E
                 this._keys.interact = true;
                 break;
+
+            case 70: // F
+                this._keys.drop = true;
+                break;
+
+            case 81: // Q
+                this._keys.use = true;
+                break;
         }
     }
 
@@ -79,6 +89,14 @@ class CharacterControllerInput {
 
             case 69: // E
                 this._keys.interact = false;
+                break;
+
+            case 70: // F
+                this._keys.drop = false;
+                break;
+
+            case 81: // Q
+                this._keys.use = false;
                 break;
         }
     }

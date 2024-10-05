@@ -11,6 +11,7 @@ import directional_light from '../../lighting/directional_lights';
 import DynamicObject from '../../engine/dynamicObject';
 import InteractableBox from './InteractableBox';
 import Disk from '../../disks/Disk';
+import InteractableDisk from '../../disks/InteractableDisk';
 
 class LobbyLevel extends Level {
 
@@ -23,7 +24,7 @@ class LobbyLevel extends Level {
     _create_interactable_objects() {
         // console.log()
        
-        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object);
+        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5);
     }
 
     async _create_disks() {
@@ -34,6 +35,12 @@ class LobbyLevel extends Level {
         };
         this._level.add(sample_disk);
         this._dynamic_objects.push(sample_disk);
+
+        this._interactable_objects['sample_disk'] = {
+            object: sample_disk,
+            type: 'dynamic'
+        }
+        this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5);
 
         // this._dynamic_objects.push(sample_disk);
     }
@@ -108,6 +115,10 @@ class LobbyLevel extends Level {
 
     get_interactable_objects() {
         return this._interactable_objects;
+    }
+
+    get_level() {
+        return this._level;
     }
 
     render_level() {

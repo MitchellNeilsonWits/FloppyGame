@@ -50,8 +50,8 @@ class Disk extends Object3D {
             loader.setPath('../models/');
             loader.load('disk_org_anim.glb', (a) => {_on_load('floating', a);}); // idle animation
 
-            this._light = new THREE.PointLight(0xffffff, 100, 0);
-            this._light.translateY(0.2);
+            this._light = new THREE.PointLight(0x0000ff, 5, 0);
+            this._light.translateY(-0.1);
             this.add(this._light);
 
             this.position.copy(this._disk_mesh.position);

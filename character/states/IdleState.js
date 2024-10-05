@@ -55,6 +55,7 @@ class IdleState extends State {
                 return; 
             }
         } else {
+            // this._parent.set_state('idle');
             return;
         }
     }

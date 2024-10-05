@@ -22,6 +22,7 @@ class CharacterFSM extends FiniteStateMachine {
         this._add_state('run', RunState);
         this._add_state('run_turning_left', RunTurningLeftState);
         this._add_state('run_turning_right', RunTurningRightState);
+
     }
 }
 

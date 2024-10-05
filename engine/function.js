@@ -71,7 +71,7 @@ export function createRigidBodyEntity(position, physic) {
 }
 
 function createColliderDisk(physic, rigidBody) {
-  const colliderDesc = ColliderDesc.cuboid(0.4,0.4,0.4);
+  const colliderDesc = ColliderDesc.cuboid(0.4,0.3,0.4);
   return physic.createCollider(colliderDesc, rigidBody)
 }
 

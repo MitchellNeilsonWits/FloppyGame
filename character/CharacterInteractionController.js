@@ -1,8 +1,13 @@
 import * as THREE from 'three';
+import { get_cartesian_angle_from_rotation } from '../common/Angle';
 
 class CharacterInteractionController {
-    constructor(target, input) {
-        this._target = target; // the player
+    constructor(controls, input) {
+        // console.log(controls);
+        this._controls = controls;
+        this._level = controls._level;
+        console.log(this._controls);
+        this._target = controls._target; // the player
         this._input = input; // input keys 
         this._raycaster = new THREE.Raycaster();
         this._distance_threshold = 2.5;
@@ -33,6 +38,9 @@ class CharacterInteractionController {
     _show_interact_message(interactable_object) {
         console.log(interactable_object);
         this._start_interaction = interactable_object.start_interaction;
+        this._end_interaction = interactable_object.end_interaction;
+        this._use_object = interactable_object.use_object;
+
         this.interactMessage.innerHTML = `${interactable_object.interaction_display}`;
         document.body.appendChild(this.interactMessage);  
     }
@@ -58,19 +66,20 @@ class CharacterInteractionController {
     // Finds the cartesian angle along the x-z plane (easy to work with)
     _find_2d_angle() {
         // need to handle different cases of the euler rotational values
-        if (this._target.rotation.x === 0) {
-            if (this._target.rotation.y >= 0) {
-                return this._target.rotation.y;
-            } else {
-                return this._target.rotation.y + 2*Math.PI;
-            }
-        } else {
-            if (this._target.rotation.y >= 0) {
-                return Math.PI - this._target.rotation.y;
-            } else {
-                return -1*this._target.rotation.y + Math.PI;
-            }
-        }
+        // if (this._target.rotation.x === 0) {
+        //     if (this._target.rotation.y >= 0) {
+        //         return this._target.rotation.y;
+        //     } else {
+        //         return this._target.rotation.y + 2*Math.PI;
+        //     }
+        // } else {
+        //     if (this._target.rotation.y >= 0) {
+        //         return Math.PI - this._target.rotation.y;
+        //     } else {
+        //         return -1*this._target.rotation.y + Math.PI;
+        //     }
+        // }
+        return get_cartesian_angle_from_rotation(this._target.rotation);
     }
 
     _desired_angle_to_object(object) {
@@ -122,16 +131,27 @@ class CharacterInteractionController {
         return false;
     }
 
+    get_can_interact() {
+        return this.can_interact;
+    }
+
     update(interactable_objects) {
 
         if (this.can_interact) {
-            console.log(this._target)
             if (this._input) {
                 if (this._input._keys) {
                     if (this._input._keys.interact) {
-                        this._start_interaction();
+                        this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                     }
                 }
+            }
+        }
+
+        if (this._controls._holding_disk) {
+            if (this._input._keys.drop) {
+                this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+            } else if (this._input._keys.use) {
+                this._use_object(this._controls, this._object_to_interact_with, this._level);
             }
         }
 
@@ -146,8 +166,10 @@ class CharacterInteractionController {
                     // Calculate the euclidean distance from the object
                     const distance = this._distance_to_object(object);
 
+                    const distance_threshold = interactable_objects[key].interactable_object.distance_threshold;
+
                     // If the distance is within the threshold, we see if the character is facing the object
-                    if (distance <= this._distance_threshold) {
+                    if (distance <= distance_threshold) {
 
                         // Find the desired angle
                         const desired_angle = this._desired_angle_to_object(object);
@@ -159,9 +181,10 @@ class CharacterInteractionController {
                         if (in_range) {
                             if (!this.can_interact) {
                                 this.can_interact = true;
+                                this._object_to_interact_with = interactable_objects[key]; 
                                 this._show_interact_message(interactable_objects[key].interactable_object);
                             }
-                            return;
+                            return true;
                         }
                     }
                     // this._raycaster.set(this._target.position, this._target.rotation);
@@ -176,6 +199,7 @@ class CharacterInteractionController {
                     // if (el) {
                     //     document.body.removeChild(el);
                     // }
+                    return false;
                 }
             }
         }

@@ -20,7 +20,7 @@ class RunState extends State {
 
             const ratio = curr_action.getClip().duration / prev_action.getClip().duration;
             curr_action.time = prev_action.time * ratio;
-            curr_action.setEffectiveTimeScale(1.0);
+            curr_action.setEffectiveTimeScale(1);
             curr_action.setEffectiveWeight(1.0);
 
             
