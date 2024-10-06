@@ -12,6 +12,7 @@ import DynamicObject from '../../engine/dynamicObject';
 import InteractableBox from './InteractableBox';
 import Disk from '../../disks/Disk';
 import InteractableDisk from '../../disks/InteractableDisk';
+import Pushbox from './Pushbox';
 
 class LobbyLevel extends Level {
 
@@ -20,10 +21,19 @@ class LobbyLevel extends Level {
         this._scene = scene;
         
     }
+
+    async _create_pushboxes() {
+        for (const pushbox of this._pushboxes) {
+            console.log(pushbox);
+            const new_pushbox = new Pushbox(pushbox.object.position, pushbox.object.rotation);
+            pushbox.pushbox_object = new_pushbox;
+            await pushbox.pushbox_object.set_pushbox();
+            this._level.add(new_pushbox);
+            this._dynamic_objects.push(new_pushbox);
+        }
+    }
     
     _create_interactable_objects() {
-        // console.log()
-       
         this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5);
     }
 
@@ -48,7 +58,7 @@ class LobbyLevel extends Level {
     // Function to set the components for the scene
     async _set_components(character_controller, scene) {
         // Load the meshes for the lobby
-        const meshes = await loadAssets('assets/lobby_interactive.glb');
+        const meshes = await loadAssets('assets/lobby_interactive_with_box.glb');
 
         // Create the physics for the world
         this._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
@@ -101,7 +111,18 @@ class LobbyLevel extends Level {
             this._lights.push(point_light);
         }
 
+        this._pushboxes = [];
+        let pushbox_num = 0;
+        for (const pushbox of meshes.pushboxes) {
+            this._pushboxes.push({
+                id: pushbox_num,
+                object: pushbox
+            })
+            pushbox_num++;
+        }
+
         this._create_interactable_objects()
+        await this._create_pushboxes();
         await this._create_disks();
     }
     
@@ -146,6 +167,10 @@ class LobbyLevel extends Level {
         for (const object of this._dynamic_objects) {
             object.update(time_elapsed_in_seconds);
         }
+
+        // for () {
+
+        // }
 
         // for (const key in ) {
 

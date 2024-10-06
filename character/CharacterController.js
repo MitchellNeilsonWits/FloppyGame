@@ -56,7 +56,7 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
-        gltfLoader.load('floppy_with_reader_remastered_v2.glb', (gltf) => {  
+        gltfLoader.load('floppy_with_reader_remastered_v3.glb', (gltf) => {  
             
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
@@ -105,11 +105,11 @@ class CharacterController {
             loader.load('floppy_with_reader_animated_v4.glb', (a) => {_on_load('walk', a);}); // walk animation
             loader.load('floppy_with_reader_turning_left.glb', (a) => {_on_load('turning_left', a);}); // turn left animation
             loader.load('floppy_with_reader_turning_right.glb', (a) => {_on_load('turning_right', a);}); // turn right animation
-            loader.load('floppy_with_reader_running.glb', (a) => {_on_load('run', a);}); // turn right animation
+            loader.load('floppy_with_reader_running_v2.glb', (a) => {_on_load('run', a);}); // turn right animation
             loader.load('floppy_with_reader_running_turning_left.glb', (a) => {_on_load('run_turning_left', a);}); // turn left animation
             loader.load('floppy_with_reader_running_turning_right.glb', (a) => {_on_load('run_turning_right', a);}); // turn right animation
             loader.load('floppy_with_reader_pick_up_v2.glb', (a) => {_on_load('pick_up', a);}); // load the disk animation
-            loader.load('floppy_with_reader_load_disk_v3.glb', (a) => {_on_load('load_disk', a);}); // load the disk animation
+            loader.load('floppy_with_reader_load_disk_v4.glb', (a) => {_on_load('load_disk', a);}); // load the disk animation
             loader.load('floppy_with_reader_holding.glb', (a) => {_on_load('holding_disk', a);}); // load the disk animation
             
             console.log("loaded all models")
@@ -129,6 +129,11 @@ class CharacterController {
     async get_children() {
         // return this._target_children;
         return this._target.children;
+    }
+
+    // Change the character's ability
+    change_ability(new_ability) {
+        this._ability = new_ability;
     }
 
     /* Function to determine direction of offset based on key input */

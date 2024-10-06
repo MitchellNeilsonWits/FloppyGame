@@ -1,4 +1,4 @@
-import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d-compat'
+import { ActiveCollisionTypes, ActiveEvents, ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d-compat'
 import * as THREE from 'three';
 
 export function getCanvas() {
@@ -94,5 +94,17 @@ export function createRigidBodyDynamicDisk(mesh, physic) {
 
   const collider = create_collider_for_disk(physic, rigidBody);
 
+  return { rigidBody, collider }
+}
+
+
+
+export function createRigidBodyDynamicPushbox(position, rotation, physic) {
+  const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(0);
+  rigidBodyDesc.setTranslation(...position);
+  // rigidBodyDesc.setRotation(rotation);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+  const colliderDesc = ColliderDesc.cuboid(0.44,0.44,0.44).setMass(100);
+  const collider = physic.createCollider(colliderDesc, rigidBody);
   return { rigidBody, collider }
 }

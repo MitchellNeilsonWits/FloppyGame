@@ -12,12 +12,15 @@ export default async function loadAssets(path) {
   const pointLights = []
   const players = []
   const interactable = {}
+  const pushboxes = [];
 
   for (const mesh of glb.scene.children) {
     if (mesh.type === 'PointLight') {
       pointLights.push(mesh);
     } else if (mesh.type === 'Mesh') {
-      if (!mesh.name.includes("dynamic")) {
+      if (mesh.name.includes("pushbox")) {
+        pushboxes.push(mesh);
+      } else if (!mesh.name.includes("dynamic")) {
         if (mesh.name.includes("interactable")) {
           interactable[mesh.name] = {
             mesh: mesh,
@@ -41,5 +44,5 @@ export default async function loadAssets(path) {
     
   }
   
-  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable }
+  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes }
 }
