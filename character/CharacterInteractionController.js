@@ -33,13 +33,13 @@ class CharacterInteractionController {
 
         // initialize a "start interaction" function to not do anything
         this._start_interaction = () => {console.log("no interaction")};
+
+        this._object_being_interacted_with = null;
     }
 
     _show_interact_message(interactable_object) {
         console.log(interactable_object);
         this._start_interaction = interactable_object.start_interaction;
-        this._end_interaction = interactable_object.end_interaction;
-        this._use_object = interactable_object.use_object;
 
         this.interactMessage.innerHTML = `${interactable_object.interaction_display}`;
         document.body.appendChild(this.interactMessage);  
@@ -141,7 +141,14 @@ class CharacterInteractionController {
             if (this._input) {
                 if (this._input._keys) {
                     if (this._input._keys.interact) {
-                        this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                        this._object_being_interacted_with = this._object_to_interact_with;
+                        this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
+                        this._use_object = this._object_to_interact_with.interactable_object.use_object;
+                        console.log(this);
+                        this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
+                        // this._object_to_interact_with = null;
+                        this.can_interact = false;
+                        this._hide_interact_message();
                     }
                 }
             }
@@ -149,9 +156,11 @@ class CharacterInteractionController {
 
         if (this._controls._holding_disk) {
             if (this._input._keys.drop) {
-                this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                this._end_interaction(this._controls, this._object_being_interacted_with, this._level);
+                this._object_being_interacted_with = null;
             } else if (this._input._keys.use) {
-                this._use_object(this._controls, this._object_to_interact_with, this._level);
+                this._use_object(this._controls, this._object_being_interacted_with, this._level);
+                this._object_being_interacted_with = null;
             }
         }
 

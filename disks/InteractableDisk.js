@@ -11,7 +11,36 @@ class InteractableDisk extends interactableObject {
     }
     
     use_object(controls, object_to_use, level) {
-        console.log("use disk");
+        console.log("using object");
+        const prev_action = this._action;
+        this._action.stop();
+
+        const fade_from = controls._state_machine._proxy._animations["holding_disk"].action;
+        const action = controls._state_machine._proxy._animations["load_disk"].action;
+        action.time = 0.0;
+        action.enabled = true;
+        action.setEffectiveWeight(2);
+        action.setLoop(THREE.LoopOnce, 1);
+        action.clampWhenFinished = true;
+        action.setEffectiveTimeScale(1.0);
+        action.setEffectiveWeight(1.0);
+        // action.crossFadeFrom(fade_from, 0.1, true);
+        
+        // See if animation is done
+        controls._mixer.addEventListener('finished', (e) => {
+            const fade_to = controls._state_machine._proxy._animations[controls._state_machine._current_state.get_name()].action;
+            controls.change_ability('sample'); // set the new ability
+            e.action.crossFadeTo(fade_to, 1, true); // fade out the animation
+            // stop the action after the fade out
+            // setTimeout(() => {
+                e.action.stop(); // stop the animation
+            // }, 0.5)
+            controls._mixer.removeEventListener('finished',this); // remove the listener
+        })
+
+        this._action = action;        
+        this._action.play();
+        console.log(this._action);
     }
     
     start_interaction(controls, object_interacted_with, level) {
@@ -64,7 +93,7 @@ class InteractableDisk extends interactableObject {
         // object_to_drop.object.position.copy(controls._target.position);
         const player_pos = controls._target.position;
         const player_facing = get_cartesian_angle_from_rotation(controls._target.rotation);
-        const drop_distance = 0.7;
+        const drop_distance = 0.8;
 
         const drop_position = {
             x: player_pos.x + drop_distance*Math.sin(player_facing),
