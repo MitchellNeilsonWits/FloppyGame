@@ -6,12 +6,11 @@ class TurningLeftState extends State {
     }
 
     get_name() {
-        return 'turning_left';
+        return 'walk_turning_left';
     }
 
     enter(prev_state){ 
-        const curr_action = this._parent._proxy._animations['turning_left'].action;
-        console.log("here within turning state");
+        const curr_action = this._parent._proxy._animations['walk_turning_left'].action;
         curr_action.play();
    
         if (prev_state) {
@@ -29,36 +28,6 @@ class TurningLeftState extends State {
             curr_action.play();
         } else {
             curr_action.play();
-        }
-    }
-
-    exit() {
-
-    }
-
-    update(character_is_turning, input) {
-        if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right) {
-            if (input._keys.shift) {
-                if (character_is_turning === "turning_left") {
-                    this._parent.set_state('run_turning_left');
-                    return;
-                }  else if (character_is_turning === "turning_right") {
-                    this._parent.set_state('run_turning_right');
-                    return; 
-                }
-
-                this._parent.set_state('run');
-            } else {
-                if (character_is_turning === "turning_left") {
-                    return;
-                }  else if (character_is_turning === "turning_right") {
-                    this._parent.set_state('turning_right');
-                    return; 
-                }
-                this._parent.set_state('walk');
-            }
-        } else {
-            this._parent.set_state('idle');
         }
     }
 }

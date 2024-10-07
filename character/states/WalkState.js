@@ -6,11 +6,11 @@ class WalkState extends State {
     }
 
     get_name() {
-        return 'walk';
+        return 'walk_not_turning';
     }
 
     enter(prev_state){ 
-        const curr_action = this._parent._proxy._animations['walk'].action;
+        const curr_action = this._parent._proxy._animations['walk_not_turning'].action;
    
         if (prev_state) {
             const prev_state_name = prev_state.get_name();
@@ -18,7 +18,7 @@ class WalkState extends State {
             
             curr_action.enabled = true;
 
-            if (prev_state_name == 'run' || prev_state_name == 'turning_left' || prev_state_name == 'turning_right') {
+            if (prev_state_name == 'run_not_turning' || prev_state_name == 'walk_turning_left' || prev_state_name == 'walk_turning_right') {
                 const ratio = curr_action.getClip().duration / prev_action.getClip().duration;
                 curr_action.time = prev_action.time * ratio;
             } else {
@@ -32,39 +32,6 @@ class WalkState extends State {
             curr_action.play();
         } else {
             curr_action.play();
-        }
-    }
-
-    exit() {
-
-    }
-
-    update(character_is_turning, input) {
-        if (input._keys.forward || input._keys.backward || input._keys.left || input._keys.right) {
-            if (input._keys.shift) {
-                if (character_is_turning === "turning_left") {
-                    this._parent.set_state('run_turning_left');
-                    return; 
-                } else if (character_is_turning === "turning_right") {
-                    this._parent.set_state('run_turning_right');
-                    return; 
-                }
-            
-                this._parent.set_state('run');
-                return;
-            } else {
-                if (character_is_turning === "turning_left") {
-                    this._parent.set_state('turning_left');
-                    return; 
-                } else if (character_is_turning === "turning_right") {
-                    this._parent.set_state('turning_right');
-                    return; 
-                }
-
-                return; 
-            }
-        } else {
-            this._parent.set_state('idle');
         }
     }
 }
