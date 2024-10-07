@@ -77,7 +77,6 @@ class Disk extends Object3D {
 
     update(time_in_seconds) {
         if (this._mixer) {
-            console.log(time_in_seconds);
             this._mixer.update(time_in_seconds);
         }
 

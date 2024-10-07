@@ -26,7 +26,7 @@ class CharacterController {
         this._decceleration = new THREE.Vector3(-0.5, -0.0001, -0.5);
         this._acceleration = new THREE.Vector3(1.0, 0.25, 1.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
-        this._character_is_turning = false; // note when the character is turning
+        this._character_is_turning = "not_turning"; // note when the character is turning
 
         // INITIALIZE ANIMATIONS
         this._animations = {};
@@ -102,16 +102,16 @@ class CharacterController {
             const loader = new GLTFLoader(this._manager);
             loader.setPath('../models/');
             loader.load('floppy_with_reader_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
-            loader.load('floppy_with_reader_animated_v4.glb', (a) => {_on_load('walk', a);}); // walk animation
-            loader.load('floppy_with_reader_turning_left.glb', (a) => {_on_load('turning_left', a);}); // turn left animation
-            loader.load('floppy_with_reader_turning_right.glb', (a) => {_on_load('turning_right', a);}); // turn right animation
-            loader.load('floppy_with_reader_running_v2.glb', (a) => {_on_load('run', a);}); // turn right animation
+            loader.load('floppy_with_reader_animated_v4.glb', (a) => {_on_load('walk_not_turning', a);}); // walk animation
+            loader.load('floppy_with_reader_turning_left.glb', (a) => {_on_load('walk_turning_left', a);}); // turn left animation
+            loader.load('floppy_with_reader_turning_right.glb', (a) => {_on_load('walk_turning_right', a);}); // turn right animation
+            loader.load('floppy_with_reader_running_v2.glb', (a) => {_on_load('run_not_turning', a);}); // turn right animation
             loader.load('floppy_with_reader_running_turning_left.glb', (a) => {_on_load('run_turning_left', a);}); // turn left animation
             loader.load('floppy_with_reader_running_turning_right.glb', (a) => {_on_load('run_turning_right', a);}); // turn right animation
             loader.load('floppy_with_reader_pick_up_v2.glb', (a) => {_on_load('pick_up', a);}); // load the disk animation
             loader.load('floppy_with_reader_load_disk_v4.glb', (a) => {_on_load('load_disk', a);}); // load the disk animation
             loader.load('floppy_with_reader_holding.glb', (a) => {_on_load('holding_disk', a);}); // load the disk animation
-            
+            loader.load('floppy_with_reader_jump.glb', (a) => {_on_load('jump', a);}); // load the disk animation
             console.log("loaded all models")
             return "done";
         })

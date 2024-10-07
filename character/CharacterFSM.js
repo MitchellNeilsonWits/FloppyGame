@@ -6,6 +6,7 @@ import RunTurningRightState from "./states/RunTurningRightState";
 import TurningLeftState from "./states/TurningLeftState";
 import TurningRightState from "./states/TurningRightState";
 import WalkState from "./states/WalkState";
+import JumpState from "./states/JumpState";
 
 class CharacterFSM extends FiniteStateMachine {
     constructor(proxy) {
@@ -16,13 +17,13 @@ class CharacterFSM extends FiniteStateMachine {
 
     _init() {
         this._add_state('idle', IdleState);
-        this._add_state('walk', WalkState);
-        this._add_state('turning_left', TurningLeftState);
-        this._add_state('turning_right', TurningRightState);
-        this._add_state('run', RunState);
+        this._add_state('walk_not_turning', WalkState);
+        this._add_state('walk_turning_left', TurningLeftState);
+        this._add_state('walk_turning_right', TurningRightState);
+        this._add_state('run_not_turning', RunState);
         this._add_state('run_turning_left', RunTurningLeftState);
         this._add_state('run_turning_right', RunTurningRightState);
-
+        this._add_state('jump', JumpState);
     }
 }
 
