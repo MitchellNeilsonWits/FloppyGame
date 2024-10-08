@@ -6,8 +6,8 @@ import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
 import { create_collider_for_disk } from "../engine/function";
 
 class InteractableDisk extends interactableObject {
-    constructor(interaction_display, object, distance_threshold) {
-        super(interaction_display, object, distance_threshold);
+    constructor(interaction_display, object, distance_threshold, interaction_trigger) {
+        super(interaction_display, object, distance_threshold, interaction_trigger);
     }
     
     use_object(controls, object_to_use, level) {
