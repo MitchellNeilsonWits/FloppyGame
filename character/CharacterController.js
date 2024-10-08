@@ -112,6 +112,8 @@ class CharacterController {
             loader.load('floppy_with_reader_load_disk_v4.glb', (a) => {_on_load('load_disk', a);}); // load the disk animation
             loader.load('floppy_with_reader_holding.glb', (a) => {_on_load('holding_disk', a);}); // load the disk animation
             loader.load('floppy_with_reader_jump.glb', (a) => {_on_load('jump', a);}); // load the disk animation
+            loader.load('floppy_with_reader_pushing.glb', (a) => {_on_load('pushing', a);}); // load the disk animation
+    
             console.log("loaded all models")
             return "done";
         })
@@ -179,7 +181,7 @@ class CharacterController {
             - If we goal = current, we are not turning
             - We also handle based on cartesian quadrants using whether our rotation is negative or not (see cases below)
         */
-        if (Math.abs(mouse_movement_x) == 0) {
+        if (Math.abs(mouse_movement_x) <= 100) {
             const rotation_current = new THREE.Euler().setFromQuaternion(quaternion_current).y;
             const angle_goal = this._get_angle(quaternion_goal_direction);
             const angle_curr = this._get_angle(quaternion_current);

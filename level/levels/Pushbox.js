@@ -76,14 +76,17 @@ class Pushbox extends Object3D {
     this.add(this._pushbox_mesh);
   }
 
+  move_pushbox(x_vel, y_vel, z_vel) {
+    this.updatePhysic(x_vel, y_vel, z_vel);
+  }
+
   update(x_vel, y_vel, z_vel) {
-    // this.updatePhysic(x_vel, y_vel, z_vel);
     this.updateVisual();
   }
 
   updatePhysic(x_vel, y_vel, z_vel) {
     const x = x_vel;
-    const y = y_vel;
+    const y = this.rigidBody.linvel().y;
     const z = z_vel;
     this.rigidBody.setLinvel({ x, y, z }, true);
   }

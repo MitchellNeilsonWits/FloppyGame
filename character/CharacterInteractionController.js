@@ -65,20 +65,6 @@ class CharacterInteractionController {
 
     // Finds the cartesian angle along the x-z plane (easy to work with)
     _find_2d_angle() {
-        // need to handle different cases of the euler rotational values
-        // if (this._target.rotation.x === 0) {
-        //     if (this._target.rotation.y >= 0) {
-        //         return this._target.rotation.y;
-        //     } else {
-        //         return this._target.rotation.y + 2*Math.PI;
-        //     }
-        // } else {
-        //     if (this._target.rotation.y >= 0) {
-        //         return Math.PI - this._target.rotation.y;
-        //     } else {
-        //         return -1*this._target.rotation.y + Math.PI;
-        //     }
-        // }
         return get_cartesian_angle_from_rotation(this._target.rotation);
     }
 
@@ -103,24 +89,27 @@ class CharacterInteractionController {
         }
     }
 
-    _check_angle_range(desired_angle, current_angle) {
-
-        const view_range = Math.PI/6;
-
+    _check_angle_range(desired_angle, current_angle, view_range) {
         const upper_view_range = desired_angle + view_range;
         const lower_view_range = desired_angle - view_range;
 
-        // Handle special case where UPPER > 2PI and LOWER < 2PI
+        // Handle special cases
         if (upper_view_range > 2*Math.PI) {
             if (lower_view_range <= 2*Math.PI) {
 
                 // Look from [lower_view_range, 2*PI] and [0, upper_view_range]
                 if (lower_view_range <= current_angle ) {
-                    if (current_angle <= upper_view_range) {
-                        return true;
-                    }
+                    return true;
+                } else if (current_angle <= upper_view_range) {
+                    return true;
                 }
 
+            }
+        } else if (lower_view_range < 0) {
+            if (lower_view_range+2*Math.PI <= current_angle ) {
+                return true;
+            } else if (current_angle <= upper_view_range) {
+                return true;
             }
         } else {
             if (lower_view_range <= current_angle && current_angle <= upper_view_range) {
@@ -135,26 +124,115 @@ class CharacterInteractionController {
         return this.can_interact;
     }
 
+    handle_press_e_interaction(interactable_object) {
+        // Get the object of the interactable object
+        const object = interactable_object.object;
+
+        // Calculate the euclidean distance from the object
+        const distance = this._distance_to_object(object);
+
+        const distance_threshold = interactable_object.interactable_object.distance_threshold;
+
+        // If the distance is within the threshold, we see if the character is facing the object
+        if (distance <= distance_threshold) {
+
+            // Find the desired angle
+            const desired_angle = this._desired_angle_to_object(object);
+            const current_angle = this._find_2d_angle();
+
+            // Check if the current angle is within range of the desired angle
+            const view_range = Math.PI/6;
+            const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
+
+            if (in_range) {
+                if (!this.can_interact) {
+                    this.can_interact = true;
+                    this._object_to_interact_with = interactable_object; 
+                    this._show_interact_message(interactable_object.interactable_object);
+                }
+                return true;
+            }
+        }
+    }
+
+    handle_touch_interaction(interactable_object) {
+        // Get the object of the interactable object
+        const object = interactable_object.object;
+
+        // Calculate the euclidean distance from the object
+        const distance = this._distance_to_object(object);
+
+        const distance_threshold = interactable_object.interactable_object.distance_threshold;
+
+        // If the distance is within the threshold, we see if the character is facing the object
+        if (distance <= distance_threshold) {
+
+            // Find the desired angle
+            const desired_angle = this._desired_angle_to_object(object);
+            const current_angle = this._find_2d_angle();
+            // const current_angle = this._controls._direction_of_offset()
+
+            // Check if the current angle is within range of the desired angle
+            const view_range = Math.PI/6;
+            const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
+
+            if (in_range) {
+                if (!this.can_interact) {
+                    this.can_interact = true;
+                    this._object_to_interact_with = interactable_object; 
+                    this._end_interaction = interactable_object.interactable_object.end_interaction;
+
+                    this._show_interact_message(interactable_object.interactable_object);
+                }
+                return true;
+            }
+        }
+    }
+
     update(interactable_objects) {
 
+        // If user is able to interact with some object, handle inputs based on the trigger of the interaction available
         if (this.can_interact) {
             if (this._input) {
+                const interaction_trigger = this._object_to_interact_with.interactable_object.interaction_trigger;
+                
                 if (this._input._keys) {
-                    if (this._input._keys.interact) {
-                        this._object_being_interacted_with = this._object_to_interact_with;
-                        this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
-                        this._use_object = this._object_to_interact_with.interactable_object.use_object;
-                        console.log(this);
-                        this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
-                        // this._object_to_interact_with = null;
-                        this.can_interact = false;
-                        this._hide_interact_message();
+                    if (interaction_trigger === 'press_e') {
+                        // press_e objects will start an interaction only when E is pressed on keyboard
+                        if (this._input._keys.interact) {
+                            this._object_being_interacted_with = this._object_to_interact_with;
+                            this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
+                            this._use_object = this._object_to_interact_with.interactable_object.use_object;
+                            console.log(this);
+                            this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
+                            // this._object_to_interact_with = null;
+                            this.can_interact = false;
+                            this._hide_interact_message();
+                        }
+                    } else if (interaction_trigger === 'push') {
+                        console.log("complete push");
+                        const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
+                        const current_angle = this._find_2d_angle();
+                        const view_range = Math.PI/8;
+
+                        const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
+                        if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
+                            if (correct_direction) {
+                                this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                            } else {
+                                this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                            }
+                        } else {
+                            this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                        }
                     }
                 }
             }
         }
-
+         
         if (this._controls._holding_disk) {
+            // If character is holding a disk, handle the dropping and using of the disk
+            // -- cannot interact with other objects if holding an objects already
             if (this._input._keys.drop) {
                 this._end_interaction(this._controls, this._object_being_interacted_with, this._level);
                 this._object_being_interacted_with = null;
@@ -162,56 +240,44 @@ class CharacterInteractionController {
                 this._use_object(this._controls, this._object_being_interacted_with, this._level);
                 this._object_being_interacted_with = null;
             }
-        }
+        } else {
+            // If character is not holding a disk, check to see if we can run interactions for the user
 
-        if (interactable_objects) {
-            if (this._target) {
-                // Go through each dynamic object to find if we are close enough and looking at it
-                for (var key in interactable_objects) {
+            if (interactable_objects) {
+                if (this._target) {
+                    // Go through each dynamic object
+                    for (var key in interactable_objects) {
 
-                    // Get the object of the interactable object
-                    const object = interactable_objects[key].object;
+                        // We test the type of interaction to occur:
+                        // - touch
+                        // - pickup
+                        
+                        const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
-                    // Calculate the euclidean distance from the object
-                    const distance = this._distance_to_object(object);
-
-                    const distance_threshold = interactable_objects[key].interactable_object.distance_threshold;
-
-                    // If the distance is within the threshold, we see if the character is facing the object
-                    if (distance <= distance_threshold) {
-
-                        // Find the desired angle
-                        const desired_angle = this._desired_angle_to_object(object);
-                        const current_angle = this._find_2d_angle();
-
-                        // Check if the current angle is within range of the desired angle
-                        const in_range = this._check_angle_range(desired_angle, current_angle);
-
-                        if (in_range) {
-                            if (!this.can_interact) {
-                                this.can_interact = true;
-                                this._object_to_interact_with = interactable_objects[key]; 
-                                this._show_interact_message(interactable_objects[key].interactable_object);
-                            }
-                            return true;
+                        if (trigger === "press_e") {
+                            console.log("checking press e interaction")
+                            const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
+                            if (interaction_started) {
+                                return;
+                            };
+                        } else if (trigger === "push") {
+                            const interaction_started = this.handle_touch_interaction(interactable_objects[key]);
+                            if (interaction_started) {
+                                return;
+                            };
                         }
+                        
                     }
-                    // this._raycaster.set(this._target.position, this._target.rotation);
-                    // const intersects = this._raycaster.intersectObjects( dynamic_objects, true );
-                    // console.log(intersects);
-                }
 
-                if (this.can_interact) {
-                    this.can_interact = false;
-                    this._hide_interact_message();
-                    // const el = document.getElementById('interact_message');
-                    // if (el) {
-                    //     document.body.removeChild(el);
-                    // }
-                    return false;
+                    if (this.can_interact) {
+                        this.can_interact = false;
+                        this._hide_interact_message();
+                        return false;
+                    }
                 }
             }
         }
+        
     }
 }
 

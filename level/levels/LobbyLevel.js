@@ -13,6 +13,7 @@ import InteractableBox from './InteractableBox';
 import Disk from '../../disks/Disk';
 import InteractableDisk from '../../disks/InteractableDisk';
 import Pushbox from './Pushbox';
+import InteractablePushbox from './InteractablePushbox';
 
 class LobbyLevel extends Level {
 
@@ -24,17 +25,24 @@ class LobbyLevel extends Level {
 
     async _create_pushboxes() {
         for (const pushbox of this._pushboxes) {
-            console.log(pushbox);
+            
             const new_pushbox = new Pushbox(pushbox.object.position, pushbox.object.rotation);
             pushbox.pushbox_object = new_pushbox;
+
             await pushbox.pushbox_object.set_pushbox();
             this._level.add(new_pushbox);
             this._dynamic_objects.push(new_pushbox);
+
+            this._interactable_objects['pushbox_A'] = {
+                object: new_pushbox,
+                type: 'dynamic'
+            };
+            this._interactable_objects['pushbox_A']['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 1, "push")
         }
     }
     
     _create_interactable_objects() {
-        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5);
+        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
     }
 
     async _create_disks() {
@@ -50,7 +58,7 @@ class LobbyLevel extends Level {
             object: sample_disk,
             type: 'dynamic'
         }
-        this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5);
+        this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5, "press_e");
 
         // this._dynamic_objects.push(sample_disk);
     }
