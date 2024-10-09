@@ -46,7 +46,7 @@ class LobbyLevel extends Level {
     }
     
     _create_interactable_objects() {
-        this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
+        // this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
     }
 
     async _create_disks() {

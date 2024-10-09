@@ -5,7 +5,7 @@ class TutRender {
         this.character_controller = character_controller;
         this.targetObjectName = "tut"; // Object player should approach
         this.scene = scene;
-        this.proximityThreshold = 50; 
+        this.proximityThreshold = 7; 
         this.isPlayerNear = false; 
         this.onStartTutorial = onStartTutorial; // Callback for starting the tutorial
 
@@ -53,10 +53,12 @@ class TutRender {
 
                 // Check proximity
                 const distance = playerPos.distanceTo(targetPos);
+                console.log(distance);
                 if (distance < this.proximityThreshold) {
                     if (!this.isPlayerNear) {
                         console.log("Player is near the tutorial object, press 'E' to start the tutorial");
                         this.isPlayerNear = true;
+                        // this.showTutorialMessage();
                     }
                 } else {
                     if (this.isPlayerNear) {
