@@ -14,13 +14,14 @@ import Disk from '../../disks/Disk';
 import InteractableDisk from '../../disks/InteractableDisk';
 import Pushbox from './Pushbox';
 import InteractablePushbox from './InteractablePushbox';
+import TutRender from '../../engine/tutRender';
 
 class LobbyLevel extends Level {
 
     constructor(scene) {
         super();
         this._scene = scene;
-        
+        this._TutRender = null;
     }
 
     async _create_pushboxes() {
@@ -81,6 +82,14 @@ class LobbyLevel extends Level {
         // CREATE THE PROXIMITY RENDERER
         // -- finds position of character to load screen
         this._prox = new ProximityScreenRenderer(character_controller, scene );
+
+            // Instantiate TutRender with a callback to start the tutorial
+        console.log("SCENE",scene);
+        this._tutorialRenderer = new TutRender(character_controller, scene, () => {
+        console.log("Starting tutorial...");
+        
+        //this.startTutorial();
+        });
 
         this._level = new THREE.Group();
         this._interactable_objects = {};
@@ -202,6 +211,10 @@ class LobbyLevel extends Level {
             this._prox.update();
         }
 
+        if (this._tutorialRenderer) {
+            this._tutorialRenderer.update();
+        }
+
         // Update the dynamic objects
         for (const object of this._dynamic_objects) {
             object.update(time_elapsed_in_seconds);
@@ -215,6 +228,11 @@ class LobbyLevel extends Level {
 
         // }
     }
+
+    startTutorial() {
+        console.log("Loading tutorial level...");
+    }
+    
 }
 
 export default LobbyLevel
