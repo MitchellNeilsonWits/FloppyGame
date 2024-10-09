@@ -30,7 +30,7 @@ class InteractableDisk extends interactableObject {
         controls._mixer.addEventListener('finished', (e) => {
             const fade_to = controls._state_machine._proxy._animations[controls._state_machine._current_state.get_name()].action;
             controls.change_ability('sample'); // set the new ability
-            e.action.crossFadeTo(fade_to, 1, true); // fade out the animation
+            // e.action.crossFadeTo(fade_to, 1, true); // fade out the animation
             // stop the action after the fade out
             // setTimeout(() => {
                 e.action.stop(); // stop the animation
@@ -41,6 +41,8 @@ class InteractableDisk extends interactableObject {
         this._action = action;        
         this._action.play();
         console.log(this._action);
+
+        controls._holding_disk = null;
     }
     
     start_interaction(controls, object_interacted_with, level) {
@@ -117,7 +119,6 @@ class InteractableDisk extends interactableObject {
         
         controls._holding_disk = null;
         this._action.stop();
-
     }
 }
 

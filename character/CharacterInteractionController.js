@@ -236,9 +236,11 @@ class CharacterInteractionController {
             if (this._input._keys.drop) {
                 this._end_interaction(this._controls, this._object_being_interacted_with, this._level);
                 this._object_being_interacted_with = null;
+                this.can_interact = false;
             } else if (this._input._keys.use) {
                 this._use_object(this._controls, this._object_being_interacted_with, this._level);
                 this._object_being_interacted_with = null;
+                this.can_interact = false;
             }
         } else {
             // If character is not holding a disk, check to see if we can run interactions for the user

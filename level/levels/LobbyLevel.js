@@ -38,6 +38,9 @@ class LobbyLevel extends Level {
                 type: 'dynamic'
             };
             this._interactable_objects['pushbox_A']['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 1, "push")
+        
+            // Want to be able to jump off of pushboxes
+            this._ground_colliders.push(new_pushbox.collider);
         }
     }
     
@@ -60,7 +63,6 @@ class LobbyLevel extends Level {
         }
         this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5, "press_e");
 
-        // this._dynamic_objects.push(sample_disk);
     }
 
     // Function to set the components for the scene
@@ -68,8 +70,13 @@ class LobbyLevel extends Level {
         // Load the meshes for the lobby
         const meshes = await loadAssets('assets/lobby_interactive_with_box.glb');
 
+        this._ground_colliders = [];
+
         // Create the physics for the world
         this._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
+        
+        // Add the static ground colliders from the world as objects to jump off of
+        this._world.get_ground_colliders().forEach(obj => {this._ground_colliders.push(obj)});
 
         // CREATE THE PROXIMITY RENDERER
         // -- finds position of character to load screen
@@ -77,6 +84,7 @@ class LobbyLevel extends Level {
 
         this._level = new THREE.Group();
         this._interactable_objects = {};
+        
         // Set rigid body meshes
         for (const mesh of meshes.visuals) {
             this._level.add(mesh);
@@ -89,6 +97,7 @@ class LobbyLevel extends Level {
                 }
             }
         }
+
         // Set dynamic body meshes
         this._dynamic_objects = [];
         for (const mesh of meshes.colliders_dynamic) {
@@ -148,6 +157,10 @@ class LobbyLevel extends Level {
 
     get_level() {
         return this._level;
+    }
+
+    get_ground_objects() {
+        return this._ground_colliders;
     }
 
     render_level() {
