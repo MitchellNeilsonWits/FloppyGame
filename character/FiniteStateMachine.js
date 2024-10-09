@@ -25,9 +25,9 @@ class FiniteStateMachine {
         state.enter(prev_state);
     }
 
-    update(time_elapsed, input) {
+    update(character_is_turning, input, height_state) {
         if (this._current_state) {
-            this._current_state.update(time_elapsed, input);
+            this._current_state.update(character_is_turning, input, height_state);
         }
     }
 }

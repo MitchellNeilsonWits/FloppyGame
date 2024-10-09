@@ -44,7 +44,12 @@ class LevelController {
         // Get the dynamic objects of the level
         this._dynamic_objects = this._levels[this._current_level].get_dynamic_objects();
         
+        // Get the interactable objects of the level
         this._interactable_objects = this._levels[this._current_level].get_interactable_objects();
+
+        // Get the ground objects of the level
+        this._ground_objects = this._levels[this._current_level].get_ground_objects();
+        console.log(this._ground_objects);
 
         this._controls.set_level(this._levels[this._current_level].get_level());
     }
@@ -70,6 +75,10 @@ class LevelController {
 
         if (this._controls._interaction_controller) {
             this._controls._interaction_controller.update(this._interactable_objects);
+        }
+
+        if (this._controls.height_controller) {
+            this._controls.height_controller.update(this._ground_objects);
         }
 
         

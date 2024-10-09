@@ -12,6 +12,7 @@ import CharacterFSM from './CharacterFSM';
 import BasicCharacterControllerProxy from './CharacterControllerProxy';
 import Player from '../engine/player';
 import CharacterInteractionController from './CharacterInteractionController';
+import CharacterHeightController from './CharacterHeightController';
 
 class CharacterController {
     constructor(params) {
@@ -27,6 +28,7 @@ class CharacterController {
         this._acceleration = new THREE.Vector3(1.0, 0.25, 1.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._character_is_turning = "not_turning"; // note when the character is turning
+        this.height_state = "on ground";
 
         // INITIALIZE ANIMATIONS
         this._animations = {};
@@ -56,7 +58,7 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
-        gltfLoader.load('floppy_with_reader_remastered_v3.glb', (gltf) => {  
+        gltfLoader.load('floppy_with_reader_remastered_V3.glb', (gltf) => {  
             
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
@@ -73,6 +75,9 @@ class CharacterController {
 
             // Create interaction controller to handle interactions with objects
             this._interaction_controller = new CharacterInteractionController(this, this._input);
+
+            // Create height controller to handle changes in height of character
+            this.height_controller = new CharacterHeightController(this);
 
             // console.log(this._player)
             // this._params.scene.add(this._player);
@@ -113,7 +118,8 @@ class CharacterController {
             loader.load('floppy_with_reader_holding.glb', (a) => {_on_load('holding_disk', a);}); // load the disk animation
             loader.load('floppy_with_reader_jump.glb', (a) => {_on_load('jump', a);}); // load the disk animation
             loader.load('floppy_with_reader_pushing.glb', (a) => {_on_load('pushing', a);}); // load the disk animation
-    
+            loader.load('floppy_with_reader_falling_v2.glb', (a) => {_on_load('falling', a);}); // load the disk animation
+
             console.log("loaded all models")
             return "done";
         })
@@ -252,7 +258,7 @@ class CharacterController {
             
         // } else {
             // UPDATE FSM
-            this._state_machine.update(this._character_is_turning, this._input);
+            this._state_machine.update(this._character_is_turning, this._input, this.height_state);
 
             // VELOCITY INITIALIZATION
             const velocity = this._velocity;
@@ -317,20 +323,23 @@ class CharacterController {
             }
 
             let y_velocity = this._velocity.y;
-            // Jumping threshold (can only jump when between -0.07 and 0.07)
-            if (Math.abs(this._velocity.y) <= 0.07) {
+            // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
+            if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.07)) {
                 if (this._input._keys.space) {
-                    y_velocity = 5;
+                    y_velocity += 5;
                 }
                 else{
                     y_velocity = this._target.rigidBody.linvel().y;
                 }
+            } else {
+                y_velocity = this._target.rigidBody.linvel().y;
             }
             
             const v = new THREE.Vector3();
             control_object.getWorldPosition(v);
             this._params.camera.move_pivot(v);
             // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
+
             this._target.update(forward.x, y_velocity, forward.z);
         // }
         

@@ -47,7 +47,7 @@ export function createRigidBodyFixed(mesh, physic) {
   rigidBodyDesc.setTranslation(...position);
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
   // console.log("rigid_body = ",rigidBody)
-  createColliderGeo(rigidBody, physic, mesh)
+  return createColliderGeo(rigidBody, physic, mesh)
 }
 
 export function createRigidBodyDynamic(mesh, physic) {
@@ -67,6 +67,16 @@ export function createRigidBodyEntity(position, physic) {
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
   const collider = createColliderBall(0.25, rigidBody, physic)
+  return { rigidBody, collider }
+}
+
+export function createFoot(position, physic) {
+  const rigidBodyDesc = RigidBodyDesc.kinematicVelocityBased().setAdditionalMass(0);
+  rigidBodyDesc.setTranslation(position.x,position.y,position.z);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+
+  const colliderDesc = ColliderDesc.cuboid(0.001,0.25,0.001).setMass(0);
+  const collider = physic.createCollider(colliderDesc, rigidBody);
   return { rigidBody, collider }
 }
 

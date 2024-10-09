@@ -5,10 +5,18 @@ class State {
 
     enter() {}
     exit() {}
-    update(character_is_turning, input) {
-        if (input._keys.space) {
-            this._parent.set_state('jump');
+    update(character_is_turning, input, height_state) {
+        console.log(height_state);
+
+        // Handle when player is in the air
+        if (height_state == "in air") {
+            this._parent.set_state('falling');
             return;
+        } else if (height_state == "on ground") {
+            // if (input._keys.space) {
+            //     this._parent.set_state('jump');
+            //     return;
+            // }
         }
 
         if (this._requested_movement_update(input)) {
