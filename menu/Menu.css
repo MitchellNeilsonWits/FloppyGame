@@ -79,7 +79,8 @@
   /* Sliders */
   #menu_root input[type="range"] {
     width: 100%;
-    accent-color: var(--blue); /* Neon blue sliders */
+    /* accent-color: var(--blue); Neon blue sliders */
+    accent-color: rgb(125, 212, 168);
   }
   
   /* Horizontal rule styling */
@@ -122,4 +123,6 @@
 }
 
   
-  
+#sensitivity_slider, #fov_slider {
+  -webkit-user-drag: none;
+}

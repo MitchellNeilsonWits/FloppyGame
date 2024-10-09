@@ -29,6 +29,7 @@ export default async function loadAssets(path) {
           };
         }
         if (mesh.name.includes("ground")) {
+          console.log("new ground: ", mesh);
           ground_objects.push(mesh);
         }
         visuals.push(mesh)

@@ -35,6 +35,8 @@ class MenuController {
         sensitivity_slider.min = '0';
         sensitivity_slider.max = '100';
         sensitivity_slider.value = '50';
+        sensitivity_slider.ondrag = 'none';
+
         var sensitivity_value = document.createElement('span');
         sensitivity_value.className='sensitivity_value';
         sensitivity_value.textContent = sensitivity_slider.value;
@@ -55,6 +57,7 @@ class MenuController {
         fov_slider.min = '60';
         fov_slider.max = '120';
         fov_slider.value = '90';
+        fov_slider.ondrag = 'none';
         var fov_value = document.createElement('span');
         fov_value.className='fov_value';
         fov_value.textContent = fov_slider.value;

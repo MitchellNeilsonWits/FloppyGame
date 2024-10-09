@@ -3,7 +3,7 @@ import * as THREE from 'three';
 class ProximityScreenRenderer {
     constructor(character_controller, scene) {
         this.character_controller = character_controller; 
-        this.platformName = "stage_stage5_0"; 
+        this.platformName = "stage_stage5_0_ground"; 
         this.screenName = "screen"; 
         this.scene = scene; 
         this.proximityThreshold = 5; 
