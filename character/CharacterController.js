@@ -320,8 +320,6 @@ class CharacterController {
                 forward.x *= speed;
                 forward.z *= speed;
                 // forward.multiplyScalar(speed);
-
-                
             }
 
             let y_velocity = this._velocity.y;
