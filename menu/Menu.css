@@ -1,12 +1,125 @@
+/* Colors */
+:root {
+    --green: #7dd4a8;
+    --blue: #31c8ff;
+    --dark-gray: #242424;
+    --black: #000;
+    --white:#ffffff;
+  }
+  
+  /* Body Background */
+  body {
+    font-family: sans-serif;
+    background: 
+      radial-gradient(black 3px, transparent 4px),
+      radial-gradient(black 3px, transparent 4px),
+      linear-gradient(rgb(0, 0, 0) 4px, transparent 0),
+      linear-gradient(45deg, transparent 74px, transparent 75px, #242424 75px, #242424 76px, transparent 77px, transparent 109px),
+      linear-gradient(-45deg, transparent 75px, transparent 76px, #242424 76px, #242424 77px, transparent 78px, transparent 109px),
+      rgb(0, 0, 0);
+    background-size: 109px 109px, 109px 109px, 100% 6px, 109px 109px, 109px 109px;
+    background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  }
+  
+  /* Glow Effect Mixin */
+  .glow {
+    filter: drop-shadow(2px 2px 10px var(--green));
+  }
+  
+/* Menu Root */
 #menu_root {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100dvw;
-    height: 100dvh;
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Ensures the div is perfectly centered */
+  
+  width: 40%; /* Only cover part of the screen */
+  height: auto; /* Adjust height to fit content */
+  padding: 20px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  background-color: #374247; /* Solid color background */
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 10px var(--green); /* Glowing green effect */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* Space between buttons */
 }
+
+  
+  /* Menu Elements */
+  #menu_root h1,
+  #menu_root p,
+  #menu_root label {
+    color: var(--green); /* Neon green text */
+  }
+  
+  /* Buttons */
+  #menu_root button {
+    width: 80%;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: var(--black); /* Dark background */
+    color: var(--green); /* Neon green text */
+    border: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px var(--green); /* Glowing effect */
+    transition: all 0.3s ease;
+  }
+  
+  #menu_root button:hover {
+    background-color: var(--green);
+    color: var(--black);
+  }
+  
+  /* Sliders */
+  #menu_root input[type="range"] {
+    width: 100%;
+    accent-color: var(--blue); /* Neon blue sliders */
+  }
+  
+  /* Horizontal rule styling */
+  #menu_root hr {
+    border-color: var(--green); /* Green horizontal lines */
+  }
+  
+  /* Slider Labels */
+  #menu_root .slider-label {
+    font-weight: bold;
+    color: var(--white);
+  }
+
+  /* Animation for menu entrance */
+@keyframes menuSlideIn {
+  0% {
+    transform: translate(-50%, -60%); /* Start above the center */
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%); /* End in the center */
+    opacity: 1;
+  }
+}
+
+/* Apply the animation to #menu_root */
+#menu_root {
+  animation: menuSlideIn 0.5s ease forwards;
+  opacity: 0; /* Initially hidden */
+}
+
+.sensitivity_value{
+  color: #ffffff;
+
+}
+
+.fov_value{
+  color: #ffffff;
+
+}
+
+  
+  
