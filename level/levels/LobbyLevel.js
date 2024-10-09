@@ -69,7 +69,7 @@ class LobbyLevel extends Level {
     // Function to set the components for the scene
     async _set_components(character_controller, scene) {
         // Load the meshes for the lobby
-        const meshes = await loadAssets('assets/lobbyFinal2.glb');
+        const meshes = await loadAssets('assets/tutorialLevel.glb');
 
         this._ground_colliders = [];
 
