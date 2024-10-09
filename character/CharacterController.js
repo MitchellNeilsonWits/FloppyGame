@@ -314,16 +314,24 @@ class CharacterController {
                 forward.x *= speed;
                 forward.z *= speed;
                 // forward.multiplyScalar(speed);
+            }
 
-                
+            let y_velocity = this._velocity.y;
+            // Jumping threshold (can only jump when between -0.07 and 0.07)
+            if (Math.abs(this._velocity.y) <= 0.07) {
+                if (this._input._keys.space) {
+                    y_velocity = 5;
+                }
+                else{
+                    y_velocity = this._target.rigidBody.linvel().y;
+                }
             }
             
             const v = new THREE.Vector3();
             control_object.getWorldPosition(v);
             this._params.camera.move_pivot(v);
             // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
-
-            this._target.update(forward.x, this._target.rigidBody.linvel().y, forward.z);
+            this._target.update(forward.x, y_velocity, forward.z);
         // }
         
         // this._target.update(0, 0, 0);
