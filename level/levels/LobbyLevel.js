@@ -115,6 +115,7 @@ class LobbyLevel extends Level {
         }
 
         // Set lighting
+        // (A) Point Lights
         this._lights = []
         for (const light of meshes.pointLights) {
             const pos = light.position;
@@ -126,6 +127,23 @@ class LobbyLevel extends Level {
             point_light.position.set( pos.x, pos.y, pos.z );
 
             this._lights.push(point_light);
+        }
+        // (B) Spot Lights
+        for (const light of meshes.spotLights) {
+            console.log(light);
+            const pos = light.position;
+            const colour = light.color;
+            const intensity = light.intensity/1000; // adjust lighting for three js
+            const distance = light.distance;
+            const rotation = light.rotation;
+            const angle = light.angle; // angle of spotlight set to be 0.3 :-)
+            const spotlight = new THREE.SpotLight(colour, intensity, distance, angle);
+            // const point_light = new THREE.PointLight( colour, intensity, distance );
+            spotlight.position.set( pos.x, pos.y, pos.z );
+            spotlight.setRotationFromEuler(rotation);
+            console.log(spotlight);
+
+            this._lights.push(spotlight);
         }
 
         this._pushboxes = [];
