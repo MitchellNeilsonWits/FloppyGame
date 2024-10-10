@@ -101,11 +101,11 @@ class Disk extends Object3D {
         // const x = linvel.x;
         // const y = linvel.y;
         // const z = linvel.z;
-        // this.rigidBody.setLinvel({ x, y, z }, true);
+        // this.rigidBody.setLinvel(0,0,0);
 
         // this.rigidBody.addForce({x: 0, y: 0, z: 0})
 
-        // this.rigidBody.setLinvel({ x: 0, y: -1, z: 0 }, true);
+        this.rigidBody.setLinvel({ x: 0, y: -1, z: 0 }, true);
 
     }
 

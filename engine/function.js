@@ -81,16 +81,16 @@ export function createFoot(position, physic) {
 }
 
 function createColliderDisk(physic, rigidBody) {
-  const colliderDesc = ColliderDesc.cuboid(0.4,0.3,0.4).setMass(0);
+  const colliderDesc = ColliderDesc.cuboid(0.4,0.3,0.4).setMass(1).setActiveEvents(ActiveEvents.CONTACT_FORCE_EVENTS).setActiveCollisionTypes(ActiveCollisionTypes.DYNAMIC_DYNAMIC);
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
 export function create_rigid_body_for_disk(mesh, physic) {
   const position = mesh.position;
-  const rigidBodyDesc = RigidBodyDesc.dynamic()
+  const rigidBodyDesc = RigidBodyDesc.dynamic();
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  rigidBody.setAdditionalMass(100);
+  rigidBody.setAdditionalMass(0);
   return rigidBody;
 }
 

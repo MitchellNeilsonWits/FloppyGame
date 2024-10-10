@@ -66,9 +66,10 @@ class LobbyLevel extends Level {
             this._interactable_objects[`${disk_type}_disk`] = {
                 object: disk,
                 type: 'dynamic',
-                name: `${disk_type}_disk`
+                name: `${disk_type}_disk`,
+                power: `${disk_type}`
             }
-            this._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk("Press E to pickup STRENGTH disk", this._interactable_objects[`${disk_type}_disk`].object);
+            this._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk(`Press E to pickup ${disk_type} disk`, this._interactable_objects[`${disk_type}_disk`].object);
 
         }
 

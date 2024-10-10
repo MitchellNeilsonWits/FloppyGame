@@ -4,10 +4,8 @@ import physic from '../engine/physic';
 
 class CharacterInteractionController {
     constructor(controls, input) {
-        // console.log(controls);
         this._controls = controls;
         this._level = controls._level;
-        console.log(this._controls);
         this._target = controls._target; // the player
         this._input = input; // input keys 
         this._raycaster = new THREE.Raycaster();
@@ -33,13 +31,12 @@ class CharacterInteractionController {
 
 
         // initialize a "start interaction" function to not do anything
-        this._start_interaction = () => {console.log("no interaction")};
+        this._start_interaction = () => {};
 
         this._object_being_interacted_with = null;
     }
 
     _show_interact_message(interactable_object) {
-        console.log(interactable_object);
         this._start_interaction = interactable_object.start_interaction;
 
         this.interactMessage.innerHTML = `${interactable_object.interaction_display}`;
@@ -48,7 +45,7 @@ class CharacterInteractionController {
 
     _hide_interact_message() {
 
-        this._start_interaction = () => {console.log("no interaction")};
+        this._start_interaction = () => {};
         const el = document.getElementById('interact_message');
         if (el) {
             document.body.removeChild(el);
@@ -221,16 +218,14 @@ class CharacterInteractionController {
                             this._object_being_interacted_with = this._object_to_interact_with;
                             this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
                             this._use_object = this._object_to_interact_with.interactable_object.use_object;
-                            console.log(this);
-                            console.log(this._level);
+                            
                             this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
                             // this._object_to_interact_with = null;
                             this.can_interact = false;
                             this._hide_interact_message();
                         }
                     } else if (interaction_trigger === 'push') {
-                        console.log("complete push");
-
+                        
                         // Ensure that y values are good enough to work with
                         const object_y = this._object_to_interact_with.object.position.y;
                         const player_y = this._target.position.y;
@@ -259,19 +254,31 @@ class CharacterInteractionController {
                 }
             }
         }
-         
+
+        console.log("according to CIC: ",this._controls._holding_disk);
         if (this._controls._holding_disk) {
-            // If character is holding a disk, handle the dropping and using of the disk
-            // -- cannot interact with other objects if holding an objects already
-            if (this._input._keys.drop) {
-                this._end_interaction(this._controls, this._object_being_interacted_with, this._level);
-                this._object_being_interacted_with = null;
-                this.can_interact = false;
-            } else if (this._input._keys.use) {
-                this._use_object(this._controls, this._object_being_interacted_with, this._level);
-                this._object_being_interacted_with = null;
-                this.can_interact = false;
+
+            if (!this._controls.busy_loading_disk) {    
+                // If character is holding a disk, handle the dropping and using of the disk
+                // -- cannot interact with other objects if holding an objects already
+                // this._object_being_interacted_with = this._controls._holding_disk;
+                if (this._input._keys.drop) {
+                    // if (this._object_being_interacted_with) {
+                        this._end_interaction = this._controls._holding_disk.interactable_object.end_interaction;
+                        this._end_interaction(this._controls, this._controls._holding_disk, this._level);
+                    // }
+                    this._object_being_interacted_with = null;
+                    this.can_interact = false;
+                } else if (this._input._keys.use) {
+                    // if (this._object_being_interacted_with) {
+                        this._use_object = this._controls._holding_disk.interactable_object.use_object;
+                        this._use_object(this._controls, this._controls._holding_disk, this._level);
+                    // }
+                    this._object_being_interacted_with = null;
+                    this.can_interact = false;
+                }
             }
+
         } else {
             // If character is not holding a disk, check to see if we can run interactions for the user
 
@@ -283,11 +290,9 @@ class CharacterInteractionController {
                         // We test the type of interaction to occur:
                         // - touch
                         // - pickup
-                        console.log(interactable_objects[key]);
                         const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
                         if (trigger === "press_e") {
-                            console.log("checking press e interaction")
                             const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;

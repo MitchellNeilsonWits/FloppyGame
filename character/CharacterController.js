@@ -13,6 +13,7 @@ import BasicCharacterControllerProxy from './CharacterControllerProxy';
 import Player from '../engine/player';
 import CharacterInteractionController from './CharacterInteractionController';
 import CharacterHeightController from './CharacterHeightController';
+import CharacterPowerController from './CharacterPowerController';
 
 class CharacterController {
     constructor(params) {
@@ -48,6 +49,7 @@ class CharacterController {
         };
 
         this._holding_disk = null;
+        this.busy_loading_disk = false;
 
         this._level = null;
     }
@@ -85,6 +87,9 @@ class CharacterController {
 
             // Create height controller to handle changes in height of character
             this.height_controller = new CharacterHeightController(this);
+
+            // Create disk controller to handle which disk is loaded
+            this.power_controller = new CharacterPowerController();
 
             // console.log(this._player)
             // this._params.scene.add(this._player);
@@ -145,11 +150,6 @@ class CharacterController {
     async get_children() {
         // return this._target_children;
         return this._target.children;
-    }
-
-    // Change the character's ability
-    change_ability(new_ability) {
-        this._ability = new_ability;
     }
 
     /* Function to determine direction of offset based on key input */
