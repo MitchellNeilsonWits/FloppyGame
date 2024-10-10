@@ -70,7 +70,7 @@ class CharacterController {
             gltf.scene.children[0].position.x = -51.35;
             gltf.scene.children[0].position.y = 2;
             gltf.scene.children[0].position.z = 0.2933;
-            gltf.scene.children[0].setRotationFromEuler( new THREE.Euler(-Math.PI, Math.PI/2, -Math.PI, "XYZ"));
+         // gltf.scene.children[0].setRotationFromEuler( new THREE.Euler(-Math.PI, Math.PI/2, -Math.PI, "XYZ"));
 
             // gltf.scene.
 
