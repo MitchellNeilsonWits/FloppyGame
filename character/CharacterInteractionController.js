@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { get_cartesian_angle_from_rotation } from '../common/Angle';
+import physic from '../engine/physic';
 
 class CharacterInteractionController {
     constructor(controls, input) {
@@ -159,32 +160,49 @@ class CharacterInteractionController {
         // Get the object of the interactable object
         const object = interactable_object.object;
 
-        // Calculate the euclidean distance from the object
-        const distance = this._distance_to_object(object);
+        let touching_object_side = false;
+        physic.contactPair(this._target.collider, object.collider, (manifold, flipped) => {
+            const normal = manifold.normal();
+            const rounded = {
+                x: Math.round(normal.x),
+                y: Math.round(normal.y),
+                z: Math.round(normal.z),
+            }
 
-        const distance_threshold = interactable_object.interactable_object.distance_threshold;
+            if ((Math.abs(rounded.x) === 0 && Math.abs(rounded.y) === 0 & Math.abs(rounded.z) === 1) || (Math.abs(rounded.x) === 1 && Math.abs(rounded.y) === 0 & Math.abs(rounded.z) === 0)) {
+                touching_object_side = true;
+            }
+        });
 
-        // If the distance is within the threshold, we see if the character is facing the object
-        if (distance <= distance_threshold) {
+        // If player is touching the side of the object
+        if (touching_object_side) {
+            // Calculate the euclidean distance from the object
+            const distance = this._distance_to_object(object);
+            
+            const distance_threshold = interactable_object.interactable_object.distance_threshold;
+            
+            // If the distance is within the threshold, we see if the character is facing the object
+            if ((distance <= distance_threshold)) {
 
-            // Find the desired angle
-            const desired_angle = this._desired_angle_to_object(object);
-            const current_angle = this._find_2d_angle();
-            // const current_angle = this._controls._direction_of_offset()
+                // Find the desired angle
+                const desired_angle = this._desired_angle_to_object(object);
+                const current_angle = this._find_2d_angle();
+                // const current_angle = this._controls._direction_of_offset()
 
-            // Check if the current angle is within range of the desired angle
-            const view_range = Math.PI/6;
-            const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
+                // Check if the current angle is within range of the desired angle
+                const view_range = Math.PI/6;
+                const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
 
-            if (in_range) {
-                if (!this.can_interact) {
-                    this.can_interact = true;
-                    this._object_to_interact_with = interactable_object; 
-                    this._end_interaction = interactable_object.interactable_object.end_interaction;
+                if (in_range) {
+                    if (!this.can_interact) {
+                        this.can_interact = true;
+                        this._object_to_interact_with = interactable_object; 
+                        this._end_interaction = interactable_object.interactable_object.end_interaction;
 
-                    this._show_interact_message(interactable_object.interactable_object);
+                        this._show_interact_message(interactable_object.interactable_object);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
     }
@@ -204,6 +222,7 @@ class CharacterInteractionController {
                             this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
                             this._use_object = this._object_to_interact_with.interactable_object.use_object;
                             console.log(this);
+                            console.log(this._level);
                             this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
                             // this._object_to_interact_with = null;
                             this.can_interact = false;
@@ -211,14 +230,25 @@ class CharacterInteractionController {
                         }
                     } else if (interaction_trigger === 'push') {
                         console.log("complete push");
-                        const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
-                        const current_angle = this._find_2d_angle();
-                        const view_range = Math.PI/8;
 
-                        const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
-                        if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
-                            if (correct_direction) {
-                                this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                        // Ensure that y values are good enough to work with
+                        const object_y = this._object_to_interact_with.object.position.y;
+                        const player_y = this._target.position.y;
+                        const vertical_distance = Math.abs(player_y - object_y);
+                        const vertical_distance_threshold = 0.35;
+
+                        if (vertical_distance < vertical_distance_threshold) {
+                            const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
+                            const current_angle = this._find_2d_angle();
+                            const view_range = Math.PI/8;
+
+                            const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
+                            if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
+                                if (correct_direction) {
+                                    this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                                } else {
+                                    this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                                }
                             } else {
                                 this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                             }
@@ -253,7 +283,7 @@ class CharacterInteractionController {
                         // We test the type of interaction to occur:
                         // - touch
                         // - pickup
-                        
+                        console.log(interactable_objects[key]);
                         const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
                         if (trigger === "press_e") {

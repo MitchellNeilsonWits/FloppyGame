@@ -3,6 +3,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import { Object3D } from 'three';
 import { createRigidBodyDynamic, createRigidBodyDynamicDisk, createRigidBodyEntity } from '../engine/function';
 import physic from '../engine/physic';
+import colors from './disk_colors';
 // import physic from '../engine/physic';
 
 class Disk extends Object3D {
@@ -16,8 +17,19 @@ class Disk extends Object3D {
     async set_disk(disk_type, physic) {
         const gltf = await (new GLTFLoader()).loadAsync("../models/disk_org_anim.glb")
         .then((gltf) => {
+            // Get the colour of the disk ring
+            const disk_color = colors[disk_type];
+            this._color = new THREE.Color(disk_color.r, disk_color.g, disk_color.b);
+
+
             console.log(gltf.scene.children);
             this._disk_mesh = gltf.scene.children[0];
+
+            // Extract the skinned material so we can set the colour directly
+            this._colour_ring = this._disk_mesh.children[0].children[1];
+            this._colour_ring.material.emissive = this._color;
+            
+
             console.log(this._disk_mesh);
             this._disk_mesh.scale.setScalar(0.2);
             this._disk_mesh.position.y = 8;
@@ -51,7 +63,7 @@ class Disk extends Object3D {
             loader.setPath('../models/');
             loader.load('disk_org_anim.glb', (a) => {_on_load('floating', a);}); // idle animation
 
-            this._light = new THREE.PointLight(0x0000ff, 5, 0);
+            this._light = new THREE.PointLight(this._color, 5, 0);
             this._light.translateY(-0.1);
             this.add(this._light);
 

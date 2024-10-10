@@ -6,7 +6,9 @@ import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
 import { create_collider_for_disk } from "../engine/function";
 
 class InteractableDisk extends interactableObject {
-    constructor(interaction_display, object, distance_threshold, interaction_trigger) {
+    constructor(interaction_display, object) {
+        const distance_threshold = 1.5;
+        const interaction_trigger = 'press_e';
         super(interaction_display, object, distance_threshold, interaction_trigger);
     }
     
@@ -46,11 +48,12 @@ class InteractableDisk extends interactableObject {
     }
     
     start_interaction(controls, object_interacted_with, level) {
-        console.log(object_interacted_with);
+        console.log(object_interacted_with.object.collider);
         
         // object_interacted_with.object.collider.setActiveCollisionTypes(ActiveCollisionTypes.FIXED_FIXED);
         physic.removeCollider(object_interacted_with.object.collider);
         // physic.removeRigidBody(object_interacted_with.object.rigidBody);
+        console.log(level);
         level.remove(object_interacted_with.object);
 
         controls._holding_disk = object_interacted_with;

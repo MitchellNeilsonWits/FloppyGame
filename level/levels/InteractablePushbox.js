@@ -32,13 +32,11 @@ class InteractablePushbox extends interactableObject {
 
         object_interacted_with.object.move_pushbox(velocity.x,velocity.y,velocity.z);
 
-        const prev_action = controls._state_machine._proxy._animations[controls._state_machine._current_state.get_name()].action; 
         const action = controls._state_machine._proxy._animations["pushing"].action;
         action.time = 0.0;
         action.enabled = true;
         action.setEffectiveTimeScale(1.0);
         action.setEffectiveWeight(200.0);
-        action.crossFadeFrom(prev_action, 0.4, true);
 
         this._action = action;
         
