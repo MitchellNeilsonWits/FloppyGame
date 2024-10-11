@@ -2,10 +2,13 @@ import * as THREE from 'three';
 import colors from "../disks/disk_colors";
 
 class CharacterPowerController {
-    constructor(target) {
+    constructor(controls) {
+        this.controls = controls;
         this.loaded_disk = null;
         this.power = "none";
-        this.target = target;
+        this.target = controls._target;
+        this.change_scale_to = null;
+        this.change_scale_increments = null;
     }
 
     set_loaded_disk(disk) {
@@ -23,6 +26,16 @@ class CharacterPowerController {
         
         // this.disk_meshes.disk_1.material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
         // this.disk_meshes.disk_1.material.emissiveIntensity = 20;
+
+        if (this.power === "shrink") {
+            // this.target.scale.setScalar(0.4);
+            this.change_scale_increments = -0.1;
+            this.change_scale_to = 0.4;
+        } else {
+            // this.target.scale.setScalar(1);
+            this.change_scale_increments = 0.1;
+            this.change_scale_to = 1;
+        }
     }
 
     get_loaded_disk() {
@@ -32,6 +45,22 @@ class CharacterPowerController {
     clear_loaded_disk() {
         this.loaded_disk = null;
         this.power = "none";
+        this.controls.skin_controller.change_skin("default");
+        this.change_scale_increments = 0.1;
+        this.change_scale_to = 1;
+    }
+
+    update() {
+        console.log(this.target.scale);
+        if (this.change_scale_to) {
+            const curr_scale = this.target.scale.x;
+            if (Math.round(curr_scale*10)/10 != this.change_scale_to) {
+                const update_val = curr_scale + this.change_scale_increments;
+                this.target.scale.setScalar(update_val);
+            } else {
+                this.change_scale_to = null;
+            }
+        }
     }
 }
 

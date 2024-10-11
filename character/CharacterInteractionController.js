@@ -36,10 +36,9 @@ class CharacterInteractionController {
         this._object_being_interacted_with = null;
     }
 
-    _show_interact_message(interactable_object) {
-        this._start_interaction = interactable_object.start_interaction;
+    _show_interact_message(message) {
 
-        this.interactMessage.innerHTML = `${interactable_object.interaction_display}`;
+        this.interactMessage.innerHTML = `${message}`;
         document.body.appendChild(this.interactMessage);  
     }
 
@@ -146,7 +145,10 @@ class CharacterInteractionController {
                 if (!this.can_interact) {
                     this.can_interact = true;
                     this._object_to_interact_with = interactable_object; 
-                    this._show_interact_message(interactable_object.interactable_object);
+                    this._start_interaction = interactable_object.interactable_object.start_interaction;
+
+                    
+                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
                 }
                 return true;
             }
@@ -196,7 +198,12 @@ class CharacterInteractionController {
                         this._object_to_interact_with = interactable_object; 
                         this._end_interaction = interactable_object.interactable_object.end_interaction;
 
-                        this._show_interact_message(interactable_object.interactable_object);
+                        if (this._controls.power_controller.power === "strength") {
+                            this._start_interaction = interactable_object.interactable_object.start_interaction;
+                            this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                        } else {
+                            this._show_interact_message("You cannot push objects without the strength floppy disk");
+                        }
                     }
                     return true;
                 }
@@ -225,37 +232,49 @@ class CharacterInteractionController {
                             this._hide_interact_message();
                         }
                     } else if (interaction_trigger === 'push') {
+                        if (this._controls.power_controller.power === "strength") {
                         
-                        // Ensure that y values are good enough to work with
-                        const object_y = this._object_to_interact_with.object.position.y;
-                        const player_y = this._target.position.y;
-                        const vertical_distance = Math.abs(player_y - object_y);
-                        const vertical_distance_threshold = 0.35;
+                            // Ensure that y values are good enough to work with
+                            const object_y = this._object_to_interact_with.object.position.y;
+                            const player_y = this._target.position.y;
+                            const vertical_distance = Math.abs(player_y - object_y);
+                            const vertical_distance_threshold = 0.35;
 
-                        if (vertical_distance < vertical_distance_threshold) {
-                            const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
-                            const current_angle = this._find_2d_angle();
-                            const view_range = Math.PI/8;
+                            if (vertical_distance < vertical_distance_threshold) {
+                                const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
+                                const current_angle = this._find_2d_angle();
+                                const view_range = Math.PI/8;
 
-                            const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
-                            if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
-                                if (correct_direction) {
-                                    this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                                const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
+                                if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
+                                    if (correct_direction) {
+                                        this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                                    } else {
+                                        this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                                    }
                                 } else {
                                     this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                                 }
                             } else {
                                 this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                             }
-                        } else {
-                            this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                         }
                     }
                 }
             }
         }
 
-        console.log("according to CIC: ",this._controls._holding_disk);
+        if (this._controls.power_controller.loaded_disk) {
+            if (this._input._keys.unload_disk) {
+                const loaded_disk = this._controls.power_controller.loaded_disk;
+                
+                loaded_disk.interactable_object.end_interaction(this._controls, loaded_disk, this._level);
+
+                this._controls.power_controller.loaded_disk = null;
+                this._controls.power_controller.clear_loaded_disk();
+            }
+        }
+
         if (this._controls._holding_disk) {
 
             if (!this._controls.busy_loading_disk) {    
@@ -266,6 +285,8 @@ class CharacterInteractionController {
                     // if (this._object_being_interacted_with) {
                         this._end_interaction = this._controls._holding_disk.interactable_object.end_interaction;
                         this._end_interaction(this._controls, this._controls._holding_disk, this._level);
+                        this._controls._holding_disk = null;
+
                     // }
                     this._object_being_interacted_with = null;
                     this.can_interact = false;
@@ -302,6 +323,7 @@ class CharacterInteractionController {
                             if (interaction_started) {
                                 return;
                             };
+                            
                         }
                         
                     }
