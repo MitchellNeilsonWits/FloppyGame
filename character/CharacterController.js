@@ -60,7 +60,7 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
-        gltfLoader.load('floppy_with_reader_remastered_V3.glb', (gltf) => {  
+        gltfLoader.load('floppy_with_reader_remastered_optimized.glb', (gltf) => {  
             
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
@@ -68,6 +68,26 @@ class CharacterController {
             gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
             gltf.scene.children[0].position.y = 5;
             gltf.scene.children[0].position.z = 25;
+
+
+            // const texture_loader = new THREE.TextureLoader();
+            // const power_texture = texture_loader.load('./skins/power_baseColor.jpg');
+            // power_texture.wrapS = THREE.RepeatWrapping;
+            // power_texture.wrapT = THREE.RepeatWrapping;
+            // power_texture.repeat.set( 4, 4 );
+            // power_texture.needsUpdate = true;
+            // power_texture.imag
+            // gltf.scene.children[0].children[0].children[0].material.image = './skins/power_baseColor.jpg';
+            const src = "skins/power_baseColor.jpg";
+            
+            // gltf.scene.children[0].children[0].children[0].material.map = THREE.ImageUtils. .loadTexture( src );
+            console.log(gltf.scene.children[0].children[0].children[0]);
+
+            this._disks = {
+                disk_0: gltf.scene.children[0].children[0].children[2],
+                disk_1: gltf.scene.children[0].children[0].children[1],
+            }
+        
             // --- TUTORIAL --- 
             // gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
             // gltf.scene.children[0].position.x = -51.35;
@@ -81,6 +101,15 @@ class CharacterController {
             // this._target = gltf.scene;
             
             this._target = new Player(gltf.scene.children[0], this._params.physic);
+            new THREE.TextureLoader().load("skins/power_baseColor.jpg", texture => {
+                console.log(this._target);
+                this._target.children[0].children[0].children[0].material.map = texture;
+                this._target.children[0].children[0].children[0].needsUpdate = true;
+            }, xhr => {
+                console.log((xhr.loaded/xhr.total)*100 + "% loaded");
+            }, err => {
+                console.log(err)
+            })
 
             // Create interaction controller to handle interactions with objects
             this._interaction_controller = new CharacterInteractionController(this, this._input);
@@ -89,7 +118,7 @@ class CharacterController {
             this.height_controller = new CharacterHeightController(this);
 
             // Create disk controller to handle which disk is loaded
-            this.power_controller = new CharacterPowerController();
+            this.power_controller = new CharacterPowerController(this._target);
 
             // console.log(this._player)
             // this._params.scene.add(this._player);
@@ -127,6 +156,7 @@ class CharacterController {
             loader.load('floppy_with_reader_running_turning_right.glb', (a) => {_on_load('run_turning_right', a);}); // turn right animation
             loader.load('floppy_with_reader_pick_up_v2.glb', (a) => {_on_load('pick_up', a);}); // load the disk animation
             loader.load('floppy_with_reader_load_disk_v4.glb', (a) => {_on_load('load_disk', a);}); // load the disk animation
+            loader.load('floppy_with_reader_swap_disks.glb', (a) => {_on_load('swap_disks', a);}); // load the disk animation
             loader.load('floppy_with_reader_holding.glb', (a) => {_on_load('holding_disk', a);}); // load the disk animation
             loader.load('floppy_with_reader_jump.glb', (a) => {_on_load('jump', a);}); // load the disk animation
             loader.load('floppy_with_reader_pushing.glb', (a) => {_on_load('pushing', a);}); // load the disk animation

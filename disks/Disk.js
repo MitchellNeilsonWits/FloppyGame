@@ -15,7 +15,7 @@ class Disk extends Object3D {
     }
 
     async set_disk(disk_type, physic) {
-        const gltf = await (new GLTFLoader()).loadAsync("../models/disk_org_anim.glb")
+        const gltf = await (new GLTFLoader()).loadAsync("../models/disk_org_anim_remastered.glb")
         .then((gltf) => {
             // Get the colour of the disk ring
             const disk_color = colors[disk_type];

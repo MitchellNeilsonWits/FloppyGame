@@ -36,14 +36,7 @@ class InteractableDisk extends interactableObject {
             this._disk_action.stop();
         }
 
-        const action = controls._state_machine._proxy._animations["load_disk"].action;
-        action.time = 0.0;
-        action.enabled = true;
-        action.setEffectiveWeight(2);
-        action.setLoop(THREE.LoopOnce, 1);
-        action.clampWhenFinished = true;
-        action.setEffectiveTimeScale(1.0);
-        action.setEffectiveWeight(1.0);
+        
         // action.crossFadeFrom(fade_from, 0.1, true);
         
         const currently_loaded_disk = controls.power_controller.get_loaded_disk();
@@ -53,16 +46,53 @@ class InteractableDisk extends interactableObject {
         controls._holding_disk = currently_loaded_disk;//object_to_use; // Swap the old disk to be the new one
         // }
 
-        controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
-        this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
-            console.log("currently loading:",object_to_use);
-            e.action.stop(); // stop the animation
-            if (currently_loaded_disk) {
-                currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
-            }
-            controls.busy_loading_disk = false;
+        
 
-        })
+        if (!currently_loaded_disk) {
+            const action = controls._state_machine._proxy._animations["load_disk"].action;
+            action.time = 0.0;
+            action.enabled = true;
+            action.setEffectiveWeight(2);
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+            action.setEffectiveTimeScale(1.0);
+            action.setEffectiveWeight(1.0);
+            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+                controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
+                console.log("currently loading:",object_to_use);
+                e.action.stop(); // stop the animation
+                if (currently_loaded_disk) {
+                    currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
+                }
+                controls.busy_loading_disk = false;
+
+            })
+            this._disk_action = action;        
+            this._disk_action.play();
+        } else {
+            const action = controls._state_machine._proxy._animations["swap_disks"].action;
+            action.time = 0.0;
+            action.enabled = true;
+            action.setEffectiveWeight(2);
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+            action.setEffectiveTimeScale(1.0);
+            action.setEffectiveWeight(200.0);
+            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+                controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
+                console.log("currently loading:",object_to_use);
+                e.action.stop(); // stop the animation
+                if (currently_loaded_disk) {
+                    currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
+                }
+                controls.busy_loading_disk = false;
+
+            })
+            this._disk_action = action;        
+            this._disk_action.play();
+        }
+
+        
             
         
         
@@ -80,8 +110,7 @@ class InteractableDisk extends interactableObject {
         //     controls._mixer.removeEventListener('finished',this); // remove the listener
         // })
 
-        this._disk_action = action;        
-        this._disk_action.play();
+        
 
         // controls._holding_disk = null;
     }
@@ -133,6 +162,11 @@ class InteractableDisk extends interactableObject {
         // target._halt_character.time_to_completion =  time_to_completion;
 
         controls._holding_disk = object_interacted_with;
+
+        console.log(object_interacted_with)
+        const disk_color = object_interacted_with.object._color; 
+        controls._target.children[0].children[0].children[2].material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
+        controls._target.children[0].children[0].children[2].material.emissiveIntensity = 0.15;
 
     }
 
