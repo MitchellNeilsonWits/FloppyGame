@@ -116,7 +116,10 @@ class MenuController {
     hide_menu(pointer_lock_target) {
         if (pointer_lock_target) {
             pointer_lock_target.requestPointerLock().then(() => {
-                document.getElementsByTagName('body')[0].removeChild(document.getElementById('menu_root'));
+                const menu_item = document.getElementById('menu_root');
+                if (menu_item){
+                    document.getElementsByTagName('body')[0].removeChild(menu_item);
+                }
             });
         }
     }

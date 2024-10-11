@@ -6,54 +6,129 @@ import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
 import { create_collider_for_disk } from "../engine/function";
 
 class InteractableDisk extends interactableObject {
-    constructor(interaction_display, object, distance_threshold, interaction_trigger) {
+    constructor(interaction_display, object) {
+        const distance_threshold = 1.5;
+        const interaction_trigger = 'press_e';
         super(interaction_display, object, distance_threshold, interaction_trigger);
+        this.start_interaction = this.start_interaction_static.bind(this);
+        this.end_interaction = this.end_interaction_static.bind(this);
+        this.use_object = this.use_object_static.bind(this);
+
+    }
+
+    _addOneTimeEventListener(element, event, callback) {
+        // const wrapper = e => {
+        //     try {callback(e)} finally {
+        //         element.removeEventListener(event, wrapper);
+        //     };
+        // }
+        let handler = (e) => {
+            callback(e);
+            element.removeEventListener(event, handler);
+        }
+        element.addEventListener(event, handler);
     }
     
-    use_object(controls, object_to_use, level) {
-        console.log("using object");
-        const prev_action = this._action;
-        this._action.stop();
+    use_object_static(controls, object_to_use, level) {
+        controls.busy_loading_disk = true;
+        console.log(this);
+        if (this._disk_action) {
+            this._disk_action.stop();
+        }
 
-        const fade_from = controls._state_machine._proxy._animations["holding_disk"].action;
-        const action = controls._state_machine._proxy._animations["load_disk"].action;
-        action.time = 0.0;
-        action.enabled = true;
-        action.setEffectiveWeight(2);
-        action.setLoop(THREE.LoopOnce, 1);
-        action.clampWhenFinished = true;
-        action.setEffectiveTimeScale(1.0);
-        action.setEffectiveWeight(1.0);
+        
         // action.crossFadeFrom(fade_from, 0.1, true);
         
-        // See if animation is done
-        controls._mixer.addEventListener('finished', (e) => {
-            const fade_to = controls._state_machine._proxy._animations[controls._state_machine._current_state.get_name()].action;
-            controls.change_ability('sample'); // set the new ability
-            // e.action.crossFadeTo(fade_to, 1, true); // fade out the animation
-            // stop the action after the fade out
-            // setTimeout(() => {
+        const currently_loaded_disk = controls.power_controller.get_loaded_disk();
+        console.log("after check, the currently loaded disk is",currently_loaded_disk);
+        // if (currently_loaded_disk) {
+            // currently_loaded_disk.interactable_object.end_interaction(controls, currently_loaded_disk, level);
+        controls._holding_disk = currently_loaded_disk;//object_to_use; // Swap the old disk to be the new one
+        // }
+
+        
+
+        if (!currently_loaded_disk) {
+            const action = controls._state_machine._proxy._animations["load_disk"].action;
+            action.time = 0.0;
+            action.enabled = true;
+            action.setEffectiveWeight(2);
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+            action.setEffectiveTimeScale(1.0);
+            action.setEffectiveWeight(1.0);
+            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+                controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
+                console.log("currently loading:",object_to_use);
+                controls.skin_controller.change_skin(object_to_use.power);
                 e.action.stop(); // stop the animation
-            // }, 0.5)
-            controls._mixer.removeEventListener('finished',this); // remove the listener
-        })
+                if (currently_loaded_disk) {
+                    currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
+                }
+                controls.busy_loading_disk = false;
 
-        this._action = action;        
-        this._action.play();
-        console.log(this._action);
+            })
+            this._disk_action = action;        
+            this._disk_action.play();
+        } else {
+            const action = controls._state_machine._proxy._animations["swap_disks"].action;
+            action.time = 0.0;
+            action.enabled = true;
+            action.setEffectiveWeight(2);
+            action.setLoop(THREE.LoopOnce, 1);
+            action.clampWhenFinished = true;
+            action.setEffectiveTimeScale(1.0);
+            action.setEffectiveWeight(200.0);
+            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+                controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
+                console.log("currently loading:",object_to_use);
+                controls.skin_controller.change_skin(object_to_use.power);
+                e.action.stop(); // stop the animation
+                if (currently_loaded_disk) {
+                    currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
+                }
+                controls.busy_loading_disk = false;
 
-        controls._holding_disk = null;
+            })
+            this._disk_action = action;        
+            this._disk_action.play();
+        }
+
+        
+            
+        
+        
+        
+        // See if animation is done
+        // controls._mixer.addEventListener('finished', (e) => {
+
+            
+        //     console.log("currently loading:",object_to_use);
+        //     controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
+        //     e.action.stop(); // stop the animation
+        //     if (currently_loaded_disk) {
+        //         currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
+        //     }
+        //     controls._mixer.removeEventListener('finished',this); // remove the listener
+        // })
+
+        
+
+        // controls._holding_disk = null;
     }
     
-    start_interaction(controls, object_interacted_with, level) {
-        console.log(object_interacted_with);
+    start_interaction_static(controls, object_interacted_with, level) {
+        // console.log(object_interacted_with.object.collider);
+        console.log("starting interaction, with this=",this);
+        if (this._disk_action) {
+            this._disk_action.stop();
+        }
         
         // object_interacted_with.object.collider.setActiveCollisionTypes(ActiveCollisionTypes.FIXED_FIXED);
         physic.removeCollider(object_interacted_with.object.collider);
         // physic.removeRigidBody(object_interacted_with.object.rigidBody);
         level.remove(object_interacted_with.object);
 
-        controls._holding_disk = object_interacted_with;
 
         // const prev_action = controls._state_machine._proxy._animations[controls._state_machine._current_state.get_name()].action; 
         const action = controls._state_machine._proxy._animations["holding_disk"].action;
@@ -64,7 +139,7 @@ class InteractableDisk extends interactableObject {
         action.setEffectiveWeight(200.0);
         // action.crossFadeFrom(prev_action, 0.4, true);
 
-        this._action = action;
+        this._disk_action = action;
 
         // Play the animation one time
         // target._state_machine._proxy._animations[target._state_machine._current_state.get_name()].action.stop();
@@ -79,16 +154,28 @@ class InteractableDisk extends interactableObject {
 
 
         
-        this._action.play();
+        this._disk_action.play();
 
 
 
         // const time_to_completion = target._state_machine._proxy._animations["load_disk"].action.getClip().duration;
         
         // target._halt_character.time_to_completion =  time_to_completion;
+
+        controls._holding_disk = object_interacted_with;
+
+        console.log(object_interacted_with)
+        const disk_color = object_interacted_with.object._color; 
+        controls._target.children[0].children[0].children[2].material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
+        controls._target.children[0].children[0].children[2].material.emissiveIntensity = 0.15;
+
     }
 
-    end_interaction(controls, object_to_drop, level) {
+    end_interaction_static(controls, object_to_drop, level) {
+        if (this._disk_action) {
+            this._disk_action.stop();
+        }
+        
         console.log("drop disk:",object_to_drop);
         
         // change position of object to drop to position of character
@@ -117,8 +204,7 @@ class InteractableDisk extends interactableObject {
         // finally, add back into the level
         level.add(object_to_drop.object);
         
-        controls._holding_disk = null;
-        this._action.stop();
+        
     }
 }
 

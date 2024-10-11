@@ -27,15 +27,6 @@ class GameController {
     constructor() {
         this._init();
         this._playing_game = false;
-        this.bound_handle_press_escape = this.handle_press_escape.bind(this);
-    }
-
-    handle_press_escape(e) {
-        console.log(e);
-        if (e.key == "Escape") {
-            console.log("handle!");
-        }
-        this.play_game();
     }
 
     // Play game: sets the mouse listener, sets playing game to true, and hides the pause menu
@@ -50,7 +41,6 @@ class GameController {
         this._mouse_listener.remove_listener();
         this._playing_game = false;
         this._menu.show_menu();
-        document.addEventListener('keydown', this.handle_press_escape)
     }
 
     _setup_first_pointer_lock() {

@@ -35,6 +35,7 @@ class LobbyLevel extends Level {
             this._dynamic_objects.push(new_pushbox);
 
             this._interactable_objects['pushbox_A'] = {
+                name: 'pushbox_A',
                 object: new_pushbox,
                 type: 'dynamic'
             };
@@ -50,26 +51,35 @@ class LobbyLevel extends Level {
     }
 
     async _create_disks() {
-        const sample_disk = new Disk();
-        await sample_disk.set_disk('', physic);
-        this._disks = {
-            sample_disk: sample_disk
-        };
-        this._level.add(sample_disk);
-        this._dynamic_objects.push(sample_disk);
 
-        this._interactable_objects['sample_disk'] = {
-            object: sample_disk,
-            type: 'dynamic'
+        const disk_types = ['strength', 'flight', 'shrink'];
+        this._disks = {};
+
+        for (const disk_type of disk_types) {
+            const disk = new Disk();
+            await disk.set_disk(disk_type, physic);
+            this._disks[`${disk_type}_disk`] = disk;
+
+            this._level.add(disk);
+            this._dynamic_objects.push(disk);
+
+            this._interactable_objects[`${disk_type}_disk`] = {
+                object: disk,
+                type: 'dynamic',
+                name: `${disk_type}_disk`,
+                power: `${disk_type}`
+            }
+            this._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk(`Press E to pickup ${disk_type} disk`, this._interactable_objects[`${disk_type}_disk`].object);
+
         }
-        this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5, "press_e");
 
+        
     }
 
     // Function to set the components for the scene
     async _set_components(character_controller, scene) {
         // Load the meshes for the lobby
-        const meshes = await loadAssets('assets/tutorialLevel.glb');
+        const meshes = await loadAssets('assets/lobbyFinal2.glb');
 
         this._ground_colliders = [];
 
@@ -115,12 +125,12 @@ class LobbyLevel extends Level {
             this._level.add(object);
 
             // Put in interactable objects if needed
-            if (meshes.interactable[mesh.name]) {
-                this._interactable_objects[mesh.name] = {
-                    object: object,
-                    type: "dynamic"
-                }
-            }
+            // if (meshes.interactable[mesh.name]) {
+            //     this._interactable_objects[mesh.name] = {
+            //         object: object,
+            //         type: "dynamic"
+            //     }
+            // }
         }
 
         // Set lighting

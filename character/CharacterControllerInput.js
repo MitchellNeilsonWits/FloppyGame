@@ -13,7 +13,9 @@ class CharacterControllerInput {
             shift: false,
             drop: false,
             use: false,
-            interact: false
+            interact: false,
+            unload_disk: false,
+            crouch: false
         };
 
         document.addEventListener('keydown', (e) => this._on_key_down(e), false);
@@ -58,6 +60,15 @@ class CharacterControllerInput {
             case 81: // Q
                 this._keys.use = true;
                 break;
+
+            case 90: // Z
+                this._keys.unload_disk = true;
+                break;
+
+            case 67: // C
+                this._keys.crouch = true;
+                break;
+
         }
     }
 
@@ -97,6 +108,14 @@ class CharacterControllerInput {
 
             case 81: // Q
                 this._keys.use = false;
+                break;
+            
+            case 90: // Z
+                this._keys.unload_disk = false;
+                break;
+
+            case 67: // C
+                this._keys.crouch = false;
                 break;
         }
     }
