@@ -27,6 +27,12 @@ class CharacterPowerController {
         // this.disk_meshes.disk_1.material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
         // this.disk_meshes.disk_1.material.emissiveIntensity = 20;
 
+        if (this.power === "flight") {
+            this.target.rigidBody.setGravityScale(0);
+        } else {
+            this.target.rigidBody.setGravityScale(1);
+        }
+
         if (this.power === "shrink") {
             // this.target.scale.setScalar(0.4);
             this.change_scale_increments = -0.1;
@@ -48,10 +54,11 @@ class CharacterPowerController {
         this.controls.skin_controller.change_skin("default");
         this.change_scale_increments = 0.1;
         this.change_scale_to = 1;
+        this.target.rigidBody.setGravityScale(1);
     }
 
     update() {
-        console.log(this.target.scale);
+        // Update the scale of the player as needed
         if (this.change_scale_to) {
             const curr_scale = this.target.scale.x;
             if (Math.round(curr_scale*10)/10 != this.change_scale_to) {

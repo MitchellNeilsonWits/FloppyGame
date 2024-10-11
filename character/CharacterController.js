@@ -156,6 +156,9 @@ class CharacterController {
             loader.load('floppy_with_reader_jump.glb', (a) => {_on_load('jump', a);}); // load the disk animation
             loader.load('floppy_with_reader_pushing.glb', (a) => {_on_load('pushing', a);}); // load the disk animation
             loader.load('floppy_with_reader_falling_v2.glb', (a) => {_on_load('falling', a);}); // load the disk animation
+            loader.load('floppy_with_reader_flying_idle.glb', (a) => {_on_load('flying_idle', a);}); // load the disk animation
+            loader.load('floppy_with_reader_flying_forward.glb', (a) => {_on_load('flying_forward', a);}); // load the disk animation
+            loader.load('floppy_with_reader_flying_forward_fast.glb', (a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
 
             console.log("loaded all models")
             return "done";
@@ -267,7 +270,7 @@ class CharacterController {
     update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y) {
     
         // UPDATE FSM
-        this._state_machine.update(this._character_is_turning, this._input, this.height_state);
+        this._state_machine.update(this._character_is_turning, this._input, this.height_state, "none");
 
         // VELOCITY INITIALIZATION
         const velocity = this._velocity;
@@ -362,7 +365,7 @@ class CharacterController {
 
     update_strength(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         // UPDATE FSM
-        this._state_machine.update(this._character_is_turning, this._input, this.height_state);
+        this._state_machine.update(this._character_is_turning, this._input, this.height_state, "strength");
 
         // VELOCITY INITIALIZATION
         const velocity = this._velocity;
@@ -456,12 +459,105 @@ class CharacterController {
     }
 
     update_flight(time_in_seconds, mouse_movement_x, mouse_movement_y) {
+        // UPDATE FSM
+        this._state_machine.update(this._character_is_turning, this._input, this.height_state, "flight");
 
+        // VELOCITY INITIALIZATION
+        const velocity = this._velocity;
+        velocity.x = this._target.rigidBody.linvel().x;
+        velocity.y = this._target.rigidBody.linvel().y;
+        velocity.z = this._target.rigidBody.linvel().z;
+        
+        const frame_decceleration = new THREE.Vector3(
+            velocity.x * this._decceleration.x,
+            velocity.y * this._decceleration.y,
+            velocity.z * this._decceleration.z
+        );
+
+        // DECCELERATION CALCULATIONS
+        frame_decceleration.z = Math.sign(frame_decceleration.z) * Math.min( Math.abs(frame_decceleration.z), Math.abs(velocity.z));
+        velocity.add(frame_decceleration);
+
+        // GET CONTROL OBJECT AS THE CURRENT TARGET
+        const control_object = this._target;
+
+        // ROTATION ANGLE INFORMATION
+        const walk_direction = new THREE.Vector3();
+        const rotate_angle = new THREE.Vector3(0,1,0);
+        const rotate_quaternion = new THREE.Quaternion();
+
+
+        // ACCELERATION INITIALIZATION
+        const acc = this._acceleration.clone();
+        var acceleration = acc.z;
+
+        if (this._input._keys.shift) {
+            acceleration *= 3;
+        }
+        
+        var forward = new THREE.Vector3(velocity.x, velocity.y, velocity.z);
+
+        // UPDATES BASED ON DIRECTIONAL INPUT
+        if (this._input._keys.forward || this._input._keys.backward || this._input._keys.left || this._input._keys.right) {
+
+            const speed = 3.0*acceleration;
+
+            // CAMERA POSITION CONSIDERATIONS
+            const camera_info = this._params.camera.get_camera_information();
+            const angle_y_camera_direction = camera_info.yaw_y;
+
+            // ROTATION APPLICATION
+            var direction_of_offset = this._direction_of_offset();
+            rotate_quaternion.setFromAxisAngle(rotate_angle, angle_y_camera_direction + direction_of_offset);
+            control_object.quaternion.rotateTowards(rotate_quaternion, 0.1);
+
+            // UPDATE TURNING INFORMATION OF CHARACTER
+            this._character_is_turning = this._is_turning(control_object.quaternion, rotate_quaternion, mouse_movement_x);
+
+            // MOVE THE MODEL
+            forward = new THREE.Vector3(0, 0, 1);
+            forward.applyQuaternion(control_object.quaternion);
+            forward.normalize();
+
+            forward.x *= speed;
+            forward.z *= speed;
+            // forward.multiplyScalar(speed);
+        }
+
+        let y_velocity = this._velocity.y;
+        // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
+        // if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.07)) {
+            if (this._input._keys.space) {
+                y_velocity = 4;
+            } else if (this._input._keys.crouch) {
+                y_velocity = -4;
+            } else {
+                y_velocity = 0;
+                // y_velocity = this._target.rigidBody.linvel().y;
+            }
+        // } else {
+            // y_velocity = this._target.rigidBody.linvel().y;
+        // }
+        
+        const v = new THREE.Vector3();
+        control_object.getWorldPosition(v);
+        this._params.camera.move_pivot(v);
+        // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
+
+        this._target.update(forward.x, y_velocity, forward.z);
+
+        // UPDATE MIXER (ANIMATION) FOR CHARACTER
+        if (this._mixer) {
+            this._mixer.update(time_in_seconds);
+        }
+
+        // this._can_interact = this._interaction_controller.update();
+        // console.log(this._can_interact)
     }
 
     update_shrink(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         // UPDATE FSM
-        this._state_machine.update(this._character_is_turning, this._input, this.height_state);
+        this._state_machine.update(this._character_is_turning, this._input, this.height_state, "shrink");
 
         // VELOCITY INITIALIZATION
         const velocity = this._velocity;
