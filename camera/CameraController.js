@@ -63,6 +63,10 @@ class CameraController {
     move_pivot(position) {
         this._pivot.position.lerp(position, 0.5);
     }
+
+    set_rotation(rotation) {
+        this._yaw.rotation.y = rotation;
+    }
     
     update(mouse_movement_x, mouse_movement_y) {
         const mouse_sensitivity = 0.5;

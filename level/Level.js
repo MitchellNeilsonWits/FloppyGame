@@ -6,6 +6,8 @@ import InteractablePushbox from '../pushbox/InteractablePushbox';
 import Disk from '../disks/Disk';
 import InteractableDisk from '../disks/InteractableDisk';
 import World from '../engine/world';
+import { get_cartesian_angle_from_rotation } from '../common/Angle';
+import { Quaternion } from 'cannon';
 
 
 class Level {
@@ -13,7 +15,7 @@ class Level {
 
     }
 
-    async base_load(level, meshes, character_controller, scene) {
+    async base_load(level, meshes, character_controller, camera, scene) {
         // Create the physics for the world
         level._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
         
@@ -48,10 +50,28 @@ class Level {
         // Set the player start position
         const player_start_pos = meshes.player_spawn.position;
         const player_start_rotation = meshes.player_spawn.rotation;
+        const player_start_quaternion = meshes.player_spawn.quaternion;
+
         character_controller._target.rigidBody.setTranslation({x: player_start_pos.x,y: player_start_pos.y,z: player_start_pos.z}, true);
         character_controller._target.position.x = player_start_pos.x;
         character_controller._target.position.y = player_start_pos.y;
         character_controller._target.position.z = player_start_pos.z;
+        character_controller._target.quaternion.rotateTowards(player_start_quaternion, 1);
+
+        console.log("PLAYER ROT",player_start_rotation);
+        camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(player_start_rotation)));
+        // character_controller.
+    
+        level.level_start_state = {
+            player_position: new THREE.Vector3(0,0,0).copy(meshes.player_spawn.position),
+            player_quaternion: new Quaternion(0,0,0,1).copy(meshes.player_spawn.quaternion),
+            player_rotation: new THREE.Euler(0,0,0).copy(meshes.player_spawn.rotation),
+            disk_positions: {
+                'strength_disk': new THREE.Vector3(0,0,0).copy(meshes.strength_disk_spawn.position),
+                'flight_disk': new THREE.Vector3(0,0,0).copy(meshes.flight_disk_spawn.position),
+                'shrink_disk': new THREE.Vector3(0,0,0).copy(meshes.shrink_disk_spawn.position)
+            }
+        }
     }
 
     async _create_pushboxes(level, pushboxes) {

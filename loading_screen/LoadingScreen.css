@@ -1,0 +1,34 @@
+#loading_screen_root {
+    width: 100dvw;
+    height: 100dvh;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+}
+
+.loading_screen_text {
+    color: white;
+}
+
+.loading_screen_progress {
+    color: white;
+}
+
+.loading_bar_container {
+    width: 500px;
+    display: flex;
+    align-items: flex-start;
+    height: 30px;
+}
+
+#loading_bar {
+    height: 30px;
+    width: 100px;
+    background: white;
+    transition: 2s;
+}

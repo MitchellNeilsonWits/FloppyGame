@@ -41,8 +41,6 @@ class CharacterController {
             new BasicCharacterControllerProxy(this._animations) // proxy for character controlling
         );
 
-        // LOAD MODELS
-        this._load_models();
         this._halt_character = {
             status: false,
             status_verified: false,
@@ -55,14 +53,19 @@ class CharacterController {
         this._level = null;
     }
 
+    initialize_player(_callback) {
+        // LOAD MODELS
+        this._load_models(_callback);
+    }
+
     /* load character models and create states */
-    _load_models() {
+    _load_models(_callback) {
         // LOAD INITIAL CHARACTER MODEL
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
         gltfLoader.load('floppy_with_reader_remastered_optimized.glb', (gltf) => {  
-            
+            console.log(this);
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
             // --- LOBBY ---
@@ -161,6 +164,7 @@ class CharacterController {
             loader.load('floppy_with_reader_flying_forward_fast.glb', (a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
 
             console.log("loaded all models")
+            _callback();
             return "done";
         })
 
@@ -270,6 +274,7 @@ class CharacterController {
     update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y) {
     
         // UPDATE FSM
+        console.log(this.height_state);
         this._state_machine.update(this._character_is_turning, this._input, this.height_state, "none");
 
         // VELOCITY INITIALIZATION

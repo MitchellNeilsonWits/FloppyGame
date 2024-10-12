@@ -103,7 +103,8 @@ class GameController {
             scene: this._scene,
             mixers: this._mixers,
             mouse_listener: this._mouse_listener,
-            physic: physic
+            physic: physic,
+            menu: this._menu
         }
 
         this._level_controller = new LevelController(params);
