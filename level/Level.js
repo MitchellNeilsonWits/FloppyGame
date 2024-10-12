@@ -1,6 +1,199 @@
+import * as THREE from 'three';
+import DynamicObject from '../engine/dynamicObject';
+import physic from '../engine/physic';
+import Pushbox from '../pushbox/Pushbox';
+import InteractablePushbox from '../pushbox/InteractablePushbox';
+import Disk from '../disks/Disk';
+import InteractableDisk from '../disks/InteractableDisk';
+import World from '../engine/world';
+
+
 class Level {
     constructor() {
 
+    }
+
+    async base_load(level, meshes, character_controller, scene) {
+        // Create the physics for the world
+        level._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
+        
+        // Add the static ground colliders from the world as objects to jump off of
+        level._ground_colliders = [];
+        level._world.get_ground_colliders().forEach(obj => {this._ground_colliders.push(obj)});
+
+        // Initialize the level
+        level._level = new THREE.Group();
+
+        // Initialize the list of interactable objects
+        level._interactable_objects = {};
+        
+        // Set rigid body meshes
+        level.create_static_objects(level, meshes.colliders);
+
+        // Set dynamic body meshes
+        level.create_dynamic_objects(level, meshes.colliders_dynamic);
+
+        // Create lights
+        level.create_lights(level, meshes.pointLights, meshes.spotLights, meshes.directionalLights);
+
+        // Create pushboxes
+        await level._create_pushboxes(level, meshes.pushboxes);
+        
+        // Create disks
+        await level._create_disks(level, meshes.strength_disk_spawn.position, meshes.flight_disk_spawn.position, meshes.shrink_disk_spawn.position);
+
+        // Create other interactable objects
+        this._create_interactable_objects(level);
+
+        // Set the player start position
+        const player_start_pos = meshes.player_spawn.position;
+        const player_start_rotation = meshes.player_spawn.rotation;
+        character_controller._target.rigidBody.setTranslation({x: player_start_pos.x,y: player_start_pos.y,z: player_start_pos.z}, true);
+        character_controller._target.position.x = player_start_pos.x;
+        character_controller._target.position.y = player_start_pos.y;
+        character_controller._target.position.z = player_start_pos.z;
+    }
+
+    async _create_pushboxes(level, pushboxes) {
+        level._pushboxes = [];
+        let pushbox_num = 0;
+        for (const pushbox of pushboxes) {
+            level._pushboxes.push({
+                id: pushbox_num,
+                object: pushbox
+            })
+            pushbox_num++;
+        }
+
+        for (const pushbox of level._pushboxes) {
+            
+            const new_pushbox = new Pushbox(pushbox.object.position, pushbox.object.rotation);
+            pushbox.pushbox_object = new_pushbox;
+
+            await pushbox.pushbox_object.set_pushbox();
+            level._level.add(new_pushbox);
+            level._dynamic_objects.push(new_pushbox);
+
+            level._interactable_objects[`pushbox_${pushbox.id}`] = {
+                name: `pushbox_${pushbox.id}`,
+                object: new_pushbox,
+                type: 'dynamic'
+            };
+            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 1, "push")
+        
+            // Want to be able to jump off of pushboxes
+            level._ground_colliders.push(new_pushbox.collider);
+        }
+    }
+    
+    _create_interactable_objects(level) {
+        // this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
+    }
+
+    async _create_disks(level, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn) {
+
+        const disk_types = ['strength', 'flight', 'shrink'];
+        const disk_locations = {
+            'strength': strength_disk_spawn,
+            'flight': flight_disk_spawn,
+            'shrink': shrink_disk_spawn
+        };
+
+        level._disks = {};
+
+        for (const disk_type of disk_types) {
+            const disk = new Disk();
+            await disk.set_disk(disk_type, physic, disk_locations[`${disk_type}`]);
+            level._disks[`${disk_type}_disk`] = disk;
+
+            level._level.add(disk);
+            level._dynamic_objects.push(disk);
+
+            level._interactable_objects[`${disk_type}_disk`] = {
+                object: disk,
+                type: 'dynamic',
+                name: `${disk_type}_disk`,
+                power: `${disk_type}`
+            }
+            level._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk(`Press E to pickup ${disk_type} disk`, this._interactable_objects[`${disk_type}_disk`].object);
+
+        }
+
+        
+    }
+
+    create_lights(level, point_lights, spot_lights, directionalLights) {
+        level._lights = []
+        for (const light of point_lights) {
+            const pos = light.position;
+            const colour = light.color;
+            const intensity = light.intensity/1000; // adjust lighting for three js
+            const distance = light.distance;
+
+            const point_light = new THREE.PointLight( colour, intensity, distance );
+            point_light.position.set( pos.x, pos.y, pos.z );
+
+            level._lights.push(point_light);
+        }
+        // (B) Spot Lights
+        for (const light of spot_lights) {
+            const pos = light.position;
+            const colour = light.color;
+            const intensity = light.intensity/1000; // adjust lighting for three js
+            const distance = light.distance;
+            const rotation = light.rotation;
+            const angle = light.angle; 
+            const spotlight = new THREE.SpotLight(colour, intensity, distance, angle);
+            spotlight.position.set( pos.x, pos.y, pos.z );
+            spotlight.setRotationFromEuler(rotation);
+
+            level._lights.push(spotlight);
+        }
+
+        for (const light of directionalLights) {
+            
+            const pos = light.position;
+            const colour = light.color;
+            const intensity = light.intensity/1000; // adjust lighting for three js
+            const rotation = light.rotation;
+            const spotlight = new THREE.DirectionalLight(colour, intensity);
+            spotlight.position.set( pos.x, pos.y, pos.z );
+            spotlight.setRotationFromEuler(rotation);
+
+            level._lights.push(spotlight);
+        }
+    }
+
+    create_static_objects(level, objects) {
+        for (const mesh of objects) {
+            level._level.add(mesh);
+        }
+    }
+
+    create_dynamic_objects(level, objects) {
+        level._dynamic_objects = [];
+        for (const mesh of objects) {
+            const object = new DynamicObject(mesh, physic);
+            level._dynamic_objects.push(object);
+            level._level.add(object);
+        }
+    }
+
+    render_main_level_components(level) {
+        // Render the level's components
+        level._scene.add(level._level);
+
+        // Render the lights for the level
+        for (const light of level._lights) {
+            level._scene.add(light);
+        }
+    }
+
+    main_update(level, time_elapsed_in_seconds) {
+        // Update the dynamic objects
+        for (const object of level._dynamic_objects) {
+            object.update(time_elapsed_in_seconds);
+        }
     }
 
     set_level() {}
