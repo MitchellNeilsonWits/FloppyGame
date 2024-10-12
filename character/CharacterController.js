@@ -26,7 +26,7 @@ class CharacterController {
     _init(params) {
         // SET IMPORTANT VARIABLES
         this._params = params;
-        this._decceleration = new THREE.Vector3(-0.5, -0.0001, -0.5);
+        this._decceleration = new THREE.Vector3(-0.5, 0, -0.5);
         this._acceleration = new THREE.Vector3(1.0, 0.25, 1.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._character_is_turning = "not_turning"; // note when the character is turning
