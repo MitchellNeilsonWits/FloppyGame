@@ -42,14 +42,17 @@ class LevelController {
         this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
         this._controls._velocity = new Vector3(0,0,0);
         this._camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(starting_positions.player_rotation)));
+        this._controls._holding_disk = null;
+        this._controls.busy_loading_disk = false;
+        this._controls.power_controller.clear_loaded_disk();
+
+        // NEED TO TAKE DISKS OUT OF THE SCENE AND THEN PUT THEM BACK IN!!!! (instead of just translating them across)
 
         const disks = this._level.get_disks();
         console.log(disks);
         for (const key of Object.keys(disks)) {
             const disk_object = disks[key];
             console.log(disk_object);
-            console.log(key);
-            console.log(starting_positions.disk_positions);   
             disk_object.rigidBody.setTranslation(starting_positions.disk_positions[`${key}`])
         }
 
