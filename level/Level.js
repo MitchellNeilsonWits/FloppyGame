@@ -71,7 +71,13 @@ class Level {
                 'strength_disk': new THREE.Vector3(0,0,0).copy(meshes.strength_disk_spawn.position),
                 'flight_disk': new THREE.Vector3(0,0,0).copy(meshes.flight_disk_spawn.position),
                 'shrink_disk': new THREE.Vector3(0,0,0).copy(meshes.shrink_disk_spawn.position)
-            }
+            },
+            pushbox_positions: {}
+        }
+
+        const pushboxes = level.get_pushboxes();
+        for (const pushbox of pushboxes) {
+            level.level_start_state.pushbox_positions[pushbox.id] = new THREE.Vector3(0,0,0).copy(pushbox.object.position);
         }
     }
 

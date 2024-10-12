@@ -215,48 +215,50 @@ class CharacterInteractionController {
 
         // If user is able to interact with some object, handle inputs based on the trigger of the interaction available
         if (this.can_interact) {
-            if (this._input) {
-                const interaction_trigger = this._object_to_interact_with.interactable_object.interaction_trigger;
-                
-                if (this._input._keys) {
-                    if (interaction_trigger === 'press_e') {
-                        // press_e objects will start an interaction only when E is pressed on keyboard
-                        if (this._input._keys.interact) {
-                            this._object_being_interacted_with = this._object_to_interact_with;
-                            this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
-                            this._use_object = this._object_to_interact_with.interactable_object.use_object;
+            if (!this._controls.busy_loading_disk) {    
+                if (this._input) {
+                    const interaction_trigger = this._object_to_interact_with.interactable_object.interaction_trigger;
+                    
+                    if (this._input._keys) {
+                        if (interaction_trigger === 'press_e') {
+                            // press_e objects will start an interaction only when E is pressed on keyboard
+                            if (this._input._keys.interact) {
+                                this._object_being_interacted_with = this._object_to_interact_with;
+                                this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
+                                this._use_object = this._object_to_interact_with.interactable_object.use_object;
+                                
+                                this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
+                                // this._object_to_interact_with = null;
+                                this.can_interact = false;
+                                this._hide_interact_message();
+                            }
+                        } else if (interaction_trigger === 'push') {
+                            if (this._controls.power_controller.power === "strength") {
                             
-                            this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
-                            // this._object_to_interact_with = null;
-                            this.can_interact = false;
-                            this._hide_interact_message();
-                        }
-                    } else if (interaction_trigger === 'push') {
-                        if (this._controls.power_controller.power === "strength") {
-                        
-                            // Ensure that y values are good enough to work with
-                            const object_y = this._object_to_interact_with.object.position.y;
-                            const player_y = this._target.position.y;
-                            const vertical_distance = Math.abs(player_y - object_y);
-                            const vertical_distance_threshold = 0.35;
+                                // Ensure that y values are good enough to work with
+                                const object_y = this._object_to_interact_with.object.position.y;
+                                const player_y = this._target.position.y;
+                                const vertical_distance = Math.abs(player_y - object_y);
+                                const vertical_distance_threshold = 0.35;
 
-                            if (vertical_distance < vertical_distance_threshold) {
-                                const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
-                                const current_angle = this._find_2d_angle();
-                                const view_range = Math.PI/8;
+                                if (vertical_distance < vertical_distance_threshold) {
+                                    const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
+                                    const current_angle = this._find_2d_angle();
+                                    const view_range = Math.PI/8;
 
-                                const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
-                                if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
-                                    if (correct_direction) {
-                                        this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                                    const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
+                                    if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
+                                        if (correct_direction) {
+                                            this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                                        } else {
+                                            this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                                        }
                                     } else {
                                         this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                                     }
                                 } else {
                                     this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                                 }
-                            } else {
-                                this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                             }
                         }
                     }

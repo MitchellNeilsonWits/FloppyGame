@@ -44,10 +44,16 @@ class LevelController {
         this._camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(starting_positions.player_rotation)));
         this._controls.busy_loading_disk = false;
         
-        // Take off disk being held and loaded disk
+        // Take off disk being held
         if (this._controls._holding_disk) {
-            console.log(this._controls._holding_disk);
-            // this._controls._holding_disk._interactable_object
+            console.log(this._controls._holding_disk)
+            this._controls._holding_disk.interactable_object.end_interaction(this._controls, this._controls._holding_disk, this._level._level);
+        }
+
+        // Take out loaded disk
+        if (this._controls.power_controller.loaded_disk) {
+            console.log(this._controls.power_controller.loaded_disk)
+            this._controls.power_controller.loaded_disk.interactable_object.end_interaction(this._controls, this._controls.power_controller.loaded_disk, this._level._level);
         }
 
         this._controls.power_controller.clear_loaded_disk();
@@ -61,6 +67,17 @@ class LevelController {
             this._level._level.remove(disk_object);
             this._level._level.add(disk_object);
             disk_object.rigidBody.setTranslation(starting_positions.disk_positions[`${key}`])
+        }
+
+        const pushboxes = this._level.get_pushboxes();
+        let pushbox_id = 0;
+        for (const pushbox of pushboxes) {
+            const spawn_pos = starting_positions.pushbox_positions[pushbox.id];
+        
+            pushbox.pushbox_object.rigidBody.setTranslation(spawn_pos); 
+            console.log(spawn_pos)
+            console.log(pushbox)
+
         }
 
         console.log(starting_positions);

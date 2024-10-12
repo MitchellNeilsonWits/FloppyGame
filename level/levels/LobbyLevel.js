@@ -46,6 +46,18 @@ class LobbyLevel extends Level {
     get_ground_objects() {
         return this._ground_colliders;
     }
+
+    get_disks() {
+        return this._disks;
+    }
+
+    get_pushboxes() {
+        return this._pushboxes;
+    }
+
+    get_starting_positions() {
+        return this.level_start_state;
+    }
     // --------------------------------------------------------------------------
 
     render_level() {
