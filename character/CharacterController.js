@@ -67,8 +67,8 @@ class CharacterController {
             // gltf.scene.scale.setScalar(0.002);
             // --- LOBBY ---
             gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
-            gltf.scene.children[0].position.y = 5;
-            gltf.scene.children[0].position.z = 25;
+            // gltf.scene.children[0].position.y = 5;
+            // gltf.scene.children[0].position.z = 25;
 
 
             // const texture_loader = new THREE.TextureLoader();

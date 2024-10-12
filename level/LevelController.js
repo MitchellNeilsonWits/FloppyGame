@@ -8,6 +8,7 @@ import light from "../lighting/point_lights";
 import directional_light from "../lighting/directional_lights";
 import loadAssets from "../engine/loader";
 import LobbyLevel from "./levels/LobbyLevel";
+import TutorialLevel from "./levels/TutorialLevel";
 
 class LevelController {
     constructor(params) {
@@ -16,7 +17,7 @@ class LevelController {
         this._mouse_listener = params.mouse_listener;
 
         // Define the levels to be played
-        this._current_level = 0;
+        this._current_level = 1;
         this._levels = [];
 
         // Initialize
@@ -30,6 +31,10 @@ class LevelController {
         // CREATE SAMPLE LEVEL
         const sample_level = new LobbyLevel(this._scene); 
         this._levels.push(sample_level);
+
+        // CREATE TUTORIAL LEVEL
+        const tutorial_level = new TutorialLevel(this._scene);
+        this._levels.push(tutorial_level);
 
         // Render the scene
         this._render_scene();

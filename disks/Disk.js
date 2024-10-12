@@ -14,7 +14,7 @@ class Disk extends Object3D {
         super();
     }
 
-    async set_disk(disk_type, physic) {
+    async set_disk(disk_type, physic, position) {
         const gltf = await (new GLTFLoader()).loadAsync("../models/disk_org_anim_remastered.glb")
         .then((gltf) => {
             // Get the colour of the disk ring
@@ -32,8 +32,9 @@ class Disk extends Object3D {
 
             console.log(this._disk_mesh);
             this._disk_mesh.scale.setScalar(0.2);
-            this._disk_mesh.position.y = 8;
-            this._disk_mesh.position.z = 25;
+            this._disk_mesh.position.x = position.x;
+            this._disk_mesh.position.y = position.y;
+            this._disk_mesh.position.z = position.z;
             this._mixer = new THREE.AnimationMixer(this);
             
             this._manager = new THREE.LoadingManager();
