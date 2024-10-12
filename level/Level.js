@@ -25,6 +25,7 @@ class Level {
 
         // Initialize the level
         level._level = new THREE.Group();
+        level._level.name = "level";
 
         // Initialize the list of interactable objects
         level._interactable_objects = {};
