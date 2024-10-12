@@ -16,6 +16,7 @@ export default async function loadAssets(path) {
   const ground_objects = [];
   const spotLights = [];
   const directionalLights = [];
+  let skybox;
   let player_spawn;
   let strength_disk_spawn;
   let flight_disk_spawn;
@@ -32,6 +33,10 @@ export default async function loadAssets(path) {
       flight_disk_spawn = mesh;
     } else if (mesh.name.includes("shrink_disk")) {
       shrink_disk_spawn = mesh;
+    } else if (mesh.name.includes("skybox")) {
+      skybox = mesh;
+      visuals.push(mesh);
+      colliders.push(mesh);
     } else if (mesh.type === 'PointLight') {
       pointLights.push(mesh);
     } else if (mesh.type === 'SpotLight') {
@@ -69,5 +74,5 @@ export default async function loadAssets(path) {
     
   }
   
-  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights }
+  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox }
 }

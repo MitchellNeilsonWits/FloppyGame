@@ -100,7 +100,7 @@ class Level {
                 object: new_pushbox,
                 type: 'dynamic'
             };
-            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 1, "push")
+            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 2, "push")
         
             // Want to be able to jump off of pushboxes
             level._ground_colliders.push(new_pushbox.collider);

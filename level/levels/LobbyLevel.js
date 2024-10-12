@@ -3,6 +3,14 @@ import ProximityScreenRenderer from '../../engine/proxRender';
 import loadAssets from '../../engine/loader';
 import TutRender from '../../engine/tutRender';
 
+/**
+ * Thank you to the following artists whose work was used in this project:
+ * CC:
+ * 
+ * skybox texture:
+ *  https://www.deviantart.com/cosmicspark/art/Blender-Space-Skybox-15-865292177
+ * 
+ */
 class LobbyLevel extends Level {
 
     constructor(scene) {
@@ -13,7 +21,7 @@ class LobbyLevel extends Level {
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/lobbyFinal2.glb');
+        const meshes = await loadAssets('assets/lobbyFinal5.glb');
         await this.base_load(this, meshes, character_controller, camera, this._scene);
 
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
@@ -25,6 +33,12 @@ class LobbyLevel extends Level {
         this._tutorialRenderer = new TutRender(character_controller, this._scene, () => {
             //this.startTutorial();
         });
+
+        // Get the skybox
+        this._skybox = meshes.skybox;
+
+        console.log(this._skybox);
+
         // -----------------------------------------------------------------------
         
         _callback();
@@ -62,6 +76,10 @@ class LobbyLevel extends Level {
         if (this._tutorialRenderer) {
             this._tutorialRenderer.update();
         }
+
+        this._skybox.rotateX(Math.PI/10000);
+        this._skybox.rotateY(-Math.PI/10000);
+        this._skybox.rotateZ(Math.PI/10000);
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates

@@ -66,7 +66,7 @@ export function createRigidBodyEntity(position, physic) {
   console.log("Position:",position)
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  const collider = createColliderBall(0.25, rigidBody, physic)
+  const collider = createColliderBall(0.20, rigidBody, physic)
   return { rigidBody, collider }
 }
 
