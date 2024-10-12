@@ -10,22 +10,11 @@ class LobbyLevel extends Level {
         this._scene = scene;
     }
 
-    set_character_position(character_controller) {
-        const x = 0;
-        const y = 5;
-        const z = 25;
-
-        character_controller._target.rigidBody.setTranslation({x: x,y: y,z: z}, true);
-        character_controller._target.position.x = x;
-        character_controller._target.position.y = y;
-        character_controller._target.position.z = z;
-    }
-
     // Function to set the components for the scene
-    async set_level(character_controller) {
+    async set_level(character_controller, camera, _callback) {
         // Load the meshes for the lobby and load the base of the level's scene and other objects
         const meshes = await loadAssets('assets/lobbyFinal2.glb');
-        await this.base_load(this, meshes, character_controller, this._scene);
+        await this.base_load(this, meshes, character_controller, camera, this._scene);
 
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
         // CREATE THE PROXIMITY RENDERER
@@ -38,7 +27,7 @@ class LobbyLevel extends Level {
         });
         // -----------------------------------------------------------------------
         
-        // this.set_character_position(character_controller);
+        _callback();
     }
 
     // ------------------- FUNCTIONS TO GET OBJECTS EXTERNALLY -------------------

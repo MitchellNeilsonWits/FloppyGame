@@ -16,12 +16,15 @@ class CharacterHeightController {
                 // Now check that the normal of contact is directly up
                 const normal = manifold.normal();
                 const rounded = {
-                    x: Math.round(normal.x),
-                    y: Math.round(normal.y),
-                    z: Math.round(normal.z),
+                    x: Math.abs(Math.round(normal.x)),
+                    y: Math.abs(Math.round(normal.y)),
+                    z: Math.abs(Math.round(normal.z)),
                 }
 
+                console.log(rounded);
+
                 if (rounded.x == 0 && rounded.y == 1 && rounded.z == 0) {
+                    console.log("we on the ground!");
                     this.controls.height_state = "on ground";
                     has_touched_ground = true;
                     return;

@@ -26,6 +26,7 @@ class FiniteStateMachine {
     }
 
     update(character_is_turning, input, height_state, current_power) {
+        console.log("current height state:",height_state);
         if (this._current_state) {
             this._current_state.update(character_is_turning, input, height_state, current_power);
         }
