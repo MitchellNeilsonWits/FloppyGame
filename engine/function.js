@@ -50,6 +50,22 @@ export function createRigidBodyFixed(mesh, physic) {
   return createColliderGeo(rigidBody, physic, mesh)
 }
 
+export function createRigidBodyLeverBase(mesh, position, physic) {
+  const rigidBodyDesc = RigidBodyDesc.fixed();
+  rigidBodyDesc.setTranslation(...position);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc);
+  const collider = createColliderGeo(rigidBody, physic, mesh);
+  return { rigidBody, collider }
+}
+
+export function createRigidBodyLeverHandle(mesh, position, physic) {
+  const rigidBodyDesc = RigidBodyDesc.kinematicPositionBased();
+  rigidBodyDesc.setTranslation(...position);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc);
+  const collider = createColliderGeo(rigidBody, physic, mesh);
+  return { rigidBody, collider }
+}
+
 export function createRigidBodyDynamic(mesh, physic) {
   console.log("creating rigid dynamic body")
   console.log(mesh)
