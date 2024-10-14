@@ -17,7 +17,7 @@ export default class World extends Object3D {
 
   initPhysic(meshes, physic) {
     for (const mesh of meshes) {
-      const collider = createRigidBodyFixed(mesh, physic)
+      const {rigidBody, collider} = createRigidBodyFixed(mesh, physic)
       if (mesh.name.includes("ground")) {
         this.ground_colliders.push(collider);
       }

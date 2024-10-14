@@ -294,7 +294,9 @@ class CharacterInteractionController {
                             }
                         }
                     } else if (interaction_trigger === "right_click") {
-                        console.log(this._object_to_interact_with)
+                        if (this._input._keys.right_click) {
+                            this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                        }
                     }
                 }
             }
@@ -360,6 +362,7 @@ class CharacterInteractionController {
                                 return;
                             };
                         } else if (trigger === "right_click") {
+                            
                             const interaction_started = this.handle_right_click_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;

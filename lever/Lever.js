@@ -12,12 +12,22 @@ class Lever extends Object3D {
     super();
     console.log(position);
     this.position.copy(position);
-    this.lever_on = true;
+    this.lever_on = false;
+    this.lever_busy_changing = false;
     this.current_lever_rotation = 30;
   }
 
+  toggle_lever_on() {
+    if (!this.lever_busy_changing) {
+      console.log("toggled lever")
+      this.lever_on = !this.lever_on;
+    } else {
+      console.log("BUSY!")
+    }
+  }
+
   async set_lever() {
-    const gltf = await (new GLTFLoader()).loadAsync("../models/lever.glb")
+    const gltf = await (new GLTFLoader()).loadAsync("../models/lever2.glb")
     .then((gltf) => {
         console.log(gltf.scene.children);
         
@@ -60,13 +70,17 @@ class Lever extends Object3D {
   }
 
   updateVisual() {
-    if (this.lever_on && this.current_lever_rotation > -30) {
-        this.current_lever_rotation -= Math.PI/12; 
-        this._lever_handle.rotateY(Math.PI/800);
-    }
-    if (!this.lever_on && this.current_lever_rotation < 30) {
-        this.current_lever_rotation += Math.PI/12; 
-        this._lever_handle.rotateY(-Math.PI/800);
+    console.log(this._lever_handle.rotation);
+    if (this.lever_on && this._lever_handle.rotation.y < 0.37960913505345634) {
+        // this.current_lever_rotation -= Math.PI/12; 
+        this._lever_handle.rotateY(Math.PI/150);
+        this.lever_busy_changing = true;
+    } else if (!this.lever_on && this._lever_handle.rotation.y > -0.5235988167115926) {
+        // this.current_lever_rotation += Math.PI/12; 
+        this._lever_handle.rotateY(-Math.PI/150);
+        this.lever_busy_changing = true;
+    } else {
+      this.lever_busy_changing = false;
     }
     
     this.position.copy(this.rigidBody.translation());

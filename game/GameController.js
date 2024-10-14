@@ -143,7 +143,7 @@ class GameController {
             // UPDATE CAMERA
             if (this._camera) {
                 if (this._mouse_listener) {
-                    this._camera.update(this._mouse_listener._mouse_movement_x, this._mouse_listener._mouse_movement_y);
+                    this._camera.update(this._mouse_listener._mouse_movement_x, this._mouse_listener._mouse_movement_y, this._mouse_listener._zoom);
                     this._mouse_listener._decelerate_mouse_movement(); // decellerate the mouse movement to stop continuous rotations
                 }
             }

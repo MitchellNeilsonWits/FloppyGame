@@ -12,7 +12,7 @@ class CharacterHeightController {
         for (const collider of ground_colliders) {
             // console.log(this.controls._target.foot_collider.translation(), collider.translation());
             physic.contactPair(this.controls._target.collider, collider, (manifold, flipped) => {
-                
+            
                 // Now check that the normal of contact is directly up
                 const normal = manifold.normal();
                 const rounded = {
@@ -20,8 +20,6 @@ class CharacterHeightController {
                     y: Math.abs(Math.round(normal.y)),
                     z: Math.abs(Math.round(normal.z)),
                 }
-
-                console.log(rounded);
 
                 if (rounded.x == 0 && rounded.y == 1 && rounded.z == 0) {
                     console.log("we on the ground!");

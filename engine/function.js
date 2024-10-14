@@ -47,7 +47,8 @@ export function createRigidBodyFixed(mesh, physic) {
   rigidBodyDesc.setTranslation(...position);
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
   // console.log("rigid_body = ",rigidBody)
-  return createColliderGeo(rigidBody, physic, mesh)
+  const collider = createColliderGeo(rigidBody, physic, mesh)
+  return { rigidBody, collider }
 }
 
 export function createRigidBodyLeverBase(mesh, position, physic) {

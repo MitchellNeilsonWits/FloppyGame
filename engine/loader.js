@@ -46,9 +46,6 @@ export default async function loadAssets(path) {
       directionalLights.push(mesh);
     } else if (mesh.type === 'Mesh') {
       if (mesh.name.includes("lever")) {
-        // console.log("new LEVER:",mesh);
-        // visuals.push(mesh);
-        // colliders.push(mesh);
         const lever_name = mesh.name.split('_')[1];
         if (!lever_gates[lever_name]) {
           lever_gates[lever_name] = {
@@ -57,6 +54,17 @@ export default async function loadAssets(path) {
           }
         } else {
           lever_gates[lever_name].lever = mesh;
+        }
+      } else if (mesh.name.includes("gate")) {
+        
+        const gate_name = mesh.name.split('_')[1];
+        if (!lever_gates[gate_name]) {
+          lever_gates[gate_name] = {
+            name: lever_name,
+            gate: mesh
+          }
+        } else {
+          lever_gates[gate_name].gate = mesh;
         }
       } else if (mesh.name.includes("pushbox")) {
         pushboxes.push(mesh);

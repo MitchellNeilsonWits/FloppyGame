@@ -10,6 +10,7 @@ import { get_cartesian_angle_from_rotation } from '../common/Angle';
 import { Quaternion } from 'cannon';
 import Lever from '../lever/Lever';
 import InteractableLever from '../lever/InteractableLever';
+import Gate from '../gate/Gate';
 
 
 class Level {
@@ -115,18 +116,19 @@ class Level {
 
     async _create_lever_gates(level, lever_gates) {
         level._lever_gates = {};
+
+        console.log(lever_gates);
+
         for (const key of Object.keys(lever_gates)) {
             const lever_gate_name = lever_gates[key].name;
-            const object = lever_gates[key].lever;
+
+            // CREATE THE LEVER
+            const l_object = lever_gates[key].lever;
             console.log(lever_gates[key]);
-            const lever_object = new Lever(object.position, object.rotation);
+            const lever_object = new Lever(l_object.position, l_object.rotation);
             await lever_object.set_lever();
             const lever_interactable = new InteractableLever("Right click to pull lever",lever_object,1.5,"right_click");
-            level._lever_gates[lever_gate_name] = {
-                name: lever_gate_name,
-                lever_object: lever_object,
-                lever_interactable: lever_interactable
-            }
+            
             
             level._level.add(lever_object);
             
@@ -135,6 +137,20 @@ class Level {
                 object: lever_object,
                 type: 'static',
                 interactable_object: lever_interactable
+            }
+
+            // CREATE THE GATE
+            const g_object = lever_gates[key].gate;
+            const gate_object = new Gate(g_object.position, g_object.rotation, g_object.scale);
+            await gate_object.set_gate();
+            
+            level._level.add(gate_object);
+
+            level._lever_gates[lever_gate_name] = {
+                name: lever_gate_name,
+                lever_object: lever_object,
+                lever_interactable: lever_interactable,
+                gate_object: gate_object
             }
         }
     }
@@ -251,6 +267,7 @@ class Level {
         // Update gates and levers
         for (const key of Object.keys(level._lever_gates)) {
             level._lever_gates[key].lever_object.update();
+            level._lever_gates[key].gate_object.update(time_elapsed_in_seconds);
         }
     }
 
