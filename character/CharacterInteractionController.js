@@ -253,7 +253,7 @@ class CharacterInteractionController {
                 const interaction_trigger = this._object_to_interact_with.interactable_object.interaction_trigger;
                 
                 if (this._input._keys) {
-                    if (interaction_trigger === 'press_e') {
+                    if (interaction_trigger === 'disk') {
                         // press_e objects will start an interaction only when E is pressed on keyboard
                         if (this._input._keys.interact) {
                             this._object_being_interacted_with = this._object_to_interact_with;
@@ -265,7 +265,7 @@ class CharacterInteractionController {
                             this.can_interact = false;
                             this._hide_interact_message();
                         }
-                    } else if (interaction_trigger === 'push') {
+                    } else if (interaction_trigger === 'pushbox') {
                         if (this._controls.power_controller.power === "strength") {
                         
                             // Ensure that y values are good enough to work with
@@ -293,8 +293,8 @@ class CharacterInteractionController {
                                 this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                             }
                         }
-                    } else if (interaction_trigger === "right_click") {
-                        if (this._input._keys.right_click) {
+                    } else if (interaction_trigger === "lever") {
+                        if (this._input._keys.interact) {
                             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                         }
                     }
@@ -351,17 +351,17 @@ class CharacterInteractionController {
                         // - pickup
                         const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
-                        if (trigger === "press_e") {
+                        if (trigger === "disk") {
                             const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
                             };
-                        } else if (trigger === "push") {
+                        } else if (trigger === "pushbox") {
                             const interaction_started = this.handle_touch_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
                             };
-                        } else if (trigger === "right_click") {
+                        } else if (trigger === "lever") {
                             
                             const interaction_started = this.handle_right_click_interaction(interactable_objects[key]);
                             if (interaction_started) {

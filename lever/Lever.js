@@ -1,26 +1,44 @@
 import * as THREE from 'three';
 import { Object3D } from "three";
 import physic from "../engine/physic";
-import { createRigidBodyDynamicPushbox, createRigidBodyEntity, createRigidBodyFixed, createRigidBodyLeverBase, createRigidBodyLeverHandle } from "../engine/function";
+import { createColliderLeverHandle, createLeverHandle, createRigidBodyDynamicPushbox, createRigidBodyEntity, createRigidBodyFixed, createRigidBodyLeverBase, createRigidBodyLeverHandle } from "../engine/function";
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 
 class Lever extends Object3D {
   collider = null;
   rigidBody = null;
 
-  constructor(position, rotation) {
+  constructor(position, rotation, gate, level) {
     super();
     console.log(position);
     this.position.copy(position);
     this.lever_on = false;
     this.lever_busy_changing = false;
     this.current_lever_rotation = 30;
+    this.paired_gate = gate;
+    this.level = level;
+  }
+
+  remove_gate_from_level() {
+    physic.removeCollider(this.paired_gate.collider);
+    this.level.remove(this.paired_gate);
+  }
+
+  add_gate_to_level() {
+    const new_collider = createColliderLeverHandle(this.paired_gate.rigidBody, physic, this.paired_gate._gate_mesh);
+    this.paired_gate.collider = new_collider;
+    this.level.add(this.paired_gate);
   }
 
   toggle_lever_on() {
     if (!this.lever_busy_changing) {
       console.log("toggled lever")
       this.lever_on = !this.lever_on;
+      if (this.lever_on) {
+        this.remove_gate_from_level();
+      } else {
+        this.add_gate_to_level();
+      }
     } else {
       console.log("BUSY!")
     }
@@ -43,7 +61,7 @@ class Lever extends Object3D {
 
   initPhysic() {
     createRigidBodyLeverBase(this._lever_base, this.position, physic);
-    const { rigidBody, collider } = createRigidBodyLeverHandle(this._lever_handle, this.position, physic);
+    const { rigidBody, collider } = createLeverHandle(this._lever_handle, this.position, physic);
     this.rigidBody = rigidBody;
     this.collider = collider;
   }
@@ -71,13 +89,14 @@ class Lever extends Object3D {
 
   updateVisual() {
     console.log(this._lever_handle.rotation);
-    if (this.lever_on && this._lever_handle.rotation.y < 0.37960913505345634) {
+    // this._lever_handle.rotation.y = 0.6698107603586773;
+    if (this.lever_on && this._lever_handle.rotation.z < 0.8698107603586773) {
         // this.current_lever_rotation -= Math.PI/12; 
-        this._lever_handle.rotateY(Math.PI/150);
+        this._lever_handle.rotateZ(Math.PI/150);
         this.lever_busy_changing = true;
-    } else if (!this.lever_on && this._lever_handle.rotation.y > -0.5235988167115926) {
+    } else if (!this.lever_on && this._lever_handle.rotation.z > -0.2698107603586773) {
         // this.current_lever_rotation += Math.PI/12; 
-        this._lever_handle.rotateY(-Math.PI/150);
+        this._lever_handle.rotateZ(-Math.PI/150);
         this.lever_busy_changing = true;
     } else {
       this.lever_busy_changing = false;

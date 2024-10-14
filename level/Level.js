@@ -106,7 +106,7 @@ class Level {
                 object: new_pushbox,
                 type: 'dynamic'
             };
-            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 2, "push")
+            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 2, "pushbox")
         
             // Want to be able to jump off of pushboxes
             level._ground_colliders.push(new_pushbox.collider);
@@ -122,12 +122,19 @@ class Level {
         for (const key of Object.keys(lever_gates)) {
             const lever_gate_name = lever_gates[key].name;
 
+            // CREATE THE GATE
+            const g_object = lever_gates[key].gate;
+            const gate_object = new Gate(g_object.position, g_object.rotation, g_object.scale);
+            await gate_object.set_gate();
+
+            level._level.add(gate_object);
+
             // CREATE THE LEVER
             const l_object = lever_gates[key].lever;
             console.log(lever_gates[key]);
-            const lever_object = new Lever(l_object.position, l_object.rotation);
+            const lever_object = new Lever(l_object.position, l_object.rotation, gate_object, level._level);
             await lever_object.set_lever();
-            const lever_interactable = new InteractableLever("Right click to pull lever",lever_object,1.5,"right_click");
+            const lever_interactable = new InteractableLever("Press E to pull lever",lever_object,1.5,"lever");
             
             
             level._level.add(lever_object);
@@ -139,12 +146,7 @@ class Level {
                 interactable_object: lever_interactable
             }
 
-            // CREATE THE GATE
-            const g_object = lever_gates[key].gate;
-            const gate_object = new Gate(g_object.position, g_object.rotation, g_object.scale);
-            await gate_object.set_gate();
             
-            level._level.add(gate_object);
 
             level._lever_gates[lever_gate_name] = {
                 name: lever_gate_name,

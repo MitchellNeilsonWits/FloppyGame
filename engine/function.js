@@ -59,11 +59,21 @@ export function createRigidBodyLeverBase(mesh, position, physic) {
   return { rigidBody, collider }
 }
 
-export function createRigidBodyLeverHandle(mesh, position, physic) {
+export function createColliderLeverHandle(rigidBody, physic, mesh) {
+  const collider = createColliderGeo(rigidBody, physic, mesh);
+  return collider;
+}
+
+export function createRigidBodyLeverHandle(position, physic) {
   const rigidBodyDesc = RigidBodyDesc.kinematicPositionBased();
   rigidBodyDesc.setTranslation(...position);
   const rigidBody = physic.createRigidBody(rigidBodyDesc);
-  const collider = createColliderGeo(rigidBody, physic, mesh);
+  return rigidBody
+}
+
+export function createLeverHandle(mesh, position, physic) {
+  const rigidBody = createRigidBodyLeverHandle(position, physic);
+  const collider = createColliderLeverHandle(rigidBody, physic, mesh);
   return { rigidBody, collider }
 }
 
