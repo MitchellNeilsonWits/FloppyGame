@@ -24,9 +24,17 @@ export default async function loadAssets(path) {
 
   const lever_gates = {}
 
+<<<<<<< Updated upstream
+=======
+  const non_player_colliders = []
+  const glass = []
+
+>>>>>>> Stashed changes
   console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
-    if (mesh.name.includes("player_spawn")) {
+    if (mesh.name.includes("glass")) {
+      glass.push(mesh);
+    } if (mesh.name.includes("player_spawn")) {
       player_spawn = mesh;
     } else if (mesh.name.includes("strength_disk")) {
       strength_disk_spawn = mesh;
@@ -98,5 +106,9 @@ export default async function loadAssets(path) {
     
   }
   
+<<<<<<< Updated upstream
   return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates }
+=======
+  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, non_player_colliders, glass }
+>>>>>>> Stashed changes
 }

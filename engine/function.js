@@ -145,3 +145,12 @@ export function createRigidBodyDynamicPushbox(position, rotation, physic) {
   const collider = physic.createCollider(colliderDesc, rigidBody);
   return { rigidBody, collider }
 }
+
+
+export function createGlass(mesh, physic) { 
+  const rigidBodyDesc = RigidBodyDesc.dynamic();
+  rigidBodyDesc.setTranslation(...mesh.position);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+  const collider = createColliderGeo(rigidBody, physic, mesh)
+  return { rigidBody, collider }
+}
