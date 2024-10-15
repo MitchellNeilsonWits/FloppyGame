@@ -17,7 +17,7 @@ class FiniteStateMachine {
             }
             prev_state.exit();
         }
-        console.log("Setting state to: " + name);
+
         const state = new this._states[name](this);
 
         this._current_state = state;
@@ -26,7 +26,7 @@ class FiniteStateMachine {
     }
 
     update(character_is_turning, input, height_state, current_power) {
-        console.log("current height state:",height_state);
+        
         if (this._current_state) {
             this._current_state.update(character_is_turning, input, height_state, current_power);
         }

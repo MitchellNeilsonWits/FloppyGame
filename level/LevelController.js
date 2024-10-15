@@ -63,6 +63,11 @@ class LevelController {
             disk_object.rigidBody.setTranslation(starting_positions.disk_positions[`${key}`])
         }
 
+        // RESET VELOCITY OF PLAYER
+        this._controls._velocity.x = 0;
+        this._controls._velocity.y = 0;
+        this._controls._velocity.z = 0;
+
         console.log(starting_positions);
     }
 
@@ -75,7 +80,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(1);
         
         });
     }

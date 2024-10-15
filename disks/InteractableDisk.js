@@ -8,7 +8,7 @@ import { create_collider_for_disk } from "../engine/function";
 class InteractableDisk extends interactableObject {
     constructor(interaction_display, object) {
         const distance_threshold = 1.5;
-        const interaction_trigger = 'press_e';
+        const interaction_trigger = 'disk';
         super(interaction_display, object, distance_threshold, interaction_trigger);
         this.start_interaction = this.start_interaction_static.bind(this);
         this.end_interaction = this.end_interaction_static.bind(this);

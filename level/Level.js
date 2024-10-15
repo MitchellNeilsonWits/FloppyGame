@@ -8,6 +8,9 @@ import InteractableDisk from '../disks/InteractableDisk';
 import World from '../engine/world';
 import { get_cartesian_angle_from_rotation } from '../common/Angle';
 import { Quaternion } from 'cannon';
+import Lever from '../lever/Lever';
+import InteractableLever from '../lever/InteractableLever';
+import Gate from '../gate/Gate';
 
 
 class Level {
@@ -44,6 +47,9 @@ class Level {
         
         // Create disks
         await level._create_disks(level, meshes.strength_disk_spawn.position, meshes.flight_disk_spawn.position, meshes.shrink_disk_spawn.position);
+
+        // Create levers and gates
+        await level._create_lever_gates(level, meshes.lever_gates);
 
         // Create other interactable objects
         this._create_interactable_objects(level);
@@ -100,13 +106,57 @@ class Level {
                 object: new_pushbox,
                 type: 'dynamic'
             };
-            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 2, "push")
+            level._interactable_objects[`pushbox_${pushbox.id}`]['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 2, "pushbox")
         
             // Want to be able to jump off of pushboxes
             level._ground_colliders.push(new_pushbox.collider);
         }
     }
     
+
+    async _create_lever_gates(level, lever_gates) {
+        level._lever_gates = {};
+
+        console.log(lever_gates);
+
+        for (const key of Object.keys(lever_gates)) {
+            const lever_gate_name = lever_gates[key].name;
+
+            // CREATE THE GATE
+            const g_object = lever_gates[key].gate;
+            const gate_object = new Gate(g_object.position, g_object.rotation, g_object.scale);
+            await gate_object.set_gate();
+
+            level._level.add(gate_object);
+
+            // CREATE THE LEVER
+            const l_object = lever_gates[key].lever;
+            console.log(lever_gates[key]);
+            const lever_object = new Lever(l_object.position, l_object.rotation, gate_object, level._level);
+            await lever_object.set_lever();
+            const lever_interactable = new InteractableLever("Press E to pull lever",lever_object,1.5,"lever");
+            
+            
+            level._level.add(lever_object);
+            
+            level._interactable_objects[`lever_gate_${lever_gate_name}`] = {
+                name: lever_gate_name,
+                object: lever_object,
+                type: 'static',
+                interactable_object: lever_interactable
+            }
+
+            
+
+            level._lever_gates[lever_gate_name] = {
+                name: lever_gate_name,
+                lever_object: lever_object,
+                lever_interactable: lever_interactable,
+                gate_object: gate_object
+            }
+        }
+    }
+
     _create_interactable_objects(level) {
         // this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
     }
@@ -214,6 +264,12 @@ class Level {
         // Update the dynamic objects
         for (const object of level._dynamic_objects) {
             object.update(time_elapsed_in_seconds);
+        }
+
+        // Update gates and levers
+        for (const key of Object.keys(level._lever_gates)) {
+            level._lever_gates[key].lever_object.update();
+            level._lever_gates[key].gate_object.update(time_elapsed_in_seconds);
         }
     }
 

@@ -274,7 +274,6 @@ class CharacterController {
     update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y) {
     
         // UPDATE FSM
-        console.log(this.height_state);
         this._state_machine.update(this._character_is_turning, this._input, this.height_state, "none");
 
         // VELOCITY INITIALIZATION
@@ -341,9 +340,9 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.07)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
             if (this._input._keys.space) {
-                y_velocity += 5;
+                y_velocity += 4.5;
             }
             else{
                 y_velocity = this._target.rigidBody.linvel().y;
