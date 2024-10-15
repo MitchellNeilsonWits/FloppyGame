@@ -345,7 +345,8 @@ class CharacterController {
                 y_velocity += 4.5;
             }
             else{
-                y_velocity = this._target.rigidBody.linvel().y;
+                // y_velocity = this._target.rigidBody.linvel().y;
+                y_velocity = 0;
             }
         } else {
             y_velocity = this._target.rigidBody.linvel().y;
@@ -435,12 +436,13 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.07)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
             if (this._input._keys.space) {
-                y_velocity += 3.5;
+                y_velocity += 3;
             }
             else{
-                y_velocity = this._target.rigidBody.linvel().y;
+                // y_velocity = this._target.rigidBody.linvel().y;
+                y_velocity = 0;
             }
         } else {
             y_velocity = this._target.rigidBody.linvel().y;
@@ -627,12 +629,13 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.07)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
             if (this._input._keys.space) {
-                y_velocity += 3.5;
+                y_velocity += 3;
             }
             else{
-                y_velocity = this._target.rigidBody.linvel().y;
+                // y_velocity = this._target.rigidBody.linvel().y;
+                y_velocity = 0;
             }
         } else {
             y_velocity = this._target.rigidBody.linvel().y;

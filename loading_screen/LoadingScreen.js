@@ -31,6 +31,8 @@ class LoadingScreen {
         this.bar_width = 500;//loading_bar_container.style.width;
         console.log(this.bar_width);
 
+        this.is_shown = false;
+
         
     }
 
@@ -40,10 +42,12 @@ class LoadingScreen {
     }
 
     show_screen() {
+        this.is_shown = true;
         document.getElementsByTagName('body')[0].appendChild(this.loading_screen_root);
     }
 
     hide_screen() {
+        this.is_shown = false;
         const el = document.getElementById('loading_screen_root');
         if (el) {
             document.getElementsByTagName('body')[0].removeChild(el);

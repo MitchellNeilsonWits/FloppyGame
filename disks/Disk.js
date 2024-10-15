@@ -97,6 +97,10 @@ class Disk extends Object3D {
         this.updatePhysic();
     }
 
+    reset_velocity() {
+        this.rigidBody.setLinvel({x: 0, y: 0, z: 0}, true);
+    }
+
     updatePhysic() {
         // const linvel = this.rigidBody.linvel();
         // const x = linvel.x;
@@ -106,7 +110,7 @@ class Disk extends Object3D {
 
         // this.rigidBody.addForce({x: 0, y: 0, z: 0})
 
-        this.rigidBody.setLinvel({ x: 0, y: -1, z: 0 }, true);
+        this.rigidBody.setLinvel({ x: 0, y: 0, z: 0 }, true);
 
     }
 

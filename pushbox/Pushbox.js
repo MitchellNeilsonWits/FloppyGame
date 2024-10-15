@@ -22,8 +22,12 @@ class Pushbox extends Object3D {
     .then((gltf) => {
         console.log(gltf.scene.children);
         this._pushbox_mesh = gltf.scene.children[0];
-        this._pushbox_mesh.position.y = 8;
-        this._pushbox_mesh.position.z = 22;
+        // this._pushbox_mesh.position.y = 8;
+        // this._pushbox_mesh.position.z = 22;
+        this._pushbox_mesh.position.x = this.position.x;
+        this._pushbox_mesh.position.y = this.position.y;
+        this._pushbox_mesh.position.z = this.position.z;
+
         // this._mixer = new THREE.AnimationMixer(this);
         
         // this._manager = new THREE.LoadingManager();

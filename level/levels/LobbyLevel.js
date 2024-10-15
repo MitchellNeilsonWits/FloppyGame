@@ -13,9 +13,10 @@ import TutRender from '../../engine/tutRender';
  */
 class LobbyLevel extends Level {
 
-    constructor(scene) {
+    constructor(scene, change_level) {
         super();
         this._scene = scene;
+        this.change_level = change_level;
     }
 
     // Function to set the components for the scene
@@ -23,7 +24,7 @@ class LobbyLevel extends Level {
         // Load the meshes for the lobby and load the base of the level's scene and other objects
         const meshes = await loadAssets('assets/lobbyFinal5.glb');
         await this.base_load(this, meshes, character_controller, camera, this._scene);
-
+        
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
         // CREATE THE PROXIMITY RENDERER
         // -- finds position of character to load screen
@@ -32,6 +33,7 @@ class LobbyLevel extends Level {
         // Instantiate TutRender with a callback to start the tutorial
         this._tutorialRenderer = new TutRender(character_controller, this._scene, () => {
             //this.startTutorial();
+           this.change_level(1); 
         });
 
         // Get the skybox
@@ -45,6 +47,14 @@ class LobbyLevel extends Level {
     }
 
     // ------------------- FUNCTIONS TO GET OBJECTS EXTERNALLY -------------------
+    get_disks() {
+        return this._disks;
+    }
+
+    get_starting_positions() {
+        return this.level_start_state;
+    }
+    
     get_dynamic_objects() {
         return this._dynamic_objects;
     }

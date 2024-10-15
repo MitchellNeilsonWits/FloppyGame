@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import physic from "../engine/physic";
 import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
 import { create_collider_for_disk } from "../engine/function";
+import addOneTimeEventListener from "../common/SingleUseListener";
 
 class InteractableDisk extends interactableObject {
     constructor(interaction_display, object) {
@@ -14,19 +15,6 @@ class InteractableDisk extends interactableObject {
         this.end_interaction = this.end_interaction_static.bind(this);
         this.use_object = this.use_object_static.bind(this);
 
-    }
-
-    _addOneTimeEventListener(element, event, callback) {
-        // const wrapper = e => {
-        //     try {callback(e)} finally {
-        //         element.removeEventListener(event, wrapper);
-        //     };
-        // }
-        let handler = (e) => {
-            callback(e);
-            element.removeEventListener(event, handler);
-        }
-        element.addEventListener(event, handler);
     }
     
     use_object_static(controls, object_to_use, level) {
@@ -57,7 +45,7 @@ class InteractableDisk extends interactableObject {
             action.clampWhenFinished = true;
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(1.0);
-            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+            addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
                 console.log("currently loading:",object_to_use);
                 controls.skin_controller.change_skin(object_to_use.power);
