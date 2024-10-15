@@ -15,7 +15,7 @@ class Gate extends Object3D {
         this.rotation.copy(rotation);
         this.gate_open = false;
         // this.scale.copy(scale);
-    }
+    } 
 
     async set_gate(physic) {
         const gltf = await (new GLTFLoader()).loadAsync("../models/force_field.glb")
