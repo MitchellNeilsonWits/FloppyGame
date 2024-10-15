@@ -27,15 +27,6 @@ class GameController {
     constructor() {
         this._init();
         this._playing_game = false;
-        this.bound_handle_press_escape = this.handle_press_escape.bind(this);
-    }
-
-    handle_press_escape(e) {
-        console.log(e);
-        if (e.key == "Escape") {
-            console.log("handle!");
-        }
-        this.play_game();
     }
 
     // Play game: sets the mouse listener, sets playing game to true, and hides the pause menu
@@ -50,7 +41,6 @@ class GameController {
         this._mouse_listener.remove_listener();
         this._playing_game = false;
         this._menu.show_menu();
-        document.addEventListener('keydown', this.handle_press_escape)
     }
 
     _setup_first_pointer_lock() {
@@ -113,7 +103,8 @@ class GameController {
             scene: this._scene,
             mixers: this._mixers,
             mouse_listener: this._mouse_listener,
-            physic: physic
+            physic: physic,
+            menu: this._menu
         }
 
         this._level_controller = new LevelController(params);
@@ -152,7 +143,7 @@ class GameController {
             // UPDATE CAMERA
             if (this._camera) {
                 if (this._mouse_listener) {
-                    this._camera.update(this._mouse_listener._mouse_movement_x, this._mouse_listener._mouse_movement_y);
+                    this._camera.update(this._mouse_listener._mouse_movement_x, this._mouse_listener._mouse_movement_y, this._mouse_listener._zoom);
                     this._mouse_listener._decelerate_mouse_movement(); // decellerate the mouse movement to stop continuous rotations
                 }
             }

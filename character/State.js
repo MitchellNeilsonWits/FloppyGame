@@ -5,26 +5,42 @@ class State {
 
     enter() {}
     exit() {}
-    update(character_is_turning, input, height_state) {
+    update(character_is_turning, input, height_state, current_power) {
         console.log(height_state);
 
-        // Handle when player is in the air
-        if (height_state == "in air") {
-            this._parent.set_state('falling');
-            return;
-        } else if (height_state == "on ground") {
-            // if (input._keys.space) {
-            //     this._parent.set_state('jump');
-            //     return;
-            // }
-        }
+        if (current_power === "flight") {
+            // Handle when player is in the air
+            if (height_state == "in air") {
+                if (this._requested_movement_update(input)) {
+                    if (input._keys.shift) this._parent.set_state('flying_forward_fast');
+                    else this._parent.set_state('flying_forward');
+                } else {
+                    this._parent.set_state('flying_idle');
+                }
+                return;
+            }
 
-        if (this._requested_movement_update(input)) {
-            if (input._keys.shift) this._parent.set_state('run'.concat("_", character_is_turning));
-            else this._parent.set_state('walk'.concat("_", character_is_turning));
-        }
-        else {
-           this._parent.set_state('idle');
+            if (this._requested_movement_update(input)) {
+                if (input._keys.shift) this._parent.set_state('run'.concat("_", character_is_turning));
+                else this._parent.set_state('walk'.concat("_", character_is_turning));
+            }
+            else {
+                this._parent.set_state('idle');
+            }
+        } else {
+            // Handle when player is in the air
+            if (height_state == "in air") {
+                this._parent.set_state('falling');
+                return;
+            }
+
+            if (this._requested_movement_update(input)) {
+                if (input._keys.shift) this._parent.set_state('run'.concat("_", character_is_turning));
+                else this._parent.set_state('walk'.concat("_", character_is_turning));
+            }
+            else {
+                this._parent.set_state('idle');
+            }
         }
     }
 

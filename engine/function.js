@@ -47,7 +47,34 @@ export function createRigidBodyFixed(mesh, physic) {
   rigidBodyDesc.setTranslation(...position);
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
   // console.log("rigid_body = ",rigidBody)
-  return createColliderGeo(rigidBody, physic, mesh)
+  const collider = createColliderGeo(rigidBody, physic, mesh)
+  return { rigidBody, collider }
+}
+
+export function createRigidBodyLeverBase(mesh, position, physic) {
+  const rigidBodyDesc = RigidBodyDesc.fixed();
+  rigidBodyDesc.setTranslation(...position);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc);
+  const collider = createColliderGeo(rigidBody, physic, mesh);
+  return { rigidBody, collider }
+}
+
+export function createColliderLeverHandle(rigidBody, physic, mesh) {
+  const collider = createColliderGeo(rigidBody, physic, mesh);
+  return collider;
+}
+
+export function createRigidBodyLeverHandle(position, physic) {
+  const rigidBodyDesc = RigidBodyDesc.kinematicPositionBased();
+  rigidBodyDesc.setTranslation(...position);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc);
+  return rigidBody
+}
+
+export function createLeverHandle(mesh, position, physic) {
+  const rigidBody = createRigidBodyLeverHandle(position, physic);
+  const collider = createColliderLeverHandle(rigidBody, physic, mesh);
+  return { rigidBody, collider }
 }
 
 export function createRigidBodyDynamic(mesh, physic) {
@@ -66,7 +93,7 @@ export function createRigidBodyEntity(position, physic) {
   console.log("Position:",position)
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  const collider = createColliderBall(0.25, rigidBody, physic)
+  const collider = createColliderBall(0.20, rigidBody, physic)
   return { rigidBody, collider }
 }
 
@@ -81,16 +108,16 @@ export function createFoot(position, physic) {
 }
 
 function createColliderDisk(physic, rigidBody) {
-  const colliderDesc = ColliderDesc.cuboid(0.4,0.3,0.4).setMass(0);
+  const colliderDesc = ColliderDesc.cuboid(0.4,0.3,0.4).setMass(1).setActiveEvents(ActiveEvents.CONTACT_FORCE_EVENTS).setActiveCollisionTypes(ActiveCollisionTypes.DYNAMIC_DYNAMIC);
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
 export function create_rigid_body_for_disk(mesh, physic) {
   const position = mesh.position;
-  const rigidBodyDesc = RigidBodyDesc.dynamic()
+  const rigidBodyDesc = RigidBodyDesc.dynamic();
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  rigidBody.setAdditionalMass(100);
+  rigidBody.setAdditionalMass(0);
   return rigidBody;
 }
 

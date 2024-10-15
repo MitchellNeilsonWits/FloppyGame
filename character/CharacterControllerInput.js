@@ -13,12 +13,50 @@ class CharacterControllerInput {
             shift: false,
             drop: false,
             use: false,
-            interact: false
+            interact: false,
+            unload_disk: false,
+            crouch: false,
+            right_click: false,
+            left_click: false
         };
 
         document.addEventListener('keydown', (e) => this._on_key_down(e), false);
         document.addEventListener('keyup', (e) => this._on_key_up(e), false);
+        document.addEventListener('mousedown', (e) => this._on_mouse_down(e), false);
+        document.addEventListener('mouseup', (e) => this._on_mouse_up(e), false);
 
+
+    }
+
+    _on_mouse_down(event) {
+        switch (event.button) {
+            case 0:
+                this._keys.left_click = true;
+                break;
+
+            case 2:
+                this._keys.right_click = true;
+                break;
+        
+            default:
+                break;
+        }
+    }
+    
+
+    _on_mouse_up(event) {
+        switch (event.button) {
+            case 0:
+                this._keys.left_click = false;
+                break;
+
+            case 2:
+                this._keys.right_click = false;
+                break;
+        
+            default:
+                break;
+        }
     }
 
     _on_key_down(event) {
@@ -58,6 +96,15 @@ class CharacterControllerInput {
             case 81: // Q
                 this._keys.use = true;
                 break;
+
+            case 90: // Z
+                this._keys.unload_disk = true;
+                break;
+
+            case 67: // C
+                this._keys.crouch = true;
+                break;
+
         }
     }
 
@@ -97,6 +144,14 @@ class CharacterControllerInput {
 
             case 81: // Q
                 this._keys.use = false;
+                break;
+            
+            case 90: // Z
+                this._keys.unload_disk = false;
+                break;
+
+            case 67: // C
+                this._keys.crouch = false;
                 break;
         }
     }

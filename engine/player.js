@@ -39,8 +39,13 @@ export default class Player extends Object3D {
 
   updatePhysic(x_vel, y_vel, z_vel) {
     const x = x_vel;
-    const y = y_vel;
+    var y = y_vel;
     const z = z_vel;
+
+    const terminal_y_velocity = -2;
+    if (y < terminal_y_velocity) {
+      y = terminal_y_velocity;
+    }
     this.rigidBody.setLinvel({x: x_vel, y: y_vel, z: z_vel});
     // this.foot_rigidBody.setLinvel({x: x_vel, y: y_vel, z: z_vel});
     // console.log(this.foot_collider.translation());

@@ -1,179 +1,50 @@
-import * as THREE from 'three';
 import Level from "../Level";
 import ProximityScreenRenderer from '../../engine/proxRender';
-
-import physic from '../../engine/physic';
-import World from '../../engine/world';
-// import loader from "../engine/loader";
 import loadAssets from '../../engine/loader';
-import light from '../../lighting/point_lights';
-import directional_light from '../../lighting/directional_lights';
-import DynamicObject from '../../engine/dynamicObject';
-import InteractableBox from './InteractableBox';
-import Disk from '../../disks/Disk';
-import InteractableDisk from '../../disks/InteractableDisk';
-import Pushbox from './Pushbox';
-import InteractablePushbox from './InteractablePushbox';
 import TutRender from '../../engine/tutRender';
 
+/**
+ * Thank you to the following artists whose work was used in this project:
+ * CC:
+ * 
+ * skybox texture:
+ *  https://www.deviantart.com/cosmicspark/art/Blender-Space-Skybox-15-865292177
+ * 
+ */
 class LobbyLevel extends Level {
 
     constructor(scene) {
         super();
         this._scene = scene;
-        this._TutRender = null;
-    }
-
-    async _create_pushboxes() {
-        for (const pushbox of this._pushboxes) {
-            
-            const new_pushbox = new Pushbox(pushbox.object.position, pushbox.object.rotation);
-            pushbox.pushbox_object = new_pushbox;
-
-            await pushbox.pushbox_object.set_pushbox();
-            this._level.add(new_pushbox);
-            this._dynamic_objects.push(new_pushbox);
-
-            this._interactable_objects['pushbox_A'] = {
-                object: new_pushbox,
-                type: 'dynamic'
-            };
-            this._interactable_objects['pushbox_A']['interactable_object'] = new InteractablePushbox("Walk into the cube to push", pushbox.object, 1, "push")
-        
-            // Want to be able to jump off of pushboxes
-            this._ground_colliders.push(new_pushbox.collider);
-        }
-    }
-    
-    _create_interactable_objects() {
-        // this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
-    }
-
-    async _create_disks() {
-        const sample_disk = new Disk();
-        await sample_disk.set_disk('', physic);
-        this._disks = {
-            sample_disk: sample_disk
-        };
-        this._level.add(sample_disk);
-        this._dynamic_objects.push(sample_disk);
-
-        this._interactable_objects['sample_disk'] = {
-            object: sample_disk,
-            type: 'dynamic'
-        }
-        this._interactable_objects['sample_disk']['interactable_object'] = new InteractableDisk("Press E to pickup sample disk", this._interactable_objects['sample_disk'].object, 1.5, "press_e");
-
     }
 
     // Function to set the components for the scene
-    async _set_components(character_controller, scene) {
-        // Load the meshes for the lobby
-        const meshes = await loadAssets('assets/tutorialLevel.glb');
+    async set_level(character_controller, camera, _callback) {
+        // Load the meshes for the lobby and load the base of the level's scene and other objects
+        const meshes = await loadAssets('assets/lobbyFinal5.glb');
+        await this.base_load(this, meshes, character_controller, camera, this._scene);
 
-        this._ground_colliders = [];
-
-        // Create the physics for the world
-        this._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
-        
-        // Add the static ground colliders from the world as objects to jump off of
-        this._world.get_ground_colliders().forEach(obj => {this._ground_colliders.push(obj)});
-
+        // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
         // CREATE THE PROXIMITY RENDERER
         // -- finds position of character to load screen
-        this._prox = new ProximityScreenRenderer(character_controller, scene );
+        this._prox = new ProximityScreenRenderer(character_controller, this._scene );
 
-            // Instantiate TutRender with a callback to start the tutorial
-        console.log("SCENE",scene);
-        this._tutorialRenderer = new TutRender(character_controller, scene, () => {
-        console.log("Starting tutorial...");
-        
-        //this.startTutorial();
+        // Instantiate TutRender with a callback to start the tutorial
+        this._tutorialRenderer = new TutRender(character_controller, this._scene, () => {
+            //this.startTutorial();
         });
 
-        this._level = new THREE.Group();
-        this._interactable_objects = {};
+        // Get the skybox
+        this._skybox = meshes.skybox;
+
+        console.log(this._skybox);
+
+        // -----------------------------------------------------------------------
         
-        // Set rigid body meshes
-        for (const mesh of meshes.visuals) {
-            this._level.add(mesh);
-
-            // Put in interactable objects if needed
-            if (meshes.interactable[mesh.name]) {
-                this._interactable_objects[mesh.name] = {
-                    object: mesh.name,
-                    type: "static"
-                }
-            }
-        }
-
-        // Set dynamic body meshes
-        this._dynamic_objects = [];
-        for (const mesh of meshes.colliders_dynamic) {
-            const object = new DynamicObject(mesh, physic);
-            this._dynamic_objects.push(object);
-            this._level.add(object);
-
-            // Put in interactable objects if needed
-            if (meshes.interactable[mesh.name]) {
-                this._interactable_objects[mesh.name] = {
-                    object: object,
-                    type: "dynamic"
-                }
-            }
-        }
-
-        // Set lighting
-        // (A) Point Lights
-        this._lights = []
-        for (const light of meshes.pointLights) {
-            const pos = light.position;
-            const colour = light.color;
-            const intensity = light.intensity/1000; // adjust lighting for three js
-            const distance = light.distance;
-
-            const point_light = new THREE.PointLight( colour, intensity, distance );
-            point_light.position.set( pos.x, pos.y, pos.z );
-
-            this._lights.push(point_light);
-        }
-        // (B) Spot Lights
-        for (const light of meshes.spotLights) {
-            console.log(light);
-            const pos = light.position;
-            const colour = light.color;
-            const intensity = light.intensity/1000; // adjust lighting for three js
-            const distance = light.distance;
-            const rotation = light.rotation;
-            const angle = light.angle; // angle of spotlight set to be 0.3 :-)
-            const spotlight = new THREE.SpotLight(colour, intensity, distance, angle);
-            // const point_light = new THREE.PointLight( colour, intensity, distance );
-            spotlight.position.set( pos.x, pos.y, pos.z );
-            spotlight.setRotationFromEuler(rotation);
-            console.log(spotlight);
-
-            this._lights.push(spotlight);
-        }
-
-        this._pushboxes = [];
-        let pushbox_num = 0;
-        for (const pushbox of meshes.pushboxes) {
-            this._pushboxes.push({
-                id: pushbox_num,
-                object: pushbox
-            })
-            pushbox_num++;
-        }
-
-        this._create_interactable_objects()
-        await this._create_pushboxes();
-        await this._create_disks();
-    }
-    
-    async set_level(character_controller) {
-        await this._set_components(character_controller, this._scene);
+        _callback();
     }
 
+    // ------------------- FUNCTIONS TO GET OBJECTS EXTERNALLY -------------------
     get_dynamic_objects() {
         return this._dynamic_objects;
     }
@@ -189,23 +60,14 @@ class LobbyLevel extends Level {
     get_ground_objects() {
         return this._ground_colliders;
     }
+    // --------------------------------------------------------------------------
 
     render_level() {
-        // Render the level's components
-        this._scene.add(this._level);
-
-        // Render the lights for the level
-        for (const light of this._lights) {
-            this._scene.add(light);
-        }
-
-        // for (const key of Object.keys(this._disks)) {
-        //     console.log(`Adding ${key}`)
-        //     this._scene.add(this._disks[key]);
-        // }
+        this.render_main_level_components(this);
     }
 
     update(time_elapsed_in_seconds) {
+        // ---------------- LEVEL SPECIFIC UPDATES --------------------
         // Update proximity of player to screen
         if (this._prox) {
             this._prox.update();
@@ -215,18 +77,13 @@ class LobbyLevel extends Level {
             this._tutorialRenderer.update();
         }
 
-        // Update the dynamic objects
-        for (const object of this._dynamic_objects) {
-            object.update(time_elapsed_in_seconds);
-        }
+        this._skybox.rotateX(Math.PI/10000);
+        this._skybox.rotateY(-Math.PI/10000);
+        this._skybox.rotateZ(Math.PI/10000);
+        // -------------------------------------------------------------
 
-        // for () {
-
-        // }
-
-        // for (const key in ) {
-
-        // }
+        // Call main update function to handle standard level updates
+        this.main_update(this, time_elapsed_in_seconds);
     }
 
     startTutorial() {

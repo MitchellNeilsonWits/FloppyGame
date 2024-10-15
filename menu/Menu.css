@@ -126,3 +126,65 @@
 #sensitivity_slider, #fov_slider {
   -webkit-user-drag: none;
 }
+
+#restart_confirm_root {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#restart_confirm_container {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: #374247; /* Solid color background */
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 10px var(--green); /* Glowing green effect */
+
+  padding: 10px;
+}
+
+#restart_confirm_header {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  font-weight: 300;
+
+  margin: 0;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#restart_confirm_buttons {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#restart_confirm_yes, #restart_confirm_no {
+  width: 40%;
+  /* height: 25px; */
+
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: var(--black); /* Dark background */
+  color: var(--green); /* Neon green text */
+  border: none;
+  border-radius: 5px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px var(--green); /* Glowing effect */
+}

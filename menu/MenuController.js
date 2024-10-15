@@ -4,14 +4,15 @@ class MenuController {
     constructor(pointer_lock_target) {
         this._init();
         this._pointer_lock_target = pointer_lock_target;
+        this.restart_button_function = () => {};
     }
 
     _init() {
         // --------- SETUP COMPONENTS HERE ----------
         
         // Base Menu element
-        var menu_root = document.createElement('div');
-        menu_root.id = 'menu_root';
+        this.menu_root = document.createElement('div');
+        this.menu_root.id = 'menu_root';
 
         // Continue Game button
         var continue_game_button = document.createElement('button');
@@ -20,10 +21,10 @@ class MenuController {
         continue_game_button.onclick = this.continue_game.bind(this);
 
         // Restart Level button
-        var restart_button = document.createElement('button');
-        restart_button.id = 'restart_button';
-        restart_button.textContent = 'Restart Level';
-        restart_button.onclick = this.restart_level.bind(this);
+        this.restart_button = document.createElement('button');
+        this.restart_button.id = 'restart_button';
+        this.restart_button.textContent = 'Restart Level';
+        this.restart_button.onclick = this.restart_level.bind(this);
 
         // Sensitivity slider
         var sensitivity_container = document.createElement('div');
@@ -75,15 +76,15 @@ class MenuController {
         exit_button.onclick = this.exit_to_lobby.bind(this);
 
         // Add components to the base Menu element
-        menu_root.appendChild(continue_game_button);
-        menu_root.appendChild(restart_button);
-        menu_root.appendChild(sensitivity_container);
-        menu_root.appendChild(fov_container);
-        menu_root.appendChild(exit_button);
+        this.menu_root.appendChild(continue_game_button);
+        this.menu_root.appendChild(this.restart_button);
+        this.menu_root.appendChild(sensitivity_container);
+        this.menu_root.appendChild(fov_container);
+        this.menu_root.appendChild(exit_button);
         
         // ------------------------------------------
 
-        this._components = menu_root;
+        this._components = this.menu_root;
     }
 
     // Placeholder methods for buttons
@@ -94,6 +95,7 @@ class MenuController {
 
     restart_level() {
         console.log('Restarting the level...');
+        this.handle_restart_level();
     }
 
     exit_to_lobby() {
@@ -116,9 +118,59 @@ class MenuController {
     hide_menu(pointer_lock_target) {
         if (pointer_lock_target) {
             pointer_lock_target.requestPointerLock().then(() => {
-                document.getElementsByTagName('body')[0].removeChild(document.getElementById('menu_root'));
+                const menu_item = document.getElementById('menu_root');
+                if (menu_item){
+                    document.getElementsByTagName('body')[0].removeChild(menu_item);
+                }
             });
         }
+    }
+
+    handle_restart_level() {
+        this.restart_confirm_root = document.createElement('div');
+        this.restart_confirm_root.id = 'restart_confirm_root';
+
+        var restart_confirm_container = document.createElement('div');
+        restart_confirm_container.id = 'restart_confirm_container';
+        this.restart_confirm_root.appendChild(restart_confirm_container);
+        
+        var restart_confirm_header = document.createElement('h1');
+        restart_confirm_header.id = 'restart_confirm_header';
+        restart_confirm_header.innerHTML = 'Are you sure you want to restart this level?'
+        restart_confirm_container.appendChild(restart_confirm_header);
+        
+        var restart_confirm_buttons = document.createElement('div');
+        restart_confirm_buttons.id = 'restart_confirm_buttons';
+        
+        this.restart_confirm_yes = document.createElement('button');
+        this.restart_confirm_yes.id = 'restart_confirm_yes';
+        this.restart_confirm_yes.innerHTML = 'YES';
+        this.restart_confirm_yes.onclick = this.confirm_restart_level.bind(this);
+
+        this.restart_confirm_no = document.createElement('button');
+        this.restart_confirm_no.id = 'restart_confirm_no';
+        this.restart_confirm_no.innerHTML = 'NO';
+        this.restart_confirm_no.onclick = this.cancel_restart_level.bind(this);
+        restart_confirm_buttons.appendChild(this.restart_confirm_yes);
+        restart_confirm_buttons.appendChild(this.restart_confirm_no)
+        
+        restart_confirm_container.appendChild(restart_confirm_buttons);
+        document.getElementsByTagName('body')[0].appendChild(this.restart_confirm_root);
+    }
+
+    cancel_restart_level() {
+        document.getElementsByTagName('body')[0].removeChild(this.restart_confirm_root);
+    }
+
+    confirm_restart_level() {
+        this.restart_button_function();
+        document.getElementsByTagName('body')[0].removeChild(this.restart_confirm_root);
+        this.hide_menu(this._pointer_lock_target);
+    }
+
+    set_restart_level_function(func) {
+        // this.restart_confirm_yes.onclick = func;
+        this.restart_button_function = func.bind(this);
     }
 }
 
