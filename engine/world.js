@@ -4,11 +4,14 @@ import { createRigidBodyDynamic, createRigidBodyFixed } from './function'
 export default class World extends Object3D {
   constructor(visuals, colliders, visuals_dynamic, colliders_dynamic, physic) {
     super()
+    this.all_colliders = [];
+    this.all_rigid_bodies = [];
     this.ground_colliders = [];
     this.initPhysic(colliders, physic)
     this.initVisual(visuals)
     // this.initPhysicDynamic(colliders_dynamic, physic);
     // this.initVisualDynamic(visuals_dynamic);
+    
   }
 
   get_ground_colliders() {
@@ -21,6 +24,8 @@ export default class World extends Object3D {
       if (mesh.name.includes("ground")) {
         this.ground_colliders.push(collider);
       }
+      this.all_colliders.push(collider);
+      this.all_rigid_bodies.push(rigidBody);
     }
   }
 

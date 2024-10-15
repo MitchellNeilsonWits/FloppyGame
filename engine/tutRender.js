@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
 class TutRender {
-    constructor(character_controller, scene, onStartTutorial) {
+    constructor(character_controller, level, onStartTutorial) {
         this.character_controller = character_controller;
         this.targetObjectName = "tut"; // Object player should approach
-        this.scene = scene;
+        this.level = level;
         this.proximityThreshold = 7; 
         this.isPlayerNear = false; 
         this.onStartTutorial = onStartTutorial; // Callback for starting the tutorial
@@ -21,32 +21,36 @@ class TutRender {
         this.tutorialMessage.style.fontSize = '24px';
         this.tutorialMessage.style.textAlign = 'center';
         this.tutorialMessage.style.display = 'none'; // Hide initially
-        this.tutorialMessage.innerHTML = '<p>Click here to go to the tutorial level</p><button id="start-tutorial-button">Start Tutorial</button>';
+        this.tutorialMessage.innerHTML = '<p>Press E go to the tutorial level</p>';
         document.body.appendChild(this.tutorialMessage);
 
         // Event listener for the tutorial button
-        const startButton = document.getElementById('start-tutorial-button');
-        startButton.addEventListener('click', () => {
-            this.hideTutorialMessage();
-            if (this.onStartTutorial) {
-                this.onStartTutorial(); // Trigger tutorial start callback
-            }
-        });
+        // const startButton = document.getElementById('start-tutorial-button');
+        // startButton.addEventListener('click', () => {
+        //     this.hideTutorialMessage();
+        //     if (this.onStartTutorial) {
+        //         this.onStartTutorial(); // Trigger tutorial start callback
+        //     }
+        // });
 
         // Add listener for 'E' key to show tutorial HTML
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'e' || event.key === 'E') {
-                if (this.isPlayerNear) {
-                    this.showTutorialMessage();
-                }
-            }
-        });
+        // window.addEventListener('keydown', (event) => {
+        //     console.log("here!!!");
+        //     if (event.key === 'e' || event.key === 'E') {
+        //         if (this.isPlayerNear) {
+        //             // this.showTutorialMessage();
+        //             this.hideTutorialMessage();
+        //             this.onStartTutorial();
+        //             // console.log("YAYYYYY");
+        //         }
+        //     }
+        // });
     }
 
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
-            const targetObject = this.scene.getObjectByName(this.targetObjectName);
+            const targetObject = this.level.getObjectByName(this.targetObjectName);
 
             if (targetObject) {
                 const targetPos = targetObject.position.clone();
@@ -54,11 +58,18 @@ class TutRender {
                 // Check proximity
                 const distance = playerPos.distanceTo(targetPos);
                 
+                console.log(distance);
                 if (distance < this.proximityThreshold) {
                     if (!this.isPlayerNear) {
                         console.log("Player is near the tutorial object, press 'E' to start the tutorial");
                         this.isPlayerNear = true;
-                        // this.showTutorialMessage();
+                        this.showTutorialMessage();
+                    }
+                    if (this.isPlayerNear) {
+                        if (this.character_controller._input._keys.interact) {
+                            this.hideTutorialMessage();
+                            this.onStartTutorial();
+                        }
                     }
                 } else {
                     if (this.isPlayerNear) {
