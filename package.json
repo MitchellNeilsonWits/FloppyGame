@@ -2,7 +2,8 @@
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.14.0",
     "cannon": "^0.6.2",
-    "three": "^0.168.0"
+    "three": "^0.168.0",
+    "three-stdlib": "^2.33.0"
   },
   "devDependencies": {
     "vite": "^5.4.8"

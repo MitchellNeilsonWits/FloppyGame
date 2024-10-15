@@ -22,7 +22,7 @@ class LobbyLevel extends Level {
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/lobbyFinal5.glb');
+        const meshes = await loadAssets('assets/lobbyFinalAnand.glb');
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
@@ -38,8 +38,6 @@ class LobbyLevel extends Level {
 
         // Get the skybox
         this._skybox = meshes.skybox;
-
-        console.log(this._skybox);
 
         // -----------------------------------------------------------------------
         
