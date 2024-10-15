@@ -24,12 +24,9 @@ export default async function loadAssets(path) {
 
   const lever_gates = {}
 
-<<<<<<< Updated upstream
-=======
-  const non_player_colliders = []
+
   const glass = []
 
->>>>>>> Stashed changes
   console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
     if (mesh.name.includes("glass")) {
@@ -46,6 +43,7 @@ export default async function loadAssets(path) {
       skybox = mesh;
       visuals.push(mesh);
       colliders.push(mesh);
+      
     } else if (mesh.type === 'PointLight') {
       pointLights.push(mesh);
     } else if (mesh.type === 'SpotLight') {
@@ -74,10 +72,12 @@ export default async function loadAssets(path) {
         } else {
           lever_gates[gate_name].gate = mesh;
         }
+        
       } else if (mesh.name.includes("pushbox")) {
         pushboxes.push(mesh);
-        visuals.push(mesh)
-        colliders.push(mesh)
+        // visuals.push(mesh)
+        // colliders.push(mesh)
+      
       } else if (!mesh.name.includes("dynamic")) {
         if (mesh.name.includes("interactable")) {
           interactable[mesh.name] = {
@@ -91,6 +91,7 @@ export default async function loadAssets(path) {
         }
         visuals.push(mesh)
         colliders.push(mesh)
+        
       } else {
         if (mesh.name.includes("interactable")) {
           interactable[mesh.name] = {
@@ -100,15 +101,13 @@ export default async function loadAssets(path) {
         }
         visuals_dynamic.push(mesh);
         colliders_dynamic.push(mesh);
+        
       }
     }
 
     
   }
   
-<<<<<<< Updated upstream
-  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates }
-=======
-  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, non_player_colliders, glass }
->>>>>>> Stashed changes
+
+  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
 }

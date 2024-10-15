@@ -10,7 +10,7 @@ import loadAssets from "../engine/loader";
 import LobbyLevel from "./levels/LobbyLevel";
 import TutorialLevel from "./levels/TutorialLevel";
 import LoadingScreen from "../loading_screen/LoadingScreen";
-import { Quaternion, Vector3 } from "three";
+import { Quaternion, Scene, Vector3 } from "three";
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
 
 class LevelController {
@@ -28,6 +28,8 @@ class LevelController {
         this.reset_current_level_bound = this.reset_current_level.bind(this);
         this._menu.set_restart_level_function(this.reset_current_level_bound);
 
+        this.change_level = this.change_level_unbound.bind(this);
+
         // Define the levels to be played
         this._current_level = 0;
         this._level = null;
@@ -38,16 +40,28 @@ class LevelController {
     }
 
     reset_current_level() {
+        // ---------- RESET PLAYER ----------
         const starting_positions = this._level.get_starting_positions();
         this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
         this._controls._velocity = new Vector3(0,0,0);
         this._camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(starting_positions.player_rotation)));
         this._controls.busy_loading_disk = false;
+        // ------------------------------
+
+        // RESET VELOCITY OF PLAYER
+        this._controls._velocity.x = 0;
+        this._controls._velocity.y = 0;
+        this._controls._velocity.z = 0;
         
+        // ---------- RESET DISKS ----------
         // Take off disk being held and loaded disk
         if (this._controls._holding_disk) {
             console.log(this._controls._holding_disk);
-            // this._controls._holding_disk._interactable_object
+            this._controls._holding_disk.interactable_object.end_interaction(this._controls, this._controls._holding_disk, this._level._level);
+        }
+        const loaded = this._controls.power_controller.get_loaded_disk(); 
+        if (loaded) {
+            loaded.interactable_object.end_interaction(this._controls, loaded, this._level._level);
         }
 
         this._controls.power_controller.clear_loaded_disk();
@@ -57,18 +71,22 @@ class LevelController {
         console.log(disks);
         for (const key of Object.keys(disks)) {
             const disk_object = disks[key];
-            console.log(disk_object);
+            disk_object.reset_velocity();
             this._level._level.remove(disk_object);
             this._level._level.add(disk_object);
-            disk_object.rigidBody.setTranslation(starting_positions.disk_positions[`${key}`])
+            
+            disk_object.rigidBody.setTranslation(starting_positions.disk_positions[`${key}`]);
+            disk_object.position.copy(disk_object.rigidBody.translation());
         }
-
-        // RESET VELOCITY OF PLAYER
-        this._controls._velocity.x = 0;
-        this._controls._velocity.y = 0;
-        this._controls._velocity.z = 0;
-
-        console.log(starting_positions);
+        // ------------------------------
+        
+        // ---------- RESET PUSHBOXES ----------
+        for (const pushbox of this._level._pushboxes) {
+            pushbox.object.rigidBody.setTranslation(starting_positions.pushbox_positions[pushbox.id]);
+            pushbox.object.position.copy(pushbox.object.rigidBody.translation());
+        }
+        // ------------------------------
+        
     }
 
     async _init(params) {
@@ -80,7 +98,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(1);
+            this.change_level(0);
         
         });
     }
@@ -130,12 +148,35 @@ class LevelController {
         
     }
 
-    change_level(level_number) {
+    change_level_unbound(level_number) {
+        // this._scene.clear(); // clear the scene
+        if (this._level) {
+            const prev_level = this._level;
+            this._level = null;
+            console.log(this);
+            // need to clear all colliders apart from character
+            prev_level.non_player_colliders.forEach(collider => {
+                physic.removeCollider(collider);
+            });
+
+            // prev_level.non_player_rigid_bodies.forEach(rigidBody => {
+            //     // console.log(object);
+            //     // physic.removeRigidBody(object.rigidBody);
+            //     physic.removeRigidBody(rigidBody);
+            // });
+            
+
+            prev_level._world.clear();
+            prev_level._level.clear();
+        }
+        if (!this.loading_screen.is_shown) {
+            this.loading_screen.show_screen();
+        }
         this.loading_screen.set_text("Creating level");
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
-                this._level = new LobbyLevel(this._scene);
+                this._level = new LobbyLevel(this._scene, this.change_level);
                 break;
         
             case 1:
@@ -147,6 +188,7 @@ class LevelController {
         }
 
         this._render_scene();
+        // console.log(this._scene);
     }
 
     update(time_elapsed_in_seconds) {

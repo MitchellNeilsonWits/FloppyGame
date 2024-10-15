@@ -21,9 +21,20 @@ class Level {
     }
 
     async base_load(level, meshes, character_controller, camera, scene) {
+        level.non_player_colliders =  [];
+        level.non_player_rigid_bodies =  [];
+
         // Create the physics for the world
         level._world = new World(meshes.visuals, meshes.colliders, meshes.visuals_dynamic, meshes.colliders_dynamic, physic);
         
+        // Push colliders and rigidbodies to list of non-player colliders and rigidbodies
+        level._world.all_colliders.forEach(collider => {
+            level.non_player_colliders.push(collider);
+        })
+        level._world.all_rigid_bodies.forEach(rigidBody => {
+            level.non_player_rigid_bodies.push(rigidBody);
+        })
+
         // Add the static ground colliders from the world as objects to jump off of
         level._ground_colliders = [];
         level._world.get_ground_colliders().forEach(obj => {this._ground_colliders.push(obj)});
@@ -72,8 +83,13 @@ class Level {
 
         console.log("PLAYER ROT",player_start_rotation);
         camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(player_start_rotation)));
-        // character_controller.
-    
+        
+        
+
+        const pushbox_positions = [];
+        meshes.pushboxes.forEach(mesh => {
+            pushbox_positions.push(new THREE.Vector3(0,0,0).copy(mesh.position))          
+        })
         level.level_start_state = {
             player_position: new THREE.Vector3(0,0,0).copy(meshes.player_spawn.position),
             player_quaternion: new Quaternion(0,0,0,1).copy(meshes.player_spawn.quaternion),
@@ -82,7 +98,8 @@ class Level {
                 'strength_disk': new THREE.Vector3(0,0,0).copy(meshes.strength_disk_spawn.position),
                 'flight_disk': new THREE.Vector3(0,0,0).copy(meshes.flight_disk_spawn.position),
                 'shrink_disk': new THREE.Vector3(0,0,0).copy(meshes.shrink_disk_spawn.position)
-            }
+            },
+            pushbox_positions: pushbox_positions
         }
     }
 
@@ -124,9 +141,11 @@ class Level {
         for (const pushbox of level._pushboxes) {
             
             const new_pushbox = new Pushbox(pushbox.object.position, pushbox.object.rotation);
+            await new_pushbox.set_pushbox();
+            
             pushbox.pushbox_object = new_pushbox;
+            pushbox.object = new_pushbox;
 
-            await pushbox.pushbox_object.set_pushbox();
             level._level.add(new_pushbox);
             level._dynamic_objects.push(new_pushbox);
 
@@ -139,6 +158,10 @@ class Level {
         
             // Want to be able to jump off of pushboxes
             level._ground_colliders.push(new_pushbox.collider);
+
+            level.non_player_colliders.push(new_pushbox.collider);
+            level.non_player_rigid_bodies.push(new_pushbox.rigidBody);
+
         }
     }
     
@@ -156,6 +179,9 @@ class Level {
             const gate_object = new Gate(g_object.position, g_object.rotation, g_object.scale);
             await gate_object.set_gate();
 
+            level.non_player_colliders.push(gate_object.collider);
+            level.non_player_rigid_bodies.push(gate_object.rigidBody);
+
             level._level.add(gate_object);
 
             // CREATE THE LEVER
@@ -165,6 +191,8 @@ class Level {
             await lever_object.set_lever();
             const lever_interactable = new InteractableLever("Press E to pull lever",lever_object,1.5,"lever");
             
+            level.non_player_colliders.push(lever_object.collider);
+            level.non_player_rigid_bodies.push(lever_object.rigidBody);
             
             level._level.add(lever_object);
             
@@ -216,7 +244,8 @@ class Level {
                 power: `${disk_type}`
             }
             level._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk(`Press E to pickup ${disk_type} disk`, this._interactable_objects[`${disk_type}_disk`].object);
-
+            level.non_player_colliders.push(disk.collider);
+            level.non_player_rigid_bodies.push(disk.rigidBody);
         }
 
         
@@ -276,30 +305,37 @@ class Level {
             const object = new DynamicObject(mesh, physic);
             level._dynamic_objects.push(object);
             level._level.add(object);
+            level.non_player_colliders.push(object.collider);
+            level.non_player_rigid_bodies.push(object.rigidBody);
         }
     }
 
     render_main_level_components(level) {
-        // Render the level's components
-        level._scene.add(level._level);
-
         // Render the lights for the level
         for (const light of level._lights) {
-            level._scene.add(light);
+            level._level.add(light);
         }
+
+        // Render the level's components
+        level._scene.add(level._level);
     }
 
     main_update(level, time_elapsed_in_seconds) {
         // Update the dynamic objects
-        for (const object of level._dynamic_objects) {
-            object.update(time_elapsed_in_seconds);
+        if (level._dynamic_objects) {
+            for (const object of level._dynamic_objects) {
+                object.update(time_elapsed_in_seconds);
+            }
         }
 
         // Update gates and levers
-        for (const key of Object.keys(level._lever_gates)) {
-            level._lever_gates[key].lever_object.update();
-            level._lever_gates[key].gate_object.update(time_elapsed_in_seconds);
+        if (level._lever_gates) {
+            for (const key of Object.keys(level._lever_gates)) {
+                level._lever_gates[key].lever_object.update();
+                level._lever_gates[key].gate_object.update(time_elapsed_in_seconds);
+            }
         }
+        
     }
 
     set_level() {}

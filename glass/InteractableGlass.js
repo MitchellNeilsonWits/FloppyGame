@@ -12,7 +12,27 @@ class InteractableGlass extends interactableObject {
     constructor(interaction_display, object, distance_threshold, interaction_trigger) {
         super(interaction_display, object, distance_threshold, interaction_trigger);
     }
+
+    // createConvexGeometry(mesh) {
+    //     const geometry = mesh.geometry;
+    //     const vertices = [];
+        
+    //     const positionArray = geometry.attributes.position.array;
+      
+    //     for (let i = 0; i < positionArray.length; i += 3) {
+    //       const vertex = new THREE.Vector3(
+    //         positionArray[i],
+    //         positionArray[i + 1],
+    //         positionArray[i + 2]
+    //       );
+    //       vertices.push(vertex);
+    //     }
+        
+    //     const convexGeometry = new ConvexBufferGeometry(vertices);
+    //     return convexGeometry;
+    // }
     
+
     use_object(controls, object_to_use, level) {
         
     }
@@ -20,19 +40,21 @@ class InteractableGlass extends interactableObject {
     start_interaction(controls, object_interacted_with, level) {
         const breaker = new ConvexObjectBreaker();
         const glassMesh = object_interacted_with.object;
+        console.log(glassMesh);
         
-        console.log(glassMesh.geometry.attributes.position);
-
         if (glassMesh) {
+            const breakable_mesh = new THREE.Mesh(glassMesh.children[0].geometry, glassMesh.children[0].material);
+            breaker.prepareBreakableObject(breakable_mesh, 1, new THREE.Vector3(), new THREE.Vector3(), true);
+
             // Calculate impact point and direction
-            const impactPoint = glassMesh.position.clone();
+            const impactPoint = new THREE.Vector3().copy(glassMesh.position);
             // const direction = this.camera.getWorldPosition(new THREE.Vector3()).sub(impactPoint).normalize();
             console.log(controls);
             const direction = new THREE.Vector3().copy(controls._target.rotation).sub(impactPoint).normalize();
-            
+            // const direction = controls._target.position.clone().sub(impactPoint).normalize();
             // Subdivide glass
             const pieces = breaker.subdivideByImpact(
-                glassMesh,
+                breakable_mesh,
                 impactPoint,
                 direction,
                 1, // Max pieces
