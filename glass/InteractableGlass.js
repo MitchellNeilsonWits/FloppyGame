@@ -43,32 +43,33 @@ class InteractableGlass extends interactableObject {
         console.log(glassMesh);
         
         if (glassMesh) {
-            const breakable_mesh = new THREE.Mesh(glassMesh.children[0].geometry, glassMesh.children[0].material);
-            breaker.prepareBreakableObject(breakable_mesh, 1, new THREE.Vector3(), new THREE.Vector3(), true);
-
             // Calculate impact point and direction
-            const impactPoint = new THREE.Vector3().copy(glassMesh.position);
-            // const direction = this.camera.getWorldPosition(new THREE.Vector3()).sub(impactPoint).normalize();
-            console.log(controls);
-            const direction = new THREE.Vector3().copy(controls._target.rotation).sub(impactPoint).normalize();
-            // const direction = controls._target.position.clone().sub(impactPoint).normalize();
-            // Subdivide glass
-            const pieces = breaker.subdivideByImpact(
-                breakable_mesh,
+            const impactPoint = glassMesh.position.clone();
+            const playerPos = this.character_controller._target.position.clone(); 
+            const direction = playerPos.sub(impactPoint).normalize();
+    
+            // Subdivide glass into pieces
+            const pieces = this.breaker.subdivideByImpact(
+                glassMesh,
                 impactPoint,
                 direction,
-                1, // Max pieces
-                1  // randomness
+                10,  // Max pieces (can adjust based on desired effect)
+                1    // randomness
             );
-
-            //remove main glass
-            level.remove(glassMesh);
-
-            // add pieces into scene
+    
+            // Remove the original glass mesh from the scene
+            this.scene.remove(glassMesh);
+    
+            // Add each piece to the scene and physics engine
             pieces.forEach((piece) => {
-                level.add(piece);
+                this.scene.add(piece);  // Add piece to the scene
+    
+                // Create physics bodies for each piece
+                const { rigidBody, collider } = createRigidBodyDynamic(piece, this.physics); // Assuming `this.physics` is your Rapier instance
             });
-
+    
+            // Clear message after break
+            this.hideInteractMessage();
         } else {
             console.log("Glass mesh not found");
         }
