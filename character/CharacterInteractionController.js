@@ -300,10 +300,12 @@ class CharacterInteractionController {
                             this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
                             this._use_object = this._object_to_interact_with.interactable_object.use_object;
                             
-                            this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
-                            // this._object_to_interact_with = null;
-                            this.can_interact = false;
-                            this._hide_interact_message();
+                            if (!this._controls.busy_loading_disk) {
+                                this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
+                                // this._object_to_interact_with = null;
+                                this.can_interact = false;
+                                this._hide_interact_message();
+                            }
                         }
                     } else if (interaction_trigger === 'pushbox') {
                         if (this._controls.power_controller.power === "strength") {
@@ -397,10 +399,12 @@ class CharacterInteractionController {
                         const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
                         if (trigger === "disk") {
-                            const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
-                            if (interaction_started) {
-                                return;
-                            };
+                            if (!this._controls.busy_loading_disk) {
+                                const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
+                                if (interaction_started) {
+                                    return;
+                                };
+                            }
                         } else if (trigger === "pushbox") {
                             const interaction_started = this.handle_touch_interaction(interactable_objects[key]);
                             if (interaction_started) {

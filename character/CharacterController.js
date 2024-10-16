@@ -27,7 +27,7 @@ class CharacterController {
         // SET IMPORTANT VARIABLES
         this._params = params;
         this._decceleration = new THREE.Vector3(-0.5, 0, -0.5);
-        this._acceleration = new THREE.Vector3(1.0, 0.25, 1.0);
+        this._acceleration = new THREE.Vector3(1.0, 0, 1.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._character_is_turning = "not_turning"; // note when the character is turning
         this.height_state = "on ground";
@@ -53,18 +53,18 @@ class CharacterController {
         this._level = null;
     }
 
-    initialize_player(_callback) {
+    async initialize_player(_callback) {
         // LOAD MODELS
-        this._load_models(_callback);
+        await this._load_models(_callback);
     }
 
     /* load character models and create states */
-    _load_models(_callback) {
+    async _load_models(_callback) {
         // LOAD INITIAL CHARACTER MODEL
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('../models/')
 
-        gltfLoader.load('floppy_with_reader_remastered_optimized.glb', (gltf) => {  
+        await gltfLoader.loadAsync('floppy_with_reader_remastered_optimized.glb').then((gltf) => {  
             console.log(this);
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
@@ -105,7 +105,8 @@ class CharacterController {
             // this._target = gltf.scene;
             
             this._target = new Player(gltf.scene.children[0], this._params.physic);
-            
+            this._target.set_player(gltf.scene.children[0]);
+
             // Create skin controller to change textures on-the-fly
             this.skin_controller = new CharacterSkinController(this._target);  
 
