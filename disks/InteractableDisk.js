@@ -67,7 +67,7 @@ class InteractableDisk extends interactableObject {
             action.clampWhenFinished = true;
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(200.0);
-            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+            addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
                 console.log("currently loading:",object_to_use);
                 controls.skin_controller.change_skin(object_to_use.power);

@@ -269,10 +269,15 @@ class CharacterInteractionController {
                 if (!this.can_interact) {
                     this.can_interact = true;
                     this._object_to_interact_with = interactable_object; 
-                    this._start_interaction = interactable_object.interactable_object.start_interaction;
+                    
+                    if (this._controls.power_controller.power === "strength") {
+                        this._start_interaction = interactable_object.interactable_object.start_interaction;
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    } else {
+                        this._show_interact_message("You cannot break glass without the strength floppy disk");
+                    }
 
                     
-                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
                 }
                 return true;
             }
@@ -406,9 +411,11 @@ class CharacterInteractionController {
                                 return;
                             }
                         } else if (trigger === "glass") {
-                            const interaction_started = this.handle_glass_interaction(interactable_objects[key]);
-                            if (interaction_started) {
-                                return;
+                            if (!interactable_objects[key].object.broken) {
+                                const interaction_started = this.handle_glass_interaction(interactable_objects[key]);
+                                if (interaction_started) {
+                                    return;
+                                }
                             }
                         }
                         

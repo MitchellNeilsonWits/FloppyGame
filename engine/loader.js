@@ -31,7 +31,7 @@ export default async function loadAssets(path) {
   for (const mesh of glb.scene.children) {
     if (mesh.name.includes("glass")) {
       glass.push(mesh);
-    } if (mesh.name.includes("player_spawn")) {
+    } else if (mesh.name.includes("player_spawn")) {
       player_spawn = mesh;
     } else if (mesh.name.includes("strength_disk")) {
       strength_disk_spawn = mesh;

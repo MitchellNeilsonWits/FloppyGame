@@ -320,6 +320,23 @@ class Level {
         level._scene.add(level._level);
     }
 
+    remove_broken_glass(level, glass) {
+        const id = glass.id;
+        // delete level._interactable_objects[`glass_${id}`];
+        const new_glass = [];
+        // for (let i = 0; i < level._glass.length; i++) {
+        //     if (i != id) {
+        //         new_glass.push(level._glass[i]);
+        //     }
+        // }
+        for (const glass_i of level._glass) {
+            if (id != glass_i.id) {
+                new_glass.push(glass_i);
+            }
+        }
+        level._glass = new_glass;
+    }
+
     main_update(level, time_elapsed_in_seconds) {
         // Update the dynamic objects
         if (level._dynamic_objects) {
@@ -333,6 +350,14 @@ class Level {
             for (const key of Object.keys(level._lever_gates)) {
                 level._lever_gates[key].lever_object.update();
                 level._lever_gates[key].gate_object.update(time_elapsed_in_seconds);
+            }
+        }
+
+        if (level._glass) {
+            for (const glass of level._glass) {
+                glass.object.update(time_elapsed_in_seconds, (object) => {
+                    // this.remove_broken_glass(level, glass);
+                });
             }
         }
         

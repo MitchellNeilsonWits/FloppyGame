@@ -162,6 +162,7 @@ class CharacterController {
             loader.load('floppy_with_reader_flying_idle.glb', (a) => {_on_load('flying_idle', a);}); // load the disk animation
             loader.load('floppy_with_reader_flying_forward.glb', (a) => {_on_load('flying_forward', a);}); // load the disk animation
             loader.load('floppy_with_reader_flying_forward_fast.glb', (a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
+            loader.load('floppy_with_reader_punch.glb', (a) => {_on_load('punch', a);}); // load the disk animation
 
             console.log("loaded all models")
             _callback();
