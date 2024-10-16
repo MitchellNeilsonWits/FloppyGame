@@ -144,7 +144,7 @@ export function createRigidBodyDynamicPushbox(position, rotation, physic) {
   rigidBodyDesc.setTranslation(...position);
   // rigidBodyDesc.setRotation(rotation);
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  const colliderDesc = ColliderDesc.cuboid(0.48,0.48,0.48).setMass(100);
+  const colliderDesc = ColliderDesc.cuboid(0.48,0.48,0.48).setMass(10000);
   const collider = physic.createCollider(colliderDesc, rigidBody);
   return { rigidBody, collider }
 }

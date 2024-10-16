@@ -93,6 +93,7 @@ class Pushbox extends Object3D {
     const y = this.rigidBody.linvel().y;
     const z = z_vel;
     this.rigidBody.setLinvel({ x, y, z }, true);
+    this.rigidBody.setAngvel({x: 0, y: 0, z: 0}, true);
   }
 
   updateVisual() {

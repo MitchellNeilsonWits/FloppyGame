@@ -1,8 +1,6 @@
-// import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import * as THREE from 'three'; 
-// import { ConvexObjectBreaker } from "three/examples/jsm/Addons.js";
 import { ConvexObjectBreaker } from 'three-stdlib';
-import { get_cartesian_angle_from_rotation } from "../common/Angle";
+import Cannon from 'cannon'; // Import Cannon.js
 import interactableObject from "../engine/interactableObject";
 import Shard from './Shard';
 import addOneTimeEventListener from '../common/SingleUseListener';
@@ -11,39 +9,16 @@ import addOneTimeEventListener from '../common/SingleUseListener';
 // import { create_collider_for_disk } from "../engine/function";
 
 class InteractableGlass extends interactableObject {
-    constructor(interaction_display, object, distance_threshold, interaction_trigger) {
+    constructor(interaction_display, object, distance_threshold, interaction_trigger, physicsWorld) {
         super(interaction_display, object, distance_threshold, interaction_trigger);
+        this.physicsWorld = physicsWorld; // Reference to the Cannon.js physics world
     }
 
-    // createConvexGeometry(mesh) {
-    //     const geometry = mesh.geometry;
-    //     const vertices = [];
-        
-    //     const positionArray = geometry.attributes.position.array;
-      
-    //     for (let i = 0; i < positionArray.length; i += 3) {
-    //       const vertex = new THREE.Vector3(
-    //         positionArray[i],
-    //         positionArray[i + 1],
-    //         positionArray[i + 2]
-    //       );
-    //       vertices.push(vertex);
-    //     }
-        
-    //     const convexGeometry = new ConvexBufferGeometry(vertices);
-    //     return convexGeometry;
-    // }
-    
-
-    use_object(controls, object_to_use, level) {
-        
-    }
-    
     start_interaction(controls, object_interacted_with, level) {
         const breaker = new ConvexObjectBreaker();
         const glassMesh = object_interacted_with.object;
         console.log(glassMesh);
-        
+
         if (glassMesh) {
             if (!glassMesh.broken) {
                 const action = controls._state_machine._proxy._animations["punch"].action;
@@ -102,14 +77,40 @@ class InteractableGlass extends interactableObject {
                 // });
             }
 
+            // Clear interaction message after break
+            this.hideInteractMessage();
         } else {
             console.log("Glass mesh not found");
         }
     }
 
+    // Create a Cannon.js convex polyhedron shape from a three.js geometry
+    createConvexShape(geometry) {
+        const position = geometry.attributes.position;
+        const vertices = [];
+        const faces = [];
+
+        // Extract vertices
+        for (let i = 0; i < position.count; i++) {
+            const vertex = new THREE.Vector3().fromBufferAttribute(position, i);
+            vertices.push(new Cannon.Vec3(vertex.x, vertex.y, vertex.z));
+        }
+
+        // Extract faces (assuming triangles)
+        for (let i = 0; i < geometry.index.count; i += 3) {
+            faces.push([
+                geometry.index.array[i],
+                geometry.index.array[i + 1],
+                geometry.index.array[i + 2]
+            ]);
+        }
+
+        return new Cannon.ConvexPolyhedron({ vertices, faces });
+    }
+
     end_interaction(controls, object_to_drop, level) {
-        
+        // Cleanup if necessary
     }
 }
 
-export default InteractableGlass
+export default InteractableGlass;

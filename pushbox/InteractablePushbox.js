@@ -9,13 +9,18 @@ import * as THREE from 'three';
 class InteractablePushbox extends interactableObject {
     constructor(interaction_display, object, distance_threshold, interaction_trigger) {
         super(interaction_display, object, distance_threshold, interaction_trigger);
+
+        this.end_interaction = this.end_interaction_static.bind(this);
+        this.start_interaction = this.start_interaction_static.bind(this);
+        this.use_object = this.use_object_static.bind(this);
+
     }
     
-    use_object(controls, object_to_use, level) {
+    use_object_static(controls, object_to_use, level) {
         
     }
     
-    start_interaction(controls, object_interacted_with, level) {
+    start_interaction_static(controls, object_interacted_with, level) {
         console.log("started pushing");
 
         const direction_of_player = get_cartesian_angle_from_rotation(controls._target.rotation);
@@ -32,18 +37,22 @@ class InteractablePushbox extends interactableObject {
 
         object_interacted_with.object.move_pushbox(velocity.x,velocity.y,velocity.z);
 
-        const action = controls._state_machine._proxy._animations["pushing"].action;
-        action.time = 0.0;
-        action.enabled = true;
-        action.setEffectiveTimeScale(1.0);
-        action.setEffectiveWeight(200.0);
+        console.log(this._action);
+        if (!this._action) {
+            const action = controls._state_machine._proxy._animations["pushing"].action;
+            action.time = 0.0;
+            action.enabled = true;
+            action.setEffectiveTimeScale(1.0);
+            action.setEffectiveWeight(200.0);
 
-        this._action = action;
+            this._action = action;
+        }
+        
         
         this._action.play();
     }
 
-    end_interaction(controls, object_to_drop, level) {
+    end_interaction_static(controls, object_to_drop, level) {
         console.log("stopped pushing");
         if (this._action) {
             this._action.stop();

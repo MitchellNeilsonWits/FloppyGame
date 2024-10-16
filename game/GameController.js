@@ -69,6 +69,14 @@ class GameController {
         this._threejs.setSize(window.innerWidth, window.innerHeight);
         console.log(window.innerHeight);
         document.body.appendChild(this._threejs.domElement);
+        // this._threejs.shadowMap.enabled = true;
+        // this._threejs.shadowMap.needsUpdate = true;
+        // setTimeout(() => {
+        //     this._threejs.shadowMap.autoUpdate = false;
+        //     this._threejs.shadowMap.enabled = false;
+        //     this._threejs.shadowMap.needsUpdate = true;
+            
+        // },10000)
 
         // PAUSE MENU
         this._menu = new MenuController(this._threejs.domElement);

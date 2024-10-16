@@ -24,7 +24,6 @@ class GlassBreaker {
         this.interactMessage.innerHTML = 'Press E to break the glass';
         document.body.appendChild(this.interactMessage);
 
-
         window.addEventListener('keydown', (event) => {
             if ((event.key === 'e' || event.key === 'E') && this.isPlayerNear) {
                 this.breakGlass();
@@ -39,8 +38,8 @@ class GlassBreaker {
 
             if (glassMesh) {
                 const glassPos = glassMesh.position.clone();
-
                 const distance = playerPos.distanceTo(glassPos);
+                
                 if (distance < this.proximityThreshold) {
                     if (!this.isPlayerNear) {
                         this.showInteractMessage();
@@ -61,15 +60,16 @@ class GlassBreaker {
         if (glassMesh) {
             // Calculate impact point and direction
             const impactPoint = glassMesh.position.clone();
-            const direction = this.camera.getWorldPosition(new THREE.Vector3()).sub(impactPoint).normalize();
+            const playerPos = this.character_controller._target.position.clone(); 
+            const direction = playerPos.sub(impactPoint).normalize();
 
             // Subdivide glass
             const pieces = this.breaker.subdivideByImpact(
                 glassMesh,
                 impactPoint,
                 direction,
-                1, // Max pieces
-                1  // randomness
+                10,  // Max pieces (increased from 1 to 10)
+                1    // randomness
             );
 
             //remove main glass

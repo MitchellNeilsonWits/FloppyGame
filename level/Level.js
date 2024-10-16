@@ -261,6 +261,7 @@ class Level {
 
             const point_light = new THREE.PointLight( colour, intensity, distance );
             point_light.position.set( pos.x, pos.y, pos.z );
+            point_light.castShadow = true;
 
             level._lights.push(point_light);
         }
@@ -275,6 +276,7 @@ class Level {
             const spotlight = new THREE.SpotLight(colour, intensity, distance, angle);
             spotlight.position.set( pos.x, pos.y, pos.z );
             spotlight.setRotationFromEuler(rotation);
+            spotlight.castShadow = true;
 
             level._lights.push(spotlight);
         }

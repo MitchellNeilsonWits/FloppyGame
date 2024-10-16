@@ -172,7 +172,7 @@ class HUD {
             this.loaded.src = 'hud/disk_none.png'
             this.loaded.style.opacity = 0.2;
             this.loaded_header_disk.innerHTML = "none";
-            this.unload_indicator.style.transform = "translateX(-120px)";
+            this.unload_indicator.style.transform = "translateX(-140px)";
             this.loaded_header_disk.style.color = "lightgray";
         } else {
             this.loaded.style.opacity = 1
@@ -196,8 +196,8 @@ class HUD {
             this.holding.src = 'hud/disk_none.png'
             this.holding.style.opacity = 0.2
             this.holding_header_disk.innerHTML = "none";
-            this.load_indicator.style.transform = "translateX(120px)";
-            this.drop_indicator.style.transform = "translateX(120px)";
+            this.load_indicator.style.transform = "translateX(140px)";
+            this.drop_indicator.style.transform = "translateX(140px)";
             this.holding_header_disk.style.color = "gray";
 
         } else {
