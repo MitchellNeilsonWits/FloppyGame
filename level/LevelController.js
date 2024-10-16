@@ -12,6 +12,7 @@ import TutorialLevel from "./levels/TutorialLevel";
 import LoadingScreen from "../loading_screen/LoadingScreen";
 import { Quaternion, Scene, Vector3 } from "three";
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
+import hud from "../hud/Hud";
 
 class LevelController {
     constructor(params) {
@@ -141,6 +142,7 @@ class LevelController {
 
             setTimeout(() => {
                 this.loading_screen.hide_screen();
+                hud.reset_hud();
             },1000);
             console.log("DONE RENDERING THE SCENE!");
         });

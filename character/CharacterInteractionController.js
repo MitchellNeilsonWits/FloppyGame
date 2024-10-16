@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { get_cartesian_angle_from_rotation } from '../common/Angle';
 import physic from '../engine/physic';
+import hud from '../hud/Hud';
 
 class CharacterInteractionController {
     constructor(controls, input) {
@@ -349,6 +350,7 @@ class CharacterInteractionController {
             if (this._input._keys.unload_disk) {
                 const loaded_disk = this._controls.power_controller.loaded_disk;
                 
+                hud.update_loaded_disk(null);
                 loaded_disk.interactable_object.end_interaction(this._controls, loaded_disk, this._level);
 
                 this._controls.power_controller.loaded_disk = null;
@@ -367,7 +369,7 @@ class CharacterInteractionController {
                         this._end_interaction = this._controls._holding_disk.interactable_object.end_interaction;
                         this._end_interaction(this._controls, this._controls._holding_disk, this._level);
                         this._controls._holding_disk = null;
-
+                        hud.update_holding_disk(null);
                     // }
                     this._object_being_interacted_with = null;
                     this.can_interact = false;

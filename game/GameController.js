@@ -19,6 +19,7 @@ import loader from '../engine/loader';
 import World from '../engine/world';
 import Player from '../engine/player';
 import MenuController from '../menu/MenuController';
+import hud from '../hud/Hud';
 
 
 
@@ -93,6 +94,13 @@ class GameController {
 
         // REQUEST ANIMATION FRAME
         this._raf();
+
+        // Create the HUD
+        this.hud = hud;
+        hud.create_hud();
+        hud.update_holding_disk(null);
+        hud.update_loaded_disk(null);
+        hud.remove_hud();
     }
 
     /* Load in level */
