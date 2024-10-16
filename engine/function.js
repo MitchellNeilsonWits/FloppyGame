@@ -181,14 +181,14 @@ function createShardCollider(rigidBody, physic, mesh) {
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
-export function createGlass(position, physic) {
-  const rigidBodyDesc = RigidBodyDesc.fixed();
-  rigidBodyDesc.setTranslation(...position)
-  const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  const colliderDesc = ColliderDesc.cuboid(1,1,1);
-  const collider = physic.createCollider(colliderDesc, rigidBody);
-  return { rigidBody, collider }
-}
+// export function createGlass(position, physic) {
+//   const rigidBodyDesc = RigidBodyDesc.fixed();
+//   rigidBodyDesc.setTranslation(...position)
+//   const rigidBody = physic.createRigidBody(rigidBodyDesc)
+//   const colliderDesc = ColliderDesc.cuboid(1,1,1);
+//   const collider = physic.createCollider(colliderDesc, rigidBody);
+//   return { rigidBody, collider }
+// }
 
 export function createShard(position, mesh, physic) {
   const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(10000);// set mass to be very heavy so we cannot just move the shards
@@ -201,5 +201,14 @@ export function createShard(position, mesh, physic) {
   // const collider = createColliderGeoNoIndices(rigidBody, physic, mesh)
   // const collider = physic.createCollider(colliderDesc, rigidBody);
   // const collider = createShardCollider(rigidBody, physic, mesh);
+  return { rigidBody, collider }
+}
+
+
+export function createGlass(mesh, physic) { 
+  const rigidBodyDesc = RigidBodyDesc.dynamic();
+  rigidBodyDesc.setTranslation(...mesh.position);
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+  const collider = createColliderGeo(rigidBody, physic, mesh)
   return { rigidBody, collider }
 }
