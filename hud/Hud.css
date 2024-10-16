@@ -119,13 +119,13 @@
 #hud-holding-header-heading, #hud-loaded-header-heading {
     margin: 0;
     padding: 0;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 #hud-holding-header-disk, #hud-loaded-header-disk {
     margin: 0;
     padding: 0;
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .hud-holding-indicators {
@@ -145,8 +145,8 @@
 }
 
 .hud-loaded-subcontainer, .hud-holding-subcontainer {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     /* background: rgba(0, 0, 0, 0.2); */
     /* border: 1px solid rgba(0, 0, 0, 0); */
     /* border-radius: 12px; */
@@ -161,16 +161,19 @@
     transition: 0.4s;
     color: white;
     mix-blend-mode: difference;
+    font-size: 20px;
 }
 
 #hud-holding-load {
     transition: 0.4s;
     color: white;
     mix-blend-mode: difference;
+    font-size: 20px;
 }
 
 #hud-holding-drop {
     transition: 0.4s;
     color: white;
     mix-blend-mode: difference;
+    font-size: 20px;
 }
