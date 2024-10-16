@@ -5,6 +5,7 @@ import physic from "../engine/physic";
 import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
 import { create_collider_for_disk } from "../engine/function";
 import addOneTimeEventListener from "../common/SingleUseListener";
+import hud from "../hud/Hud";
 
 class InteractableDisk extends interactableObject {
     constructor(interaction_display, object) {
@@ -45,14 +46,19 @@ class InteractableDisk extends interactableObject {
             action.clampWhenFinished = true;
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(1.0);
+            
+
             addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
                 console.log("currently loading:",object_to_use);
                 controls.skin_controller.change_skin(object_to_use.power);
                 e.action.stop(); // stop the animation
                 if (currently_loaded_disk) {
-                    currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
+                    currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);            
                 }
+                hud.update_loaded_disk(object_to_use.power);
+                hud.update_holding_disk(null);
+                
                 controls.busy_loading_disk = false;
 
             })
@@ -67,7 +73,10 @@ class InteractableDisk extends interactableObject {
             action.clampWhenFinished = true;
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(200.0);
-            this._addOneTimeEventListener(controls._mixer, 'finished', (e) => {
+            console.log(currently_loaded_disk);
+            
+
+            addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
                 console.log("currently loading:",object_to_use);
                 controls.skin_controller.change_skin(object_to_use.power);
@@ -76,7 +85,8 @@ class InteractableDisk extends interactableObject {
                     currently_loaded_disk.interactable_object.start_interaction(controls, currently_loaded_disk, level);
                 }
                 controls.busy_loading_disk = false;
-
+                hud.update_loaded_disk(object_to_use.power);
+                hud.update_holding_disk(currently_loaded_disk.power);
             })
             this._disk_action = action;        
             this._disk_action.play();
@@ -151,6 +161,7 @@ class InteractableDisk extends interactableObject {
         // target._halt_character.time_to_completion =  time_to_completion;
 
         controls._holding_disk = object_interacted_with;
+        hud.update_holding_disk(object_interacted_with.power);
 
         console.log(object_interacted_with)
         const disk_color = object_interacted_with.object._color; 
@@ -165,6 +176,7 @@ class InteractableDisk extends interactableObject {
         }
         
         console.log("drop disk:",object_to_drop);
+        
         
         // change position of object to drop to position of character
         // object_to_drop.object.position.copy(controls._target.position);

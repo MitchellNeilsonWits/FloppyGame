@@ -19,6 +19,7 @@ import loader from '../engine/loader';
 import World from '../engine/world';
 import Player from '../engine/player';
 import MenuController from '../menu/MenuController';
+import hud from '../hud/Hud';
 
 
 
@@ -68,6 +69,14 @@ class GameController {
         this._threejs.setSize(window.innerWidth, window.innerHeight);
         console.log(window.innerHeight);
         document.body.appendChild(this._threejs.domElement);
+        // this._threejs.shadowMap.enabled = true;
+        // this._threejs.shadowMap.needsUpdate = true;
+        // setTimeout(() => {
+        //     this._threejs.shadowMap.autoUpdate = false;
+        //     this._threejs.shadowMap.enabled = false;
+        //     this._threejs.shadowMap.needsUpdate = true;
+            
+        // },10000)
 
         // PAUSE MENU
         this._menu = new MenuController(this._threejs.domElement);
@@ -93,6 +102,13 @@ class GameController {
 
         // REQUEST ANIMATION FRAME
         this._raf();
+
+        // Create the HUD
+        this.hud = hud;
+        hud.create_hud();
+        hud.update_holding_disk(null);
+        hud.update_loaded_disk(null);
+        hud.remove_hud();
     }
 
     /* Load in level */

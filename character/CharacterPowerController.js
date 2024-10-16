@@ -37,10 +37,13 @@ class CharacterPowerController {
             // this.target.scale.setScalar(0.4);
             this.change_scale_increments = -0.1;
             this.change_scale_to = 0.4;
+            // console.log(this.target.collider);
+            this.target.collider.setRadius(0.4*0.18);
         } else {
             // this.target.scale.setScalar(1);
             this.change_scale_increments = 0.1;
             this.change_scale_to = 1;
+            this.target.collider.setRadius(1*0.18);
         }
     }
 

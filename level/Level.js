@@ -11,6 +11,8 @@ import { Quaternion } from 'cannon';
 import Lever from '../lever/Lever';
 import InteractableLever from '../lever/InteractableLever';
 import Gate from '../gate/Gate';
+import Glass from '../glass/Glass';
+import InteractableGlass from '../glass/InteractableGlass';
 
 
 class Level {
@@ -62,6 +64,9 @@ class Level {
         // Create levers and gates
         await level._create_lever_gates(level, meshes.lever_gates);
 
+        // Create glass objects
+        await level.create_glass(level, meshes.glass);
+
         // Create other interactable objects
         this._create_interactable_objects(level);
 
@@ -95,6 +100,30 @@ class Level {
                 'shrink_disk': new THREE.Vector3(0,0,0).copy(meshes.shrink_disk_spawn.position)
             },
             pushbox_positions: pushbox_positions
+        }
+    }
+
+    async create_glass(level, glass) {
+        level._glass = [];
+        let glass_id = 0;
+        for (const glass_object of glass) {
+            const new_glass = new Glass(glass_object.position, glass_object.rotation, glass_object.scale);
+            await new_glass.set_glass(physic, glass_object);
+            level._level.add(new_glass);
+
+            level._glass.push({
+                id: glass_id,
+                object: new_glass
+            });
+
+            level._interactable_objects[`glass_${glass_id}`] = {
+                name: `glass_${glass_id}`,
+                object: new_glass,
+                type: 'dynamic'
+            };
+            level._interactable_objects[`glass_${glass_id}`]['interactable_object'] = new InteractableGlass("Left click to break glass", new_glass, 2, "glass")
+            
+            glass_id+=1;
         }
     }
 
@@ -232,6 +261,7 @@ class Level {
 
             const point_light = new THREE.PointLight( colour, intensity, distance );
             point_light.position.set( pos.x, pos.y, pos.z );
+            point_light.castShadow = true;
 
             level._lights.push(point_light);
         }
@@ -246,6 +276,7 @@ class Level {
             const spotlight = new THREE.SpotLight(colour, intensity, distance, angle);
             spotlight.position.set( pos.x, pos.y, pos.z );
             spotlight.setRotationFromEuler(rotation);
+            spotlight.castShadow = true;
 
             level._lights.push(spotlight);
         }
@@ -291,6 +322,23 @@ class Level {
         level._scene.add(level._level);
     }
 
+    remove_broken_glass(level, glass) {
+        const id = glass.id;
+        // delete level._interactable_objects[`glass_${id}`];
+        const new_glass = [];
+        // for (let i = 0; i < level._glass.length; i++) {
+        //     if (i != id) {
+        //         new_glass.push(level._glass[i]);
+        //     }
+        // }
+        for (const glass_i of level._glass) {
+            if (id != glass_i.id) {
+                new_glass.push(glass_i);
+            }
+        }
+        level._glass = new_glass;
+    }
+
     main_update(level, time_elapsed_in_seconds) {
         // Update the dynamic objects
         if (level._dynamic_objects) {
@@ -304,6 +352,14 @@ class Level {
             for (const key of Object.keys(level._lever_gates)) {
                 level._lever_gates[key].lever_object.update();
                 level._lever_gates[key].gate_object.update(time_elapsed_in_seconds);
+            }
+        }
+
+        if (level._glass) {
+            for (const glass of level._glass) {
+                glass.object.update(time_elapsed_in_seconds, (object) => {
+                    // this.remove_broken_glass(level, glass);
+                });
             }
         }
         

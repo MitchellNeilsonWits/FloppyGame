@@ -12,6 +12,9 @@ import TutorialLevel from "./levels/TutorialLevel";
 import LoadingScreen from "../loading_screen/LoadingScreen";
 import { Quaternion, Scene, Vector3 } from "three";
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
+import hud from "../hud/Hud";
+import PlacementMattersLevel from "./levels/PlacementMattersLevel";
+import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 
 class LevelController {
     constructor(params) {
@@ -31,7 +34,8 @@ class LevelController {
         this.change_level = this.change_level_unbound.bind(this);
 
         // Define the levels to be played
-        this._current_level = 0;
+        this._current_level = 2;
+        this._current_level = 2;
         this._level = null;
 
 
@@ -50,7 +54,7 @@ class LevelController {
 
         // RESET VELOCITY OF PLAYER
         this._controls._velocity.x = 0;
-        this._controls._velocity.y = 0;
+        this._controls._velocity.y = 5;
         this._controls._velocity.z = 0;
         
         // ---------- RESET DISKS ----------
@@ -98,7 +102,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(2);
         
         });
     }
@@ -141,6 +145,7 @@ class LevelController {
 
             setTimeout(() => {
                 this.loading_screen.hide_screen();
+                hud.reset_hud();
             },1000);
             console.log("DONE RENDERING THE SCENE!");
         });
@@ -181,6 +186,14 @@ class LevelController {
         
             case 1:
                 this._level = new TutorialLevel(this._scene);
+                break;
+
+            case 2:
+                this._level = new IntoTheWildLevel(this._scene);
+                break;
+            
+            case 3:
+                this._level = new PlacementMattersLevel(this._scene);
                 break;
 
             default:

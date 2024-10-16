@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { get_cartesian_angle_from_rotation } from '../common/Angle';
 import physic from '../engine/physic';
+import hud from '../hud/Hud';
 
 class CharacterInteractionController {
     constructor(controls, input) {
@@ -10,6 +11,8 @@ class CharacterInteractionController {
         this._input = input; // input keys 
         this._raycaster = new THREE.Raycaster();
         this._distance_threshold = 2.5;
+        
+        this.is_pushing = false;
 
 
         this.can_interact = false;
@@ -189,7 +192,7 @@ class CharacterInteractionController {
                 // const current_angle = this._controls._direction_of_offset()
 
                 // Check if the current angle is within range of the desired angle
-                const view_range = Math.PI/6;
+                const view_range = Math.PI/8;
                 const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
 
                 if (in_range) {
@@ -245,7 +248,47 @@ class CharacterInteractionController {
         }
     }
 
+    handle_glass_interaction(interactable_object) {
+        // Get the object of the interactable object
+        const object = interactable_object.object;
+
+        // Calculate the euclidean distance from the object
+        const distance = this._distance_to_object(object);
+
+        const distance_threshold = interactable_object.interactable_object.distance_threshold;
+
+        // If the distance is within the threshold, we see if the character is facing the object
+        if (distance <= distance_threshold) {
+
+            // Find the desired angle
+            const desired_angle = this._desired_angle_to_object(object);
+            const current_angle = this._find_2d_angle();
+
+            // Check if the current angle is within range of the desired angle
+            const view_range = Math.PI/6;
+            const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
+
+            if (in_range) {
+                if (!this.can_interact) {
+                    this.can_interact = true;
+                    this._object_to_interact_with = interactable_object; 
+                    
+                    if (this._controls.power_controller.power === "strength") {
+                        this._start_interaction = interactable_object.interactable_object.start_interaction;
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    } else {
+                        this._show_interact_message("You cannot break glass without the strength floppy disk");
+                    }
+
+                    
+                }
+                return true;
+            }
+        }
+    }
+
     update(interactable_objects) {
+        this.is_pushing = false;
 
         // If user is able to interact with some object, handle inputs based on the trigger of the interaction available
         if (this.can_interact) {
@@ -260,41 +303,83 @@ class CharacterInteractionController {
                             this._end_interaction = this._object_to_interact_with.interactable_object.end_interaction;
                             this._use_object = this._object_to_interact_with.interactable_object.use_object;
                             
-                            this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
-                            // this._object_to_interact_with = null;
-                            this.can_interact = false;
-                            this._hide_interact_message();
+                            if (!this._controls.busy_loading_disk) {
+                                this._start_interaction(this._controls, this._object_being_interacted_with, this._level);
+                                // this._object_to_interact_with = null;
+                                this.can_interact = false;
+                                this._hide_interact_message();
+                            }
                         }
                     } else if (interaction_trigger === 'pushbox') {
+                        this._object_to_interact_with.interactable_object.end_interaction(this._controls, this._object_to_interact_with, this._level);
                         if (this._controls.power_controller.power === "strength") {
                         
                             // Ensure that y values are good enough to work with
                             const object_y = this._object_to_interact_with.object.position.y;
                             const player_y = this._target.position.y;
                             const vertical_distance = Math.abs(player_y - object_y);
-                            const vertical_distance_threshold = 0.35;
+                            const vertical_distance_threshold = 0.5;
 
-                            if (vertical_distance < vertical_distance_threshold) {
-                                const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
-                                const current_angle = this._find_2d_angle();
-                                const view_range = Math.PI/8;
+                            const collider = this._object_to_interact_with.object.collider;
 
-                                const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
-                                if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
-                                    if (correct_direction) {
-                                        this._start_interaction(this._controls, this._object_to_interact_with, this._level);
-                                    } else {
-                                        this._end_interaction(this._controls, this._object_to_interact_with, this._level);
-                                    }
+                            var is_pushing = false;
+                            physic.contactPair(this._controls._target.collider, collider, (manifold, flipped) => {
+            
+                                // Now check that the normal of contact is directly up
+                                const normal = manifold.normal();
+                                const rounded = {
+                                    x: Math.abs(Math.round(normal.x)),
+                                    y: Math.abs(Math.round(normal.y)),
+                                    z: Math.abs(Math.round(normal.z)),
+                                }
+                
+                                if ((rounded.x == 1 && rounded.y == 0 && rounded.z == 0) || (rounded.x == 0 && rounded.y == 0 && rounded.z == 1)) {
+                                    console.log("now only touching");
+                                    is_pushing = true;
+                                    this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                                 } else {
                                     this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                                 }
-                            } else {
+                                
+                                // if (rounded.x == 0 && rounded.y == 1 && rounded.z == 0) {
+                                //     console.log("we on the ground!");
+                                //     this.controls.height_state = "on ground";
+                                //     has_touched_ground = true;
+                                //     return;
+                                // }                
+                            })
+                            if (!is_pushing) {
                                 this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                            } else {
+                                this.is_pushing = true;
                             }
+
+
+                            // if (vertical_distance < vertical_distance_threshold) {
+                            //     const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
+                            //     const current_angle = this._find_2d_angle();
+                            //     const view_range = Math.PI/8;
+
+                            //     const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
+                            //     if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
+                            //         if (correct_direction) {
+                            //             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                            //         } else {
+                            //             this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                            //         }
+                            //     } else {
+                            //         this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                            //     }
+                            // } else {
+                            //     this._end_interaction(this._controls, this._object_to_interact_with, this._level);
+                            // }
                         }
                     } else if (interaction_trigger === "lever") {
                         if (this._input._keys.interact) {
+                            this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                        }
+                    } else if (interaction_trigger === "glass") {
+                        if (this._input._keys.left_click) {
                             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                         }
                     }
@@ -306,6 +391,7 @@ class CharacterInteractionController {
             if (this._input._keys.unload_disk) {
                 const loaded_disk = this._controls.power_controller.loaded_disk;
                 
+                hud.update_loaded_disk(null);
                 loaded_disk.interactable_object.end_interaction(this._controls, loaded_disk, this._level);
 
                 this._controls.power_controller.loaded_disk = null;
@@ -324,7 +410,7 @@ class CharacterInteractionController {
                         this._end_interaction = this._controls._holding_disk.interactable_object.end_interaction;
                         this._end_interaction(this._controls, this._controls._holding_disk, this._level);
                         this._controls._holding_disk = null;
-
+                        hud.update_holding_disk(null);
                     // }
                     this._object_being_interacted_with = null;
                     this.can_interact = false;
@@ -352,20 +438,32 @@ class CharacterInteractionController {
                         const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
                         if (trigger === "disk") {
-                            const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
-                            if (interaction_started) {
-                                return;
-                            };
+                            if (!this._controls.busy_loading_disk) {
+                                const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
+                                if (interaction_started) {
+                                    return;
+                                };
+                            }
                         } else if (trigger === "pushbox") {
                             const interaction_started = this.handle_touch_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
                             };
+                            if (this.is_pushing == false) {
+                                interactable_objects[key].interactable_object.end_interaction(this._controls, this._object_to_interact_with, this._level);
+                            }
                         } else if (trigger === "lever") {
                             
                             const interaction_started = this.handle_right_click_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
+                            }
+                        } else if (trigger === "glass") {
+                            if (!interactable_objects[key].object.broken) {
+                                const interaction_started = this.handle_glass_interaction(interactable_objects[key]);
+                                if (interaction_started) {
+                                    return;
+                                }
                             }
                         }
                         

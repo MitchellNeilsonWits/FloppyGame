@@ -2,6 +2,7 @@ import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
+import TutInstructions from "../../engine/tutInstructions";
 
 class TutorialLevel extends Level {
 
@@ -19,7 +20,7 @@ class TutorialLevel extends Level {
 
         
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
-        
+        this._tutInstructions = new TutInstructions(character_controller, this._scene);
         // -----------------------------------------------------------------------
         _callback();
     }
@@ -58,7 +59,9 @@ class TutorialLevel extends Level {
 
     update(time_elapsed_in_seconds) {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
-        
+        if (this._tutInstructions){
+            this._tutInstructions.update();
+        }
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates
