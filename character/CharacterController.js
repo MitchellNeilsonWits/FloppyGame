@@ -553,6 +553,7 @@ class CharacterController {
         // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
 
         this._target.update(forward.x, y_velocity, forward.z);
+        console.log(this._velocity);
 
         // UPDATE MIXER (ANIMATION) FOR CHARACTER
         if (this._mixer) {
@@ -633,7 +634,7 @@ class CharacterController {
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
         if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
             if (this._input._keys.space) {
-                y_velocity += 3;
+                y_velocity += 5;
             }
             else{
                 // y_velocity = this._target.rigidBody.linvel().y;

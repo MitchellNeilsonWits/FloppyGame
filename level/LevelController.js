@@ -15,6 +15,7 @@ import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import hud from "../hud/Hud";
 import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
+import MitchLevel from "./levels/MitchLevel";
 
 class LevelController {
     constructor(params) {
@@ -34,7 +35,6 @@ class LevelController {
         this.change_level = this.change_level_unbound.bind(this);
 
         // Define the levels to be played
-        this._current_level = 2;
         this._current_level = 2;
         this._level = null;
 
@@ -102,7 +102,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(2);
+            this.change_level(3);
         
         });
     }
@@ -191,8 +191,12 @@ class LevelController {
             case 2:
                 this._level = new IntoTheWildLevel(this._scene);
                 break;
-            
+
             case 3:
+                this._level = new MitchLevel(this._scene);
+                break;
+            
+            case 4:
                 this._level = new PlacementMattersLevel(this._scene);
                 break;
 
