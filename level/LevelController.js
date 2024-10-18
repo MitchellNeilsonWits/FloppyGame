@@ -115,7 +115,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(1);
+            this.change_level(0);
         
         });
     }
@@ -194,7 +194,7 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
-                this._level = new LobbyLevel(this._scene, this.change_level);
+                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
                 break;
         
             case 1:

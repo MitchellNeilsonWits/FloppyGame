@@ -5,36 +5,32 @@ class FootstepSound {
         this.character_controller = character_controller;
         this.level = level;
         this.isPlayerOnObject = null;
-        this.isPlaying = false;  // Track whether the footstep sound is playing
+        this.isPlaying = false;  
 
-        this.targetObjectName = "firstPlatform_ground";
-
-        // Create a positional audio for footstep sounds
-        this.sound = new THREE.PositionalAudio(audioListener); 
+        // Footsteps
+        this.sound = new THREE.Audio(audioListener); 
         audioLoader.load(footstepSoundFilePath, (buffer) => {
             this.sound.setBuffer(buffer);
             this.sound.setLoop(true); 
-            this.sound.setVolume(1);  
+            this.sound.setVolume(0.2);  
         });
 
-        // Create a positional audio for jump sounds
+        // Jump sound
         this.jumpSound = new THREE.Audio(audioListener);
         audioLoader.load(jumpSoundFilePath, (buffer) => {
             this.jumpSound.setBuffer(buffer);
-            this.jumpSound.setLoop(false);  // No need to loop jump sound
-            this.jumpSound.setVolume(1);
+            this.jumpSound.setLoop(false); // Play once
+            this.jumpSound.setVolume(0.2);
         });
 
-        // Raycaster for precise surface checks
         this.raycaster = new THREE.Raycaster();
 
-        // Bind the key down event
         window.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 
     handleKeyDown(event) {
         if (event.code === 'Space') {
-            event.preventDefault(); // Prevent default space behavior (like scrolling)
+            event.preventDefault(); 
             this.triggerJump();
         }
     }
@@ -46,69 +42,61 @@ class FootstepSound {
     update() {
         console.log("Character controller: ", this.character_controller);
 
-        // Check if the character is idle; if so, stop the footstep sound
+        // No footsteps on idle state
         if (this.character_controller._state_machine._current_name === 'idle') {
             console.log('Character is idle, stopping footstep sound');
             this.stopFootstepSound();
-            return;  // Exit if idle
+            return;  
         }
 
-        // Check if the player is moving (walking or sprinting)
+        // Running -> make play faster
         const isRunning = this.character_controller._state_machine._current_name.includes('run');
-        const playbackRate = isRunning ? 1.75 : 1.0;  // Faster for running states
+        const playbackRate = isRunning ? 1.75 : 1.0; 
 
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
-            const targetObject = this.level.getObjectByName(this.targetObjectName);
 
-            if (targetObject) {
-                // Use raycasting to check if the player is on top of the surface
-                const isOnSurface = this.checkIfOnSurface(playerPos, targetObject);
+            // Loop through all objects in the level
+            const objectsInLevel = this.level.children[2].children; 
+            console.log('Objects in level: ', objectsInLevel);
+            let isOnSurface = false;
 
-                if (isOnSurface) {
-                    if (this.isPlayerOnObject !== this.targetObjectName) {
-                        // Player moved onto the object
-                        this.isPlayerOnObject = this.targetObjectName;
-                        this.playFootstepSound(playerPos, playbackRate);  // Play sound at player's position
-                    } else if (!this.sound.isPlaying) {
-                        // If the player is on the object but sound is not playing, restart the sound
-                        this.playFootstepSound(playerPos, playbackRate);
-                    } else {
-                        // Update playback rate if already playing
-                        this.updatePlaybackRate(playbackRate);
-                    }
-                } else {
-                    if (this.isPlayerOnObject === this.targetObjectName) {
-                        // Player moved off the object
-                        this.isPlayerOnObject = null;
-                        this.stopFootstepSound();
+            for (let obj of objectsInLevel) {
+                if (obj.name.includes('_ground')) {
+                    
+                    if (this.checkIfOnSurface(playerPos, obj)) {
+                        isOnSurface = true;  // Player is on a ground surface
+                        if (this.isPlayerOnObject !== obj.name) {
+                            this.isPlayerOnObject = obj.name;
+                            this.playFootstepSound(playerPos, playbackRate); 
+                        } else if (!this.sound.isPlaying) {
+                            this.playFootstepSound(playerPos, playbackRate);
+                        } else {
+                            this.updatePlaybackRate(playbackRate);
+                        }
                     }
                 }
             }
+
+            if (!isOnSurface && this.isPlayerOnObject) {
+                // Player moved off all ground surfaces
+                this.isPlayerOnObject = null;
+                this.stopFootstepSound();
+            }
         }
     }
-
-    /**
-     * Checks if the player is standing on top of the surface using raycasting.
-     * @param {THREE.Vector3} playerPos - The position of the player.
-     * @param {THREE.Object3D} targetObject - The target object (mesh) to check against.
-     * @returns {boolean} - True if the player is on top of the object.
-     */
+    //GPT CODE XD
     checkIfOnSurface(playerPos, targetObject) {
-        // Set the raycaster to cast downwards from the player's position
         const rayOrigin = new THREE.Vector3(playerPos.x, playerPos.y + 1, playerPos.z);
-        const rayDirection = new THREE.Vector3(0, -1, 0);  // Ray pointing down
+        const rayDirection = new THREE.Vector3(0, -1, 0);  
         this.raycaster.set(rayOrigin, rayDirection);
 
-        // Check intersections with the target object's geometry
-        const intersects = this.raycaster.intersectObject(targetObject, true);  // Recursive check
+        const intersects = this.raycaster.intersectObject(targetObject, true); 
         
         if (intersects.length > 0) {
             const closestIntersection = intersects[0];
             const distance = closestIntersection.distance;
-
-            // Define a threshold for "on surface" check
-            const onSurfaceThreshold = 1.2;  // Distance threshold (adjust as needed)
+            const onSurfaceThreshold = 1.2;  
             console.log(`Distance to surface: ${distance}`);
             if (distance < onSurfaceThreshold) {
                 console.log('Player is on surface, exact intersection found.');
@@ -123,7 +111,7 @@ class FootstepSound {
         this.updatePlaybackRate(playbackRate);
 
         if (!this.sound.isPlaying) {
-            this.sound.position.copy(playerPos);  // Play sound at player's position
+            this.sound.position.copy(playerPos); 
             this.sound.play();
             this.isPlaying = true;
             console.log(`Playing footstep sound at player position`);
@@ -144,7 +132,6 @@ class FootstepSound {
             this.sound.setPlaybackRate(rate);
 
             if (this.isPlaying) {
-                // Restart the sound with the new playback rate if already playing
                 this.sound.stop();
                 this.sound.play();
             }
@@ -157,6 +144,7 @@ class FootstepSound {
             console.log('Playing jump sound');
         }
     }
+
 }
 
 export default FootstepSound;
