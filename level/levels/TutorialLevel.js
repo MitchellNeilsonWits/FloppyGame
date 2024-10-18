@@ -3,12 +3,15 @@ import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
 import TutInstructions from "../../engine/tutInstructions";
+import FootstepSound from "../../engine/footSteps";
 
 class TutorialLevel extends Level {
 
-    constructor(scene) {
+    constructor(scene, audioListener, audioLoader) {
         super();
         this._scene = scene;
+        this.audioListener = audioListener; 
+        this.audioLoader = audioLoader;     
     }
 
     // Function to set the components for the scene
@@ -21,6 +24,15 @@ class TutorialLevel extends Level {
         
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
         this._tutInstructions = new TutInstructions(character_controller, this._scene);
+        this._footstepSound = new FootstepSound(
+            character_controller,
+            this._scene,
+            this.audioListener,
+            this.audioLoader,
+            'sounds/zapsplat_foley_footstep_single_barefoot_on_metal_step_ladder_rung_013_36282.mp3', // Path to the footstep sound file
+            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3'
+        );
+
         // -----------------------------------------------------------------------
         _callback();
     }
@@ -61,6 +73,11 @@ class TutorialLevel extends Level {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
         if (this._tutInstructions){
             this._tutInstructions.update();
+        }
+
+        //Audio update
+        if (this._footstepSound) {
+            this._footstepSound.update();  // Update footstep sound system
         }
         // -------------------------------------------------------------
 
