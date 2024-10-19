@@ -342,7 +342,7 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 4.5;
             }
@@ -353,6 +353,15 @@ class CharacterController {
         } else {
             y_velocity = this._target.rigidBody.linvel().y;
         }
+
+        // if (this._input._keys.space) {
+        //     y_velocity = 4;
+        // } else if (this._input._keys.crouch) {
+        //     y_velocity = -4;
+        // } else {
+        //     y_velocity = 0;
+        //     // y_velocity = this._target.rigidBody.linvel().y;
+        // }
         
         const v = new THREE.Vector3();
         control_object.getWorldPosition(v);
@@ -438,7 +447,7 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 3;
             }
@@ -632,7 +641,7 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.15)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 5;
             }
