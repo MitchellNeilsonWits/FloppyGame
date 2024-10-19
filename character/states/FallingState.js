@@ -1,4 +1,4 @@
-import State from "../State";
+import State from "../../common/State";
 
 class FallingState extends State {
     constructor(parent) {

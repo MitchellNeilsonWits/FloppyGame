@@ -13,6 +13,8 @@ import InteractableLever from '../lever/InteractableLever';
 import Gate from '../gate/Gate';
 import Glass from '../glass/Glass';
 import InteractableGlass from '../glass/InteractableGlass';
+import NPC from '../npc/NPC';
+import InteractableNPC from '../npc/InteractableNPC';
 
 
 class Level {
@@ -67,8 +69,14 @@ class Level {
         // Create glass objects
         await level.create_glass(level, meshes.glass);
 
+        // Create the NPC
+        await level.create_npc(level, meshes.npc_spawn);
+
         // Create other interactable objects
         this._create_interactable_objects(level);
+
+        // Load the animations
+        this.load_animations(level, meshes.animations)
 
         // Set the player start position
         const player_start_pos = meshes.player_spawn.position;
@@ -100,6 +108,39 @@ class Level {
                 'shrink_disk': new THREE.Vector3(0,0,0).copy(meshes.shrink_disk_spawn.position)
             },
             pushbox_positions: pushbox_positions
+        }
+    }
+
+    async create_npc(level, npc_mesh) {
+        // level._npc = 
+        console.log(npc_mesh);
+
+        const npc = new NPC(npc_mesh.position, npc_mesh.rotation);
+        await npc.set_npc();
+        level._npc = npc;
+        level._level.add(npc);
+
+        level._interactable_objects[`npc`] = {
+            object: npc,
+            type: 'static',
+            name: `npc`
+        }
+
+        console.log("lines to be read:",level.npc_lines);
+
+        level._interactable_objects[`npc`]['interactable_object'] = new InteractableNPC(`Press E to interact with N.P.C`, level._interactable_objects[`npc`].object, level.npc_lines);
+        level.non_player_colliders.push(npc.collider);
+        level.non_player_rigid_bodies.push(npc.rigidBody);
+    }
+
+    load_animations(level, animations) {
+        level.mixer = new THREE.AnimationMixer(level._level)
+        level._level.animations = []
+
+        for (const animation of animations) {
+            const action = level.mixer.clipAction(animation);
+            action.play();
+            level._level.animations.push(action);
         }
     }
 
@@ -340,6 +381,15 @@ class Level {
     }
 
     main_update(level, time_elapsed_in_seconds) {
+        // Update the NPC
+        if (level._npc) {
+            level._npc.update(time_elapsed_in_seconds);
+        }
+        // Update animations
+        if (level.mixer) {
+            level.mixer.update(time_elapsed_in_seconds);
+        }
+        
         // Update the dynamic objects
         if (level._dynamic_objects) {
             for (const object of level._dynamic_objects) {

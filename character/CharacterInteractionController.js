@@ -287,6 +287,40 @@ class CharacterInteractionController {
         }
     }
 
+    handle_npc_interaction(interactable_object) {
+        // Get the object of the interactable object
+        const object = interactable_object.object;
+
+        // Calculate the euclidean distance from the object
+        const distance = this._distance_to_object(object);
+
+        const distance_threshold = interactable_object.interactable_object.distance_threshold;
+
+        // If the distance is within the threshold, we see if the character is facing the object
+        if (distance <= distance_threshold) {
+
+            // Find the desired angle
+            const desired_angle = this._desired_angle_to_object(object);
+            const current_angle = this._find_2d_angle();
+
+            // Check if the current angle is within range of the desired angle
+            const view_range = Math.PI/6;
+            const in_range = this._check_angle_range(desired_angle, current_angle, view_range);
+
+            if (in_range) {
+                if (!this.can_interact) {
+                    this.can_interact = true;
+                    this._object_to_interact_with = interactable_object; 
+                    this._start_interaction = interactable_object.interactable_object.start_interaction;
+
+                    
+                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                }
+                return true;
+            }
+        }
+    }
+
     update(interactable_objects) {
         this.is_pushing = false;
 
@@ -382,6 +416,13 @@ class CharacterInteractionController {
                         if (this._input._keys.left_click) {
                             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                         }
+                    } else if (interaction_trigger === "npc") {
+                        if (!this._controls._currently_reading_npc) { 
+                            if (this._input._keys.interact) {
+                                this._start_interaction(this._controls, this._object_to_interact_with, this._level);
+                                this._hide_interact_message();
+                            }
+                        }
                     }
                 }
             }
@@ -465,6 +506,12 @@ class CharacterInteractionController {
                                     return;
                                 }
                             }
+                        } else if (trigger === "npc") {
+                            const interaction_started = this.handle_npc_interaction(interactable_objects[key]);
+                            if (interaction_started) {
+                                return;
+                            }
+                            
                         }
                         
                     }

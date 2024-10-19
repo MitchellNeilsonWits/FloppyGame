@@ -12,8 +12,16 @@ class MitchLevel extends Level {
 
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
+        this.npc_lines = [
+            "Welcome to the SECOND simulation!",
+            "Here, we will be testing if you can keep your focus regardless of the environment",
+            "Although there is wonderful scenery around, you need to be able to focus on the task",
+            "So don't get distracted.",
+            "Your first disk is behind you. Good lucK!"
+        ]
+
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/islands_with_sky.glb');
+        const meshes = await loadAssets('assets/islands.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         
