@@ -129,7 +129,7 @@ class LevelController {
 
             // Render the scene
             this.change_level(0);
-            this.change_level(0);
+            // this.change_level(0);
         
         });
     }

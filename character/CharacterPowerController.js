@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import colors from "../disks/disk_colors";
 import physic from '../engine/physic';
 import { createColliderBall } from '../engine/function';
-import physic from '../engine/physic';
-import { createColliderBall } from '../engine/function';
+// import physic from '../engine/physic';
+// import { createColliderBall } from '../engine/function';
 
 class CharacterPowerController {
     constructor(controls) {
