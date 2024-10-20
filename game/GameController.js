@@ -100,6 +100,12 @@ class GameController {
         // Load the level
         this._load_level()
 
+
+        // AUDIO: Attach the audio listener to the actual camera object
+        this._audioListener = new THREE.AudioListener();
+        this._camera.get_camera().add(this._audioListener); // Access the actual camera object via get_camera()
+
+
         // REQUEST ANIMATION FRAME
         this._raf();
 

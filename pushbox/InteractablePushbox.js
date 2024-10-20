@@ -53,7 +53,6 @@ class InteractablePushbox extends interactableObject {
     }
 
     end_interaction_static(controls, object_to_drop, level) {
-        console.log("stopped pushing");
         if (this._action) {
             this._action.stop();
         }

@@ -2,6 +2,7 @@ import Level from "../Level";
 import ProximityScreenRenderer from '../../engine/proxRender';
 import loadAssets from '../../engine/loader';
 import TutRender from '../../engine/tutRender';
+import FootstepSound from '../../engine/footSteps';
 
 /**
  * Thank you to the following artists whose work was used in this project:
@@ -13,10 +14,12 @@ import TutRender from '../../engine/tutRender';
  */
 class LobbyLevel extends Level {
 
-    constructor(scene, change_level) {
+    constructor(scene, change_level, audioListener, audioLoader) {
         super();
         this._scene = scene;
         this.change_level = change_level;
+        this.audioListener = audioListener; 
+        this.audioLoader = audioLoader;  
     }
 
     // Function to set the components for the scene
@@ -35,6 +38,16 @@ class LobbyLevel extends Level {
             //this.startTutorial();
            this.change_level(1); 
         });
+
+        this._footstepSound = new FootstepSound(
+            character_controller,
+            this._scene,
+            this.audioListener,
+            this.audioLoader,
+            'sounds/footSteponGrass.mp4', // Path to the footstep sound file
+            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3',
+            'sounds/footSteponGrass.mp4'
+        );
 
         // Get the skybox
         this._skybox = meshes.skybox;
@@ -83,6 +96,11 @@ class LobbyLevel extends Level {
 
         if (this._tutorialRenderer) {
             this._tutorialRenderer.update();
+        }
+
+        //Audio update
+        if (this._footstepSound) {
+            this._footstepSound.update();  // Update footstep sound system
         }
 
         this._skybox.rotateX(Math.PI/10000);

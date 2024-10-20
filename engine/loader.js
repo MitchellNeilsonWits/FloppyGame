@@ -1,10 +1,18 @@
+import { DRACOLoader } from 'three-stdlib';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
+const dracoLoader = new DRACOLoader();
+// dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
+// loader.setDRACOLoader( dracoLoader );
+dracoLoader.setDecoderConfig({ type: 'js' });
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 const loaderGlb = new GLTFLoader()
+loaderGlb.setDRACOLoader(dracoLoader);
 
 export default async function loadAssets(path) {
   const glb = await loaderGlb.loadAsync(path)
 
+  const animations = glb.animations
   const visuals = []
   const colliders = []
   const visuals_dynamic = []
@@ -16,11 +24,13 @@ export default async function loadAssets(path) {
   const ground_objects = [];
   const spotLights = [];
   const directionalLights = [];
+  
   let skybox;
   let player_spawn;
   let strength_disk_spawn;
   let flight_disk_spawn;
   let shrink_disk_spawn;
+  let npc_spawn;
 
   const lever_gates = {}
 
@@ -29,7 +39,10 @@ export default async function loadAssets(path) {
 
   console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
-    if (mesh.name.includes("glass")) {
+    if (mesh.name.includes("npc_spawn")) {
+      console.log("GOT AN NPC_SPAWN")
+      npc_spawn = mesh;
+    } else if (mesh.name.includes("glass")) {
       glass.push(mesh);
     } else if (mesh.name.includes("player_spawn")) {
       player_spawn = mesh;
@@ -109,5 +122,5 @@ export default async function loadAssets(path) {
   }
   
 
-  return { visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
+  return { npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
 }

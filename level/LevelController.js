@@ -15,6 +15,8 @@ import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import hud from "../hud/Hud";
 import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
+import MitchLevel from "./levels/MitchLevel";
+import * as THREE from 'three';
 
 class LevelController {
     constructor(params) {
@@ -28,13 +30,24 @@ class LevelController {
         this._camera = params.camera;
         this._mouse_listener = params.mouse_listener;
         this._menu = params.menu;
+
+        // Create audio listener and loader
+        this.audioListener = new THREE.AudioListener();
+        this.audioLoader = new THREE.AudioLoader();
+
+    
+        // Attach audio listener to the actual camera object
+        this._camera.get_camera().add(this.audioListener);
+
+
+
+
         this.reset_current_level_bound = this.reset_current_level.bind(this);
         this._menu.set_restart_level_function(this.reset_current_level_bound);
 
         this.change_level = this.change_level_unbound.bind(this);
 
         // Define the levels to be played
-        this._current_level = 2;
         this._current_level = 2;
         this._level = null;
 
@@ -87,6 +100,7 @@ class LevelController {
         // ---------- RESET PUSHBOXES ----------
         for (const pushbox of this._level._pushboxes) {
             pushbox.object.rigidBody.setTranslation(starting_positions.pushbox_positions[pushbox.id]);
+            // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
             pushbox.object.position.copy(pushbox.object.rigidBody.translation());
         }
         // ------------------------------
@@ -102,7 +116,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(2);
+            this.change_level(0);
         
         });
     }
@@ -181,18 +195,22 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
-                this._level = new LobbyLevel(this._scene, this.change_level);
+                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
                 break;
         
             case 1:
-                this._level = new TutorialLevel(this._scene);
+                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
                 break;
 
             case 2:
                 this._level = new IntoTheWildLevel(this._scene);
                 break;
-            
+
             case 3:
+                this._level = new MitchLevel(this._scene);
+                break;
+            
+            case 4:
                 this._level = new PlacementMattersLevel(this._scene);
                 break;
 

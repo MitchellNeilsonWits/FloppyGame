@@ -8,8 +8,8 @@ export function getCanvas() {
   return canvas
 }
 
-function createColliderBall(radius, rigidBody, physic) {
-  const colliderDesc = ColliderDesc.ball(radius)
+export function createColliderBall(radius, rigidBody, physic) {
+  const colliderDesc = ColliderDesc.ball(radius).setTranslation(0,0,0);
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
@@ -91,10 +91,12 @@ export function createRigidBodyDynamic(mesh, physic) {
 export function createRigidBodyEntity(position, physic) {
   console.log("CREATING ENTITY!!!!");
   const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(1)
+  // rigidBodyDesc.ccdEnabled = true;
   console.log("Position:",position)
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
   const collider = createColliderBall(0.18, rigidBody, physic)
+  
   // const colliderDesc = ColliderDesc.capsule(0.18, 0.5);
   // const collider = physic.createCollider(colliderDesc, rigidBody);
   return { rigidBody, collider }
@@ -181,14 +183,14 @@ function createShardCollider(rigidBody, physic, mesh) {
   return physic.createCollider(colliderDesc, rigidBody)
 }
 
-// export function createGlass(position, physic) {
-//   const rigidBodyDesc = RigidBodyDesc.fixed();
-//   rigidBodyDesc.setTranslation(...position)
-//   const rigidBody = physic.createRigidBody(rigidBodyDesc)
-//   const colliderDesc = ColliderDesc.cuboid(1,1,1);
-//   const collider = physic.createCollider(colliderDesc, rigidBody);
-//   return { rigidBody, collider }
-// }
+export function createGlass(position, physic) {
+  const rigidBodyDesc = RigidBodyDesc.fixed();
+  rigidBodyDesc.setTranslation(...position)
+  const rigidBody = physic.createRigidBody(rigidBodyDesc)
+  const colliderDesc = ColliderDesc.cuboid(1,1,1);
+  const collider = physic.createCollider(colliderDesc, rigidBody);
+  return { rigidBody, collider }
+}
 
 export function createShard(position, mesh, physic) {
   const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(10000);// set mass to be very heavy so we cannot just move the shards
@@ -205,10 +207,10 @@ export function createShard(position, mesh, physic) {
 }
 
 
-export function createGlass(mesh, physic) { 
-  const rigidBodyDesc = RigidBodyDesc.dynamic();
-  rigidBodyDesc.setTranslation(...mesh.position);
-  const rigidBody = physic.createRigidBody(rigidBodyDesc)
-  const collider = createColliderGeo(rigidBody, physic, mesh)
-  return { rigidBody, collider }
-}
+// export function createGlass(mesh, physic) { 
+//   const rigidBodyDesc = RigidBodyDesc.dynamic();
+//   rigidBodyDesc.setTranslation(...mesh.position);
+//   const rigidBody = physic.createRigidBody(rigidBodyDesc)
+//   const collider = createColliderGeo(rigidBody, physic, mesh)
+//   return { rigidBody, collider }
+// }

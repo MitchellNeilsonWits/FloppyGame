@@ -11,7 +11,7 @@ class Pushbox extends Object3D {
   constructor(position, rotation) {
     super();
     this.position.copy(position);
-    // this.rotation.copy(rotation);
+    this.rotation.copy(rotation);
     // this.setRotationFromQuaternion(rotation);
     // this.initPhysic(physic);
     // this.initVisual(mesh);
