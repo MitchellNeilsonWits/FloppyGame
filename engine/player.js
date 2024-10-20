@@ -50,7 +50,7 @@ export default class Player extends Object3D {
     var y = y_vel;
     const z = z_vel;
 
-    const terminal_y_velocity = -9;
+    const terminal_y_velocity = -4;
     if (y < terminal_y_velocity) {
       y = terminal_y_velocity;
     }

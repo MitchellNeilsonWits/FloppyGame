@@ -527,10 +527,17 @@ class CharacterInteractionController {
                                 return;
                             }
                         }  else if (trigger === "gate") {
-                            
-                            const interaction_started = this.handle_gate_interaction(interactable_objects[key]);
-                            if (interaction_started) {
-                                return;
+                            // Check if the lever is pulled
+                            const lever_name = `lever_${interactable_objects[key].name.split('_')[1]}`;
+                            const lever = interactable_objects[lever_name];
+                            const is_lever_on = lever.object.lever_on;
+
+                            // Only handle display if lever is off
+                            if (!is_lever_on) {
+                                const interaction_started = this.handle_gate_interaction(interactable_objects[key]);
+                                if (interaction_started) {
+                                    return;
+                                }
                             }
                         } else if (trigger === "glass") {
                             if (!interactable_objects[key].object.broken) {

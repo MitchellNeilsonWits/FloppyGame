@@ -16,6 +16,7 @@ import InteractableGlass from '../glass/InteractableGlass';
 import NPC from '../npc/NPC';
 import InteractableNPC from '../npc/InteractableNPC';
 import InteractableGate from '../gate/InteractableGate';
+import Portal from '../portal/Portal';
 
 
 class Level {
@@ -72,9 +73,13 @@ class Level {
 
         // Create the NPC
         await level.create_npc(level, meshes.npc_spawn);
+        
+        // Create the end of level portal
+        await level.create_portal(level, meshes.portal, character_controller); 
 
         // Create other interactable objects
         this._create_interactable_objects(level);
+
 
         // Load the animations
         this.load_animations(level, meshes.animations)
@@ -109,6 +114,19 @@ class Level {
                 'shrink_disk': new THREE.Vector3(0,0,0).copy(meshes.shrink_disk_spawn.position)
             },
             pushbox_positions: pushbox_positions
+        }
+    }
+    
+    async create_portal(level, portal_object, character_controller) {
+        if (portal_object) {
+            
+            const portal = new Portal(character_controller, portal_object, level);
+            level.portal = portal;
+            
+
+            level._level.add(portal);
+            level.non_player_colliders.push(portal.collider);
+            level.non_player_rigid_bodies.push(portal.rigidBody);
         }
     }
 
@@ -260,9 +278,6 @@ class Level {
                 interactable_object: lever_interactable
             }
 
-
-            
-
             level._lever_gates[lever_gate_name] = {
                 name: lever_gate_name,
                 lever_object: lever_object,
@@ -402,6 +417,7 @@ class Level {
         if (level._npc) {
             level._npc.update(time_elapsed_in_seconds);
         }
+
         // Update animations
         if (level.mixer) {
             level.mixer.update(time_elapsed_in_seconds);
@@ -430,6 +446,10 @@ class Level {
             }
         }
         
+        // Update the portal
+        if (level.portal) {
+            level.portal.update(time_elapsed_in_seconds);
+        }
     }
 
     set_level() {}

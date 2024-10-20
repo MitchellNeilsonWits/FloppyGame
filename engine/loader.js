@@ -1,4 +1,4 @@
-import { DRACOLoader } from 'three-stdlib';
+import { DRACOLoader, KTX2Loader } from 'three-stdlib';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 const dracoLoader = new DRACOLoader();
@@ -7,6 +7,12 @@ const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderConfig({ type: 'js' });
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 const loaderGlb = new GLTFLoader()
+
+// const ktx2Loader = new KTX2Loader();
+// this.ktx2Loader.setTranscoderPath(
+
+
+// loaderGlb.setKTX2Loader(ktx2Loader);
 loaderGlb.setDRACOLoader(dracoLoader);
 
 export default async function loadAssets(path) {
@@ -31,6 +37,7 @@ export default async function loadAssets(path) {
   let flight_disk_spawn;
   let shrink_disk_spawn;
   let npc_spawn;
+  let portal;
 
   const lever_gates = {}
 
@@ -39,7 +46,9 @@ export default async function loadAssets(path) {
 
   console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
-    if (mesh.name.includes("npc_spawn")) {
+    if (mesh.name.includes("level_end")) {
+      portal = mesh;
+    } else if (mesh.name.includes("npc_spawn")) {
       console.log("GOT AN NPC_SPAWN")
       npc_spawn = mesh;
     } else if (mesh.name.includes("glass")) {
@@ -122,5 +131,5 @@ export default async function loadAssets(path) {
   }
   
 
-  return { npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
+  return { portal, npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
 }

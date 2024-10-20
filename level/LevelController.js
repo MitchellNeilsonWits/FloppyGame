@@ -51,6 +51,8 @@ class LevelController {
         this._current_level = 2;
         this._level = null;
 
+        this.changing_level = true;
+
 
         // Initialize
         this._init(params);
@@ -104,6 +106,9 @@ class LevelController {
             pushbox.object.position.copy(pushbox.object.rigidBody.translation());
         }
         // ------------------------------
+
+        // Reset the user HUD
+        hud.reset_hud();
         
     }
 
@@ -116,7 +121,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(3);
+            this.change_level(0);
         
         });
     }
@@ -160,6 +165,8 @@ class LevelController {
             setTimeout(() => {
                 this.loading_screen.hide_screen();
                 hud.reset_hud();
+
+                this.changing_level = false;
             },1000);
             console.log("DONE RENDERING THE SCENE!");
         });
@@ -168,15 +175,23 @@ class LevelController {
     }
 
     change_level_unbound(level_number) {
+        this.changing_level = true;
+
+        this._current_level = level_number;
         // this._scene.clear(); // clear the scene
         if (this._level) {
+            this.reset_current_level();
             const prev_level = this._level;
-            this._level = null;
             console.log(this);
             // need to clear all colliders apart from character
-            prev_level.non_player_colliders.forEach(collider => {
-                physic.removeCollider(collider);
-            });
+            if (prev_level.non_player_colliders) {
+                prev_level.non_player_colliders.forEach(collider => {
+                    console.log(collider);
+                    if (collider) {
+                        physic.removeCollider(collider);
+                    }
+                });
+            }
 
             // prev_level.non_player_rigid_bodies.forEach(rigidBody => {
             //     // console.log(object);
@@ -184,9 +199,15 @@ class LevelController {
             //     physic.removeRigidBody(rigidBody);
             // });
             
+            if (prev_level._world) {
+                prev_level._world.clear();
+            }
 
-            prev_level._world.clear();
-            prev_level._level.clear();
+            if (prev_level._level) {
+                prev_level._level.clear();
+            }
+            this._level = null;
+
         }
         if (!this.loading_screen.is_shown) {
             this.loading_screen.show_screen();
@@ -195,23 +216,25 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
-                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
+                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader, this);
                 break;
         
             case 1:
-                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
+                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader, this);
                 break;
 
             case 2:
-                this._level = new IntoTheWildLevel(this._scene);
+                this._level = new IntoTheWildLevel(this._scene, this);
                 break;
 
             case 3:
-                this._level = new MitchLevel(this._scene);
+                this._level = new MitchLevel(this._scene, this);
                 break;
             
             case 4:
-                this._level = new PlacementMattersLevel(this._scene);
+                // this._level = new PlacementMattersLevel(this._scene, this);
+                this._level = new IntoTheWildLevel(this._scene, this);
+
                 break;
 
             default:
@@ -223,25 +246,26 @@ class LevelController {
     }
 
     update(time_elapsed_in_seconds) {
-
-        if (this._controls.height_controller) {
-            this._controls.height_controller.update(this._ground_objects);
-        }
-
-        // Update the character (only if we have a character and active mouse listener)
-        if (this._controls) {
-            if (this._mouse_listener) {
-                this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x,  this._mouse_listener._mouse_movement_y);
+        if (!this.changing_level) {
+            if (this._controls.height_controller) {
+                this._controls.height_controller.update(this._ground_objects);
             }
-        }
 
-        // Update the level that is currently active
-        if (this._level) {
-            this._level.update(time_elapsed_in_seconds);
-        }
+            // Update the character (only if we have a character and active mouse listener)
+            if (this._controls) {
+                if (this._mouse_listener) {
+                    this._controls.update(time_elapsed_in_seconds, this._mouse_listener._mouse_movement_x,  this._mouse_listener._mouse_movement_y);
+                }
+            }
 
-        if (this._controls._interaction_controller) {
-            this._controls._interaction_controller.update(this._interactable_objects);
+            // Update the level that is currently active
+            if (this._level) {
+                this._level.update(time_elapsed_in_seconds);
+            }
+
+            if (this._controls._interaction_controller) {
+                this._controls._interaction_controller.update(this._interactable_objects);
+            }   
         }
         
     }
