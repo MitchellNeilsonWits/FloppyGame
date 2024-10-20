@@ -1,3 +1,6 @@
+// FILE IS DEPRECATED DO NOT USE!!!!//
+
+
 import * as THREE from 'three';
 
 class ProximityScreenRenderer {
@@ -14,7 +17,7 @@ class ProximityScreenRenderer {
 
         // Create video element
         this.video = document.createElement('video');
-        this.video.src = 'assets/test.mp4'; 
+        this.video.src = 'Videos/Floppy Intro - Made with Clipchamp.mp4'; 
         this.video.loop = true; 
         this.video.muted = true; 
         this.video.crossOrigin = 'anonymous'; 
@@ -83,33 +86,54 @@ class ProximityScreenRenderer {
             }
         }
     }
-
-    playVideo() {
+    playVideo(translateAmount = 0.1) {
         const screenMesh = this.scene.getObjectByName(this.screenName);
         
         if (screenMesh) {
             const existingMaterial = screenMesh.material;
-    
+        
             if (existingMaterial.map) {
                 existingMaterial.map.dispose();
             }
     
+            // Create the video texture
             this.videoTexture = new THREE.VideoTexture(this.video);
             this.videoTexture.minFilter = THREE.LinearFilter; 
             this.videoTexture.magFilter = THREE.LinearFilter;
             this.videoTexture.format = THREE.RGBAFormat;
     
+            // Ensure the texture wraps and stretches
+            this.videoTexture.wrapS = THREE.ClampToEdgeWrapping;
+            this.videoTexture.wrapT = THREE.ClampToEdgeWrapping;
+    
             existingMaterial.map = this.videoTexture;
             existingMaterial.needsUpdate = true;
     
+            // Apply UV transformation for 90-degree rotation and translate upwards
+            const uvAttribute = screenMesh.geometry.attributes.uv;
+            for (let i = 0; i < uvAttribute.count; i++) {
+                const u = uvAttribute.getX(i);
+                const v = uvAttribute.getY(i);
+    
+                // Rotate UVs by 90 degrees and correct the upside-down orientation
+                uvAttribute.setXY(i, v , 1 - u);  // Translate upwards by adjusting v coordinate
+            }
+            uvAttribute.needsUpdate = true;
+    
+            // Start video playback
             this.video.muted = false; 
             this.video.play(); 
             this.videoPlaying = true;
-            this.hideInteractMessage(); // Hide the message after you press E
+            this.hideInteractMessage(); // Hide interaction message after pressing E
         } else {
             console.log("Screen mesh not found");
         }
     }
+    
+    
+    
+    
+    
 
     stopVideo() {
         const screenMesh = this.scene.getObjectByName(this.screenName);

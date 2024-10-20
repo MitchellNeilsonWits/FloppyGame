@@ -4,6 +4,7 @@ import loadAssets from '../../engine/loader';
 import TutRender from '../../engine/tutRender';
 import FootstepSound from '../../engine/footSteps';
 
+
 /**
  * Thank you to the following artists whose work was used in this project:
  * CC:
@@ -14,10 +15,13 @@ import FootstepSound from '../../engine/footSteps';
  */
 class LobbyLevel extends Level {
 
+
     constructor(scene, change_level, audioListener, audioLoader) {
         super();
         this._scene = scene;
         this.change_level = change_level;
+        this.audioListener = audioListener; 
+        this.audioLoader = audioLoader;  
         this.audioListener = audioListener; 
         this.audioLoader = audioLoader;  
     }
@@ -45,7 +49,10 @@ class LobbyLevel extends Level {
             this.audioListener,
             this.audioLoader,
             'sounds/zapsplat_foley_footstep_single_barefoot_on_metal_step_ladder_rung_013_36282.mp3', // Path to the footstep sound file
-            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3'
+            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3',
+            'sounds/footSteponGrass.mp4',
+            'sounds/zapsplat_foley_footstep_single_boys_sneaker_wood_004_50920.mp3',
+            'sounds/zapsplat_foley_rock_heavy_chunk_set_down_onto_rubble_002_110534.mp3'
         );
 
         // Get the skybox
@@ -95,6 +102,11 @@ class LobbyLevel extends Level {
 
         if (this._tutorialRenderer) {
             this._tutorialRenderer.update();
+        }
+
+        //Audio update
+        if (this._footstepSound) {
+            this._footstepSound.update();  // Update footstep sound system
         }
 
         //Audio update

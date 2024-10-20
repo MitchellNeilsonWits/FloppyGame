@@ -26,6 +26,7 @@ class CharacterController {
     _init(params) {
         // SET IMPORTANT VARIABLES
         this._currently_reading_npc = false;
+        this._currently_reading_npc = false;
         this._params = params;
         this._decceleration = new THREE.Vector3(-0.5, 0, -0.5);
         this._acceleration = new THREE.Vector3(1.0, 0, 1.0);
@@ -364,6 +365,8 @@ class CharacterController {
         } else {
             y_velocity = 0;
             // y_velocity = this._target.rigidBody.linvel().y;
+            this._target.rigidBody.setGravityScale(1);
+            y_velocity = this._target.rigidBody.linvel().y;
         }
 
         // if (this._input._keys.space) {
@@ -456,6 +459,7 @@ class CharacterController {
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
         if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 3;
             }
@@ -463,8 +467,10 @@ class CharacterController {
                 // y_velocity = this._target.rigidBody.linvel().y;
                 y_velocity = 0;
                 this._target.rigidBody.setGravityScale(0);
+                this._target.rigidBody.setGravityScale(0);
             }
         } else {
+            this._target.rigidBody.setGravityScale(1);
             this._target.rigidBody.setGravityScale(1);
             y_velocity = this._target.rigidBody.linvel().y;
         }
@@ -567,6 +573,7 @@ class CharacterController {
         // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
 
         this._target.update(forward.x, y_velocity, forward.z);
+        console.log(this._velocity);
         console.log(this._velocity);
 
         // this._can_interact = this._interaction_controller.update();

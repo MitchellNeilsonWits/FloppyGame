@@ -16,6 +16,7 @@ import hud from "../hud/Hud";
 import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 import MitchLevel from "./levels/MitchLevel";
+import MitchLevel from "./levels/MitchLevel";
 import * as THREE from 'three';
 
 class LevelController {
@@ -30,6 +31,18 @@ class LevelController {
         this._camera = params.camera;
         this._mouse_listener = params.mouse_listener;
         this._menu = params.menu;
+
+        // Create audio listener and loader
+        this.audioListener = new THREE.AudioListener();
+        this.audioLoader = new THREE.AudioLoader();
+
+    
+        // Attach audio listener to the actual camera object
+        this._camera.get_camera().add(this.audioListener);
+
+
+
+
 
         // Create audio listener and loader
         this.audioListener = new THREE.AudioListener();
@@ -101,6 +114,7 @@ class LevelController {
         for (const pushbox of this._level._pushboxes) {
             pushbox.object.rigidBody.setTranslation(starting_positions.pushbox_positions[pushbox.id]);
             // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
+            // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
             pushbox.object.position.copy(pushbox.object.rigidBody.translation());
         }
         // ------------------------------
@@ -116,7 +130,8 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(3);
+            this.change_level(0);
+            // this.change_level(0);
         
         });
     }
@@ -196,9 +211,11 @@ class LevelController {
         switch (level_number) {
             case 0:
                 this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
+                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
                 break;
         
             case 1:
+                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
                 this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
                 break;
 
