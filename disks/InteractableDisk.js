@@ -61,6 +61,8 @@ class InteractableDisk extends interactableObject {
                 
                 controls.busy_loading_disk = false;
 
+                // SOUND.PLAY()
+
             })
             this._disk_action = action;        
             this._disk_action.play();
@@ -87,6 +89,8 @@ class InteractableDisk extends interactableObject {
                 controls.busy_loading_disk = false;
                 hud.update_loaded_disk(object_to_use.power);
                 hud.update_holding_disk(currently_loaded_disk.power);
+
+                // SOUND.PLAY()
             })
             this._disk_action = action;        
             this._disk_action.play();

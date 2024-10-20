@@ -6,10 +6,12 @@
  *  Will render the scene and contents
  */
 
+import addOneTimeEventListener from './common/SingleUseListener.js';
 import GameController from './game/GameController.js';
+import music_controller from './music/MusicController.js';
 
 // Create the dynamic menu
-window.onload = () => {
+const load_menu = () => { 
     // Set up the background image
     document.body.style.backgroundImage = "url('assets/FloopyIntro.jpeg')"; 
     document.body.style.backgroundSize = '100% 100%'; // Ensure it covers the entire viewport
@@ -19,13 +21,8 @@ window.onload = () => {
     document.body.style.padding = '0';
     document.body.style.overflow = 'hidden';
 
-    // Play background music
-    const backgroundMusic = new Audio('sounds/TitleSong.mp3'); // Replace with your music file path
-    backgroundMusic.loop = true; // Loop the music
-    backgroundMusic.volume = 0.5; // Set the volume (optional)
-    backgroundMusic.play().catch(error => {
-        console.log('Audio playback failed: ', error);
-    });
+    music_controller.load_music('sounds/TitleSong.mp3');
+    music_controller.play_music();
 
     // Create the "Start Game" button
     const startButton = document.createElement('button');
@@ -63,14 +60,32 @@ window.onload = () => {
     document.body.appendChild(startButton);
     // Add event listener for "Start Game" button
     startButton.addEventListener('click', () => {
-        // Stop the background music
-        backgroundMusic.pause(); // Pause the music
-        backgroundMusic.currentTime = 0; // Reset the music to the beginning
-
         // Derender the menu (remove HTML elements)
         startButton.style.display = 'none';
-
+        music_controller.change_volume(0);
         // Start the game by initializing GameController
         new GameController();
     });
 };
+
+const container = document.createElement('div');
+container.style.width = '100dvw';
+container.style.height = '100dvh';
+container.style.display = 'flex';
+container.style.alignItems = 'center';
+container.style.justifyContent = 'center';
+
+const text = document.createElement('div');
+text.innerHTML = "CLICK THE SCREEN TO START";
+text.style.color = 'white';
+text.style.textAlign = 'center';
+text.style.fontSize = '25px';
+text.style.fontWeight = '500';
+
+container.appendChild(text);
+document.body.appendChild(container);
+
+addOneTimeEventListener(window, 'click', () => {
+    document.body.removeChild(container);
+    load_menu();
+});
