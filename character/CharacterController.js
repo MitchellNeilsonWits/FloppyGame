@@ -25,6 +25,7 @@ class CharacterController {
     /* Initialization function */
     _init(params) {
         // SET IMPORTANT VARIABLES
+        this._currently_reading_npc = false;
         this._params = params;
         this._decceleration = new THREE.Vector3(-0.5, 0, -0.5);
         this._acceleration = new THREE.Vector3(1.0, 0, 1.0);
@@ -342,16 +343,27 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
-            if (this._input._keys.space) {
-                y_velocity += 4.5;
-            }
-            else{
-                // y_velocity = this._target.rigidBody.linvel().y;
-                y_velocity = 0;
-            }
+        // if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
+        //     if (this._input._keys.space) {
+        //         y_velocity += 4.5;
+        //     }
+        //     else{
+        //         // y_velocity = this._target.rigidBody.linvel().y;
+        //         y_velocity = 0;
+        //         this._target.rigidBody.setGravityScale(0);
+        //     }
+        // } else {
+        //     this._target.rigidBody.setGravityScale(1);
+        //     y_velocity = this._target.rigidBody.linvel().y;
+        // }
+
+        if (this._input._keys.space) {
+            y_velocity = 4;
+        } else if (this._input._keys.crouch) {
+            y_velocity = -4;
         } else {
-            y_velocity = this._target.rigidBody.linvel().y;
+            y_velocity = 0;
+            // y_velocity = this._target.rigidBody.linvel().y;
         }
 
         // if (this._input._keys.space) {
@@ -370,10 +382,6 @@ class CharacterController {
 
         this._target.update(forward.x, y_velocity, forward.z);
 
-        // UPDATE MIXER (ANIMATION) FOR CHARACTER
-        if (this._mixer) {
-            this._mixer.update(time_in_seconds);
-        }
 
         // this._can_interact = this._interaction_controller.update();
         // console.log(this._can_interact)
@@ -454,8 +462,10 @@ class CharacterController {
             else{
                 // y_velocity = this._target.rigidBody.linvel().y;
                 y_velocity = 0;
+                this._target.rigidBody.setGravityScale(0);
             }
         } else {
+            this._target.rigidBody.setGravityScale(1);
             y_velocity = this._target.rigidBody.linvel().y;
         }
         
@@ -465,11 +475,6 @@ class CharacterController {
         // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
 
         this._target.update(forward.x, y_velocity, forward.z);
-
-        // UPDATE MIXER (ANIMATION) FOR CHARACTER
-        if (this._mixer) {
-            this._mixer.update(time_in_seconds);
-        }
 
         // this._can_interact = this._interaction_controller.update();
         // console.log(this._can_interact)
@@ -564,11 +569,6 @@ class CharacterController {
         this._target.update(forward.x, y_velocity, forward.z);
         console.log(this._velocity);
 
-        // UPDATE MIXER (ANIMATION) FOR CHARACTER
-        if (this._mixer) {
-            this._mixer.update(time_in_seconds);
-        }
-
         // this._can_interact = this._interaction_controller.update();
         // console.log(this._can_interact)
     }
@@ -648,9 +648,11 @@ class CharacterController {
             else{
                 // y_velocity = this._target.rigidBody.linvel().y;
                 y_velocity = 0;
+                this._target.rigidBody.setGravityScale(0);
             }
         } else {
             y_velocity = this._target.rigidBody.linvel().y;
+            this._target.rigidBody.setGravityScale(1);
         }
         
         const v = new THREE.Vector3();
@@ -660,10 +662,7 @@ class CharacterController {
 
         this._target.update(forward.x, y_velocity, forward.z);
 
-        // UPDATE MIXER (ANIMATION) FOR CHARACTER
-        if (this._mixer) {
-            this._mixer.update(time_in_seconds);
-        }
+        
 
         // this._can_interact = this._interaction_controller.update();
         // console.log(this._can_interact)
@@ -674,6 +673,20 @@ class CharacterController {
     update(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         if (!this._target) {
             return;
+        }
+
+        // UPDATE MIXER (ANIMATION) FOR CHARACTER
+        if (this._mixer) {
+            this._mixer.update(time_in_seconds);
+        }
+
+        // If user is reading npc lines, don't let them move
+        if (this._currently_reading_npc) {
+            this._target.rigidBody.setGravityScale(0);
+            this._target.update(0,0,0);
+            return;
+        } else {
+            this._target.rigidBody.setGravityScale(1);
         }
 
         if (this.power_controller.power === "none") {

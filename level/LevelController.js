@@ -87,6 +87,7 @@ class LevelController {
         // ---------- RESET PUSHBOXES ----------
         for (const pushbox of this._level._pushboxes) {
             pushbox.object.rigidBody.setTranslation(starting_positions.pushbox_positions[pushbox.id]);
+            // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
             pushbox.object.position.copy(pushbox.object.rigidBody.translation());
         }
         // ------------------------------

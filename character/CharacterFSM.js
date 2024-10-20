@@ -1,4 +1,4 @@
-import FiniteStateMachine from "./FiniteStateMachine";
+import FiniteStateMachine from "../common/FiniteStateMachine";
 import IdleState from "./states/IdleState";
 import RunState from "./states/RunState";
 import RunTurningLeftState from "./states/RunTurningLeftState";

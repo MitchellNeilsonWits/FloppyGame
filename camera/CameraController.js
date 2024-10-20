@@ -1,9 +1,4 @@
 import * as THREE from 'three';
-import physic from '../engine/physic';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
-import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d-compat'
-
 
 class CameraController {
     constructor() {

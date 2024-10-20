@@ -6,7 +6,6 @@ class State {
     enter() {}
     exit() {}
     update(character_is_turning, input, height_state, current_power) {
-        console.log(height_state);
 
         if (current_power === "flight") {
             // Handle when player is in the air
