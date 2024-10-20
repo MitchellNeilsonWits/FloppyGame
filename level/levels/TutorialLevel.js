@@ -7,11 +7,12 @@ import FootstepSound from "../../engine/footSteps";
 
 class TutorialLevel extends Level {
 
-    constructor(scene, audioListener, audioLoader) {
+    constructor(scene, audioListener, audioLoader, controller) {
         super();
         this._scene = scene;
         this.audioListener = audioListener; 
         this.audioLoader = audioLoader;     
+        this.level_controller = controller;
     }
 
     // Function to set the components for the scene

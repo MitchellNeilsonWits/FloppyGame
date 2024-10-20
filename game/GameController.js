@@ -20,6 +20,7 @@ import World from '../engine/world';
 import Player from '../engine/player';
 import MenuController from '../menu/MenuController';
 import hud from '../hud/Hud';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 
 
@@ -63,6 +64,9 @@ class GameController {
 
     /* Init function */
     async _init() {
+        // STATS
+        this.stats = new Stats();
+        document.body.appendChild(this.stats.dom);
 
         // THREE JS RENDERER
         this._threejs = new THREE.WebGLRenderer({antialias: true});
@@ -151,6 +155,7 @@ class GameController {
 
     /* Step to update important rendering information */
     _step(time_elapsed) {
+        this.stats.update();
         if (this._playing_game) {
             // CONVERT TIME TO SECONDS
             const time_elapsed_in_seconds = time_elapsed * 0.001;

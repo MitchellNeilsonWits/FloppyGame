@@ -16,7 +16,8 @@ import FootstepSound from '../../engine/footSteps';
 class LobbyLevel extends Level {
 
 
-    constructor(scene, change_level, audioListener, audioLoader) {
+
+    constructor(scene, change_level, audioListener, audioLoader, controller) {
         super();
         this._scene = scene;
         this.change_level = change_level;
@@ -24,6 +25,7 @@ class LobbyLevel extends Level {
         this.audioLoader = audioLoader;  
         this.audioListener = audioListener; 
         this.audioLoader = audioLoader;  
+        this.level_controller = controller;
     }
 
     // Function to set the components for the scene

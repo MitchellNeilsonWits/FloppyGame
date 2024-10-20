@@ -58,6 +58,17 @@ class HUD {
         hudLevelName.append(hudLevelNameHeader, hudLevelNameSubheaderContainer);
         hudTop.append(hudLevelName);
 
+        // Middle HUD
+        const hudMiddle = document.createElement('div');
+        hudMiddle.className = 'hud-middle';
+        
+        // List of powers
+        const powerList = document.createElement('ul');
+        powerList.className = 'hud-power-list';
+
+        // Append element to list of powers
+        hudMiddle.appendChild(powerList);
+
         // Bottom HUD
         const hudBottom = document.createElement('div');
         hudBottom.className = 'hud-bottom';
@@ -140,7 +151,7 @@ class HUD {
         hudBottom.append(hudLoadedContainer, hudHoldingContainer);
 
         // Append top and bottom HUD to the root
-        hudRoot.append(hudTop, hudBottom);
+        hudRoot.append(hudTop, hudMiddle, hudBottom);
 
         // Append the entire HUD to the document body (or any other container)
         document.body.append(hudRoot);
@@ -154,6 +165,11 @@ class HUD {
         this.unload_indicator = hudLoadedUnload;
         this.loaded_header_disk = hudLoadedHeaderDisk;
         this.holding_header_disk = hudHoldingHeaderDisk;
+        this.level_name = hudLevelNameSubheader;
+        this.power_list = powerList;
+
+        this.top_bar = hudTop;
+        this.bottom_bar = hudBottom;
     }
 
     update_holding_disk(new_disk) {
@@ -166,14 +182,68 @@ class HUD {
         this.update();
     }
 
+    clear_powers() {
+        while (this.power_list.firstChild) {
+            this.power_list.removeChild(this.power_list.lastChild);
+        }
+    }
+
+    add_power(name, main_power) {
+        const new_power = document.createElement('li');
+        new_power.className = 'hud-power-item';
+        new_power.innerHTML = name;
+        if (this.loaded_disk === "strength") {
+            new_power.style.color = "rgb(255,30,86)";
+        } else if (this.loaded_disk === "flight") {
+            new_power.style.color = "rgb(50,211,139)";
+        } else if (this.loaded_disk === "shrink") {
+            new_power.style.color = "rgb(229,0,255)";
+        }
+
+        this.power_list.appendChild(new_power);
+    }
+
+    add_description(name) {
+        const new_power = document.createElement('li');
+        new_power.className = 'hud-power-description';
+        new_power.innerHTML = name;
+        this.power_list.appendChild(new_power);
+    }
+
+    set_power_list(main_power) {
+        const header = document.createElement('li');
+        header.className = 'hud-power-header';
+        header.innerHTML = "Powers";
+        this.power_list.appendChild(header);
+
+        if (main_power === "strength") {
+            this.add_power('Push boxes', 'strength');
+            this.add_description("Walk into boxes to push");
+            this.add_power('Break glass', 'strength');
+            this.add_description("Left click glass to break");
+        } else if (main_power === "flight") {
+            this.add_power('Flight', 'flight');
+            this.add_description("Space to go up");
+            this.add_description("C to go down");
+        } else if (main_power === "shrink") {
+            this.add_power('Shrink in size', 'shrink');
+            this.add_description("Walk into small pipes");
+        }
+    }
+
     update() {
         console.log(this);
+        this.clear_powers();
         if (!this.loaded_disk) {
             this.loaded.src = 'hud/disk_none.png'
             this.loaded.style.opacity = 0.2;
             this.loaded_header_disk.innerHTML = "none";
             this.unload_indicator.style.transform = "translateX(-140px)";
             this.loaded_header_disk.style.color = "lightgray";
+            // this.top_bar.style.background = 'linear-gradient(to bottom, rgb(0,0,0,0.5), rgb(0,0,0,0))';
+            // this.bottom_bar.style.background = 'linear-gradient(to top, rgb(0,0,0,0.5), rgb(0,0,0,0))';
+
+
         } else {
             this.loaded.style.opacity = 1
             this.unload_indicator.style.transform = "translateX(0)";
@@ -181,14 +251,30 @@ class HUD {
                 this.loaded.src = 'hud/disk_strength.png'
                 this.loaded_header_disk.innerHTML = "strength";
                 this.loaded_header_disk.style.color = "rgb(255,30,86)";
+                // this.top_bar.style.background = 'linear-gradient(to bottom, rgb(255,30,86,0.5), rgb(255,30,86,0))';
+                // this.bottom_bar.style.background = 'linear-gradient(to top, rgb(255,30,86,0.5), rgb(255,30,86,0), rgb(255,30,86,0))';
+
+                this.set_power_list("strength");
+
             } else if (this.loaded_disk === "flight") {
                 this.loaded.src = 'hud/disk_flight.png'
                 this.loaded_header_disk.innerHTML = "flight";
                 this.loaded_header_disk.style.color = "rgb(50,211,139)";
+                // this.top_bar.style.background = 'linear-gradient(to bottom, rgb(50,211,139,0.5), rgb(50,211,139,0))';
+                // this.bottom_bar.style.background = 'linear-gradient(to top, rgb(50,211,139,0.5), rgb(50,211,139,0), rgb(50,211,139,0))';
+                
+                this.set_power_list("flight");
+
+
             } else if (this.loaded_disk === "shrink") {
                 this.loaded.src = 'hud/disk_shrink.png';
                 this.loaded_header_disk.innerHTML = "shrink";
                 this.loaded_header_disk.style.color = "rgb(229,0,255)";
+                // this.top_bar.style.background = 'linear-gradient(to bottom, rgb(229,0,255,0.5), rgb(229,0,255,0))';
+                // this.bottom_bar.style.background = 'linear-gradient(to top, rgb(229,0,255,0.5), rgb(229,0,255,0), rgb(229,0,255,0))';
+
+                this.set_power_list("shrink");
+
             }
         }
 
@@ -226,6 +312,10 @@ class HUD {
         }
     }
 
+    set_level_name(name) {
+        this.level_name.innerHTML = name;
+    }
+
     remove_hud() {
         if (document.getElementById('hud-root')) {
             document.body.removeChild(this.hud_root);
@@ -239,6 +329,9 @@ class HUD {
     }
 
     reset_hud() {
+        this.holding_disk = null;
+        this.loaded_disk = null;
+        this.update();
         if (document.getElementById('hud-root')) {
             document.body.removeChild(this.hud_root);
         }

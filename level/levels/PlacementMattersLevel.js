@@ -5,9 +5,10 @@ import { Quaternion } from "cannon";
 
 class PlacementMattersLevel extends Level {
 
-    constructor(scene) {
+    constructor(scene, controller) {
         super();
         this._scene = scene;
+        this.level_controller = controller;
     }
 
     // Function to set the components for the scene

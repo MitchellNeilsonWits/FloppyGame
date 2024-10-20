@@ -344,30 +344,31 @@ class CharacterController {
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        // if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
-        //     if (this._input._keys.space) {
-        //         y_velocity += 4.5;
-        //     }
-        //     else{
-        //         // y_velocity = this._target.rigidBody.linvel().y;
-        //         y_velocity = 0;
-        //         this._target.rigidBody.setGravityScale(0);
-        //     }
-        // } else {
-        //     this._target.rigidBody.setGravityScale(1);
-        //     y_velocity = this._target.rigidBody.linvel().y;
-        // }
-
-        if (this._input._keys.space) {
-            y_velocity = 4;
-        } else if (this._input._keys.crouch) {
-            y_velocity = -4;
+        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
+            if (this._input._keys.space) {
+                y_velocity += 4.5;
+            }
+            else{
+                // y_velocity = this._target.rigidBody.linvel().y;
+                y_velocity = 0;
+                this._target.rigidBody.setGravityScale(0);
+            }
         } else {
             y_velocity = 0;
             // y_velocity = this._target.rigidBody.linvel().y;
             this._target.rigidBody.setGravityScale(1);
             y_velocity = this._target.rigidBody.linvel().y;
         }
+        
+
+        // if (this._input._keys.space) {
+        //     y_velocity = 4;
+        // } else if (this._input._keys.crouch) {
+        //     y_velocity = -4;
+        // } else {
+        //     y_velocity = 0;
+        //     // y_velocity = this._target.rigidBody.linvel().y;
+        // }
 
         // if (this._input._keys.space) {
         //     y_velocity = 4;
@@ -459,7 +460,6 @@ class CharacterController {
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
         if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
-        if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 3;
             }
@@ -485,6 +485,7 @@ class CharacterController {
         // this._can_interact = this._interaction_controller.update();
         // console.log(this._can_interact)
     }
+    
 
     update_flight(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         // UPDATE FSM
