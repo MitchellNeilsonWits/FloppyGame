@@ -42,6 +42,18 @@ class LevelController {
 
 
 
+
+        // Create audio listener and loader
+        this.audioListener = new THREE.AudioListener();
+        this.audioLoader = new THREE.AudioLoader();
+
+    
+        // Attach audio listener to the actual camera object
+        this._camera.get_camera().add(this.audioListener);
+
+
+
+
         this.reset_current_level_bound = this.reset_current_level.bind(this);
         this._menu.set_restart_level_function(this.reset_current_level_bound);
 
@@ -116,6 +128,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
+            this.change_level(0);
             this.change_level(0);
         
         });
@@ -196,9 +209,11 @@ class LevelController {
         switch (level_number) {
             case 0:
                 this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
+                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
                 break;
         
             case 1:
+                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
                 this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
                 break;
 

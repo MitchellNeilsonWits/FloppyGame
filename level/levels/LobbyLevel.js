@@ -3,6 +3,7 @@ import ProximityScreenRenderer from '../../engine/proxRender';
 import loadAssets from '../../engine/loader';
 import TutRender from '../../engine/tutRender';
 import FootstepSound from '../../engine/footSteps';
+import FootstepSound from '../../engine/footSteps';
 
 /**
  * Thank you to the following artists whose work was used in this project:
@@ -15,9 +16,12 @@ import FootstepSound from '../../engine/footSteps';
 class LobbyLevel extends Level {
 
     constructor(scene, change_level, audioListener, audioLoader) {
+    constructor(scene, change_level, audioListener, audioLoader) {
         super();
         this._scene = scene;
         this.change_level = change_level;
+        this.audioListener = audioListener; 
+        this.audioLoader = audioLoader;  
         this.audioListener = audioListener; 
         this.audioLoader = audioLoader;  
     }
@@ -96,6 +100,11 @@ class LobbyLevel extends Level {
 
         if (this._tutorialRenderer) {
             this._tutorialRenderer.update();
+        }
+
+        //Audio update
+        if (this._footstepSound) {
+            this._footstepSound.update();  // Update footstep sound system
         }
 
         //Audio update

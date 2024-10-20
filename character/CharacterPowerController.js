@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import colors from "../disks/disk_colors";
 import physic from '../engine/physic';
 import { createColliderBall } from '../engine/function';
+import physic from '../engine/physic';
+import { createColliderBall } from '../engine/function';
 
 class CharacterPowerController {
     constructor(controls) {
@@ -30,6 +32,7 @@ class CharacterPowerController {
         // this.disk_meshes.disk_1.material.emissiveIntensity = 20;
 
         console.log(this.target.rigidBody);
+        console.log(this.target.rigidBody);
         if (this.power === "flight") {
             this.target.rigidBody.setGravityScale(0);
         } else {
@@ -43,7 +46,7 @@ class CharacterPowerController {
             // physic.removeCollider(this.target.collider);
             // this.target.collider = createColliderBall(0.4*0.18, this.target.rigidBody, physic);
             // console.log(this.target.collider);
-            this.target.collider.setRadius(0.4*0.18);
+            // this.target.collider.setRadius(0.4*0.18);
         } else {
             // this.target.scale.setScalar(1);
             this.change_scale_increments = 0.1;
@@ -72,6 +75,7 @@ class CharacterPowerController {
         this.change_scale_increments = 0.1;
         this.change_scale_to = 1;
         this.target.rigidBody.setGravityScale(1);
+        
         
     }
 
