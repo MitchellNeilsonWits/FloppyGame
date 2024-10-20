@@ -30,8 +30,12 @@ class TutorialLevel extends Level {
             this.audioListener,
             this.audioLoader,
             'sounds/zapsplat_foley_footstep_single_barefoot_on_metal_step_ladder_rung_013_36282.mp3', // Path to the footstep sound file
-            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3'
+            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3',
+            'sounds/footSteponGrass.mp4',
+            'sounds/zapsplat_foley_footstep_single_boys_sneaker_wood_004_50920.mp3',
+            'sounds/zapsplat_foley_rock_heavy_chunk_set_down_onto_rubble_002_110534.mp3'
         );
+
 
         // -----------------------------------------------------------------------
         _callback();

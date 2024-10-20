@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 class FootstepSound {
-    constructor(character_controller, level, audioListener, audioLoader, metalSoundFilePath, jumpSoundFilePath, grassSoundFilePath) {
+    constructor(character_controller, level, audioListener, audioLoader, metalSoundFilePath, jumpSoundFilePath, grassSoundFilePath, woodSoundFilePath, rockSoundFilePath) {
         this.character_controller = character_controller;
         this.level = level;
         this.isPlayerOnObject = null;
@@ -21,6 +21,22 @@ class FootstepSound {
             this.grassSound.setBuffer(buffer);
             this.grassSound.setLoop(true); 
             this.grassSound.setVolume(0.2);
+        });
+
+        // Wood footsteps
+        this.woodSound = new THREE.Audio(audioListener); 
+        audioLoader.load(woodSoundFilePath, (buffer) => {
+            this.woodSound.setBuffer(buffer);
+            this.woodSound.setLoop(true); 
+            this.woodSound.setVolume(0.2);  
+        });
+
+        // Rock footsteps
+        this.rockSound = new THREE.Audio(audioListener);
+        audioLoader.load(rockSoundFilePath, (buffer) => {
+            this.rockSound.setBuffer(buffer);
+            this.rockSound.setLoop(true); 
+            this.rockSound.setVolume(0.2);  
         });
 
         // Jump sound
@@ -70,11 +86,21 @@ class FootstepSound {
             let isOnSurface = false;
 
             for (let obj of objectsInLevel) {
-                if (obj.name.includes('_metal') || obj.name.includes('_grass')) {
-                    const surfaceType = obj.name.includes('_metal') ? 'metal' : 'grass';
+                if (obj.name.includes('_metal') || obj.name.includes('_grass') || obj.name.includes('_wood') || obj.name.includes('_rock')) {
+                    let surfaceType = null;
+
+                    if (obj.name.includes('_metal')) {
+                        surfaceType = 'metal';
+                    } else if (obj.name.includes('_grass')) {
+                        surfaceType = 'grass';
+                    } else if (obj.name.includes('_wood')) {
+                        surfaceType = 'wood';
+                    } else if (obj.name.includes('_rock')) {
+                        surfaceType = 'rock';
+                    }
 
                     if (this.checkIfOnSurface(playerPos, obj)) {
-                        isOnSurface = true;  // Player is on a surface (metal or grass)
+                        isOnSurface = true;  // Player is on a surface (metal, grass, wood, or rock)
 
                         // Play the appropriate sound based on surface type
                         if (this.isPlayerOnObject !== obj.name) {
@@ -131,12 +157,18 @@ class FootstepSound {
     }
 
     stopFootstepSound() {
-        // Stop both sounds in case either is playing
+        // Stop all sounds in case any is playing
         if (this.metalSound.isPlaying) {
             this.metalSound.stop();
         }
         if (this.grassSound.isPlaying) {
             this.grassSound.stop();
+        }
+        if (this.woodSound.isPlaying) {
+            this.woodSound.stop();
+        }
+        if (this.rockSound.isPlaying) {
+            this.rockSound.stop();
         }
 
         this.isPlaying = false;
@@ -165,7 +197,18 @@ class FootstepSound {
     }
 
     getSoundBySurfaceType(surfaceType) {
-        return surfaceType === 'metal' ? this.metalSound : this.grassSound;
+        switch (surfaceType) {
+            case 'metal':
+                return this.metalSound;
+            case 'grass':
+                return this.grassSound;
+            case 'wood':
+                return this.woodSound;
+            case 'rock':
+                return this.rockSound;
+            default:
+                return this.metalSound; //Default - incase
+        }
     }
 }
 
