@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import colors from "../disks/disk_colors";
 import physic from '../engine/physic';
 import { createColliderBall } from '../engine/function';
+// import physic from '../engine/physic';
+// import { createColliderBall } from '../engine/function';
 
 class CharacterPowerController {
     constructor(controls) {
@@ -29,6 +31,7 @@ class CharacterPowerController {
         // this.disk_meshes.disk_1.material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
         // this.disk_meshes.disk_1.material.emissiveIntensity = 20;
 
+        console.log(this.target.rigidBody);
         console.log(this.target.rigidBody);
         if (this.power === "flight") {
             this.target.rigidBody.setGravityScale(0);
@@ -72,6 +75,7 @@ class CharacterPowerController {
         this.change_scale_increments = 0.1;
         this.change_scale_to = 1;
         this.target.rigidBody.setGravityScale(1);
+        
         
     }
 

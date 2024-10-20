@@ -42,6 +42,18 @@ class LevelController {
 
 
 
+
+        // Create audio listener and loader
+        this.audioListener = new THREE.AudioListener();
+        this.audioLoader = new THREE.AudioLoader();
+
+    
+        // Attach audio listener to the actual camera object
+        this._camera.get_camera().add(this.audioListener);
+
+
+
+
         this.reset_current_level_bound = this.reset_current_level.bind(this);
         this._menu.set_restart_level_function(this.reset_current_level_bound);
 
@@ -103,6 +115,7 @@ class LevelController {
         for (const pushbox of this._level._pushboxes) {
             pushbox.object.rigidBody.setTranslation(starting_positions.pushbox_positions[pushbox.id]);
             // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
+            // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
             pushbox.object.position.copy(pushbox.object.rigidBody.translation());
         }
         // ------------------------------
@@ -121,7 +134,8 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(3);
+            // this.change_level(0);
         
         });
     }
