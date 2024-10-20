@@ -46,7 +46,7 @@ class CharacterPowerController {
             // physic.removeCollider(this.target.collider);
             // this.target.collider = createColliderBall(0.4*0.18, this.target.rigidBody, physic);
             // console.log(this.target.collider);
-            // this.target.collider.setRadius(0.4*0.18);
+            this.target.collider.setRadius(0.4*0.18);
         } else {
             // this.target.scale.setScalar(1);
             this.change_scale_increments = 0.1;

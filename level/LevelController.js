@@ -16,6 +16,7 @@ import hud from "../hud/Hud";
 import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 import MitchLevel from "./levels/MitchLevel";
+import MitchLevel from "./levels/MitchLevel";
 import * as THREE from 'three';
 
 class LevelController {
@@ -112,6 +113,7 @@ class LevelController {
         // ---------- RESET PUSHBOXES ----------
         for (const pushbox of this._level._pushboxes) {
             pushbox.object.rigidBody.setTranslation(starting_positions.pushbox_positions[pushbox.id]);
+            // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
             // pushbox.object.rigidBody.(pushbox.object.rigidBody.translation());
             pushbox.object.position.copy(pushbox.object.rigidBody.translation());
         }
