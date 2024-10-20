@@ -60,17 +60,64 @@ const load_menu = () => {
     document.body.appendChild(startButton);
     // Add event listener for "Start Game" button
     startButton.addEventListener('click', () => {
-        // Derender the menu (remove HTML elements)
+        // Hide the start button and play the intro video
         startButton.style.display = 'none';
-        music_controller.change_volume(0);
-        // Start the game by initializing GameController
-        new GameController();
+        play_intro_video();
+    });
+};
+
+const play_intro_video = () => {
+    // Create the video element
+    const video = document.createElement('video');
+    video.src = 'Videos/FLoppyVideo.mp4'; // Replace with your video file path
+    video.style.position = 'absolute';
+    video.style.top = '50%';
+    video.style.left = '50%';
+    video.style.transform = 'translate(-50%, -50%)';
+    video.style.width = '100%'; // Adjust size as needed
+    video.style.height = 'auto';
+    video.autoplay = true;
+    video.muted = false; // Mute the video if it has sound
+    video.controls = false; // Disable video controls if you don't want them
+    video.volume = 0.5; // Adjust volume as needed
+
+    // Create the skip button
+    const skipButton = document.createElement('button');
+    skipButton.innerText = 'Skip';
+    skipButton.style.position = 'absolute';
+    skipButton.style.bottom = '20px'; // Adjust position as needed
+    skipButton.style.right = '20px';
+    skipButton.style.padding = '10px';
+    skipButton.style.fontSize = '20px';
+    skipButton.style.cursor = 'pointer';
+    skipButton.style.backgroundColor = '#f44336'; // Red color for the skip button
+    skipButton.style.color = 'white';
+    skipButton.style.border = 'none';
+    skipButton.style.borderRadius = '5px';
+
+    // Add event listener to skip button
+    skipButton.addEventListener('click', () => {
+        document.body.removeChild(video); // Remove the video
+        document.body.removeChild(skipButton); // Remove the skip button
+        music_controller.change_volume(0); // Stop the background music
+        new GameController(); // Start the game
+    });
+
+    document.body.appendChild(video);
+    document.body.appendChild(skipButton);
+
+    // Optional: When video ends, auto start the game
+    video.addEventListener('ended', () => {
+        document.body.removeChild(video); // Remove the video
+        document.body.removeChild(skipButton); // Remove the skip button
+        music_controller.change_volume(0); // Stop the background music
+        new GameController(); // Start the game
     });
 };
 
 const container = document.createElement('div');
-container.style.width = '100dvw';
-container.style.height = '100dvh';
+container.style.width = '100vw';
+container.style.height = '100vh';
 container.style.display = 'flex';
 container.style.alignItems = 'center';
 container.style.justifyContent = 'center';
