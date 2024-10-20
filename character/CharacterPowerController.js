@@ -40,20 +40,20 @@ class CharacterPowerController {
             // this.target.scale.setScalar(0.4);
             this.change_scale_increments = -0.1;
             this.change_scale_to = 0.4;
-            physic.removeCollider(this.target.collider);
-            this.target.collider = createColliderBall(0.4*0.18, this.target.rigidBody, physic);
+            // physic.removeCollider(this.target.collider);
+            // this.target.collider = createColliderBall(0.4*0.18, this.target.rigidBody, physic);
             // console.log(this.target.collider);
-            // this.target.collider.setRadius(0.4*0.18);
+            this.target.collider.setRadius(0.4*0.18);
         } else {
             // this.target.scale.setScalar(1);
             this.change_scale_increments = 0.1;
             this.change_scale_to = 1;
             // this.target.rigidBody.setTranslation(this.target.rigidBody.translation().x, this.target.rigidBody.translation().y + 0.4, this.target.rigidBody.translation().z);
-            physic.removeCollider(this.target.collider);
-            this.target.collider = createColliderBall(0.18, this.target.rigidBody, physic);
+            // physic.removeCollider(this.target.collider);
+            // this.target.collider = createColliderBall(0.18, this.target.rigidBody, physic);
             // console.log(this.target.collider);
             // this.target.collider.setTranslation(0,0.18,0);
-            // this.target.collider.setRadius(1*0.18);
+            this.target.collider.setRadius(1*0.18);
         }
     }
 
@@ -64,8 +64,10 @@ class CharacterPowerController {
     clear_loaded_disk() {
         this.loaded_disk = null;
         this.power = "none";
-        physic.removeCollider(this.target.collider);
-        this.target.collider = createColliderBall(0.18, this.target.rigidBody, physic);
+        // physic.removeCollider(this.target.collider);
+        this.target.collider.setRadius(1*0.18);
+
+        // this.target.collider = createColliderBall(0.18, this.target.rigidBody, physic);
         this.controls.skin_controller.change_skin("default");
         this.change_scale_increments = 0.1;
         this.change_scale_to = 1;

@@ -186,7 +186,7 @@ class InteractableDisk extends interactableObject {
 
         const drop_position = {
             x: player_pos.x + drop_distance*Math.sin(player_facing),
-            y: player_pos.y,
+            y: player_pos.y + 0.4,
             z: player_pos.z + drop_distance*Math.cos(player_facing),
         }
 
