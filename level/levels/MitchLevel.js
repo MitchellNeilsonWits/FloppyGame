@@ -2,13 +2,16 @@ import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { AmbientLight, Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
+import FootstepSound from "../../engine/footSteps";
 
 class MitchLevel extends Level {
 
-    constructor(scene, controller) {
+    constructor(scene, controller, audioListener, audioLoader) {
         super();
         this._scene = scene;
         this.level_controller = controller;
+        this.audioListener = audioListener; 
+        this.audioLoader = audioLoader;    
     }
 
     // Function to set the components for the scene
@@ -31,7 +34,17 @@ class MitchLevel extends Level {
         // this._scene.background = new CubeTe
         
         // --------------- DEFINE LEVEL SPECIFIC OBJECTS HERE ---------------------
-        
+        this._footstepSound = new FootstepSound(
+            character_controller,
+            this._scene,
+            this.audioListener,
+            this.audioLoader,
+            'sounds/zapsplat_foley_footstep_single_barefoot_on_metal_step_ladder_rung_013_36282.mp3', // Path to the footstep sound file
+            'sounds/zapsplat_multimedia_game_sound_classic_jump_001_41726.mp3',
+            'sounds/footSteponGrass.mp4',
+            'sounds/zapsplat_foley_footstep_single_boys_sneaker_wood_004_50920.mp3',
+            'sounds/zapsplat_foley_rock_heavy_chunk_set_down_onto_rubble_002_110534.mp3'
+        );
         // -----------------------------------------------------------------------
         _callback();
     }
@@ -70,7 +83,9 @@ class MitchLevel extends Level {
 
     update(time_elapsed_in_seconds) {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
-        
+        if (this._footstepSound) {
+            this._footstepSound.update();  // Update footstep sound system
+        }
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates

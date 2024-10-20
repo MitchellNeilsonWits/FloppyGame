@@ -84,6 +84,7 @@ class TutorialLevel extends Level {
         if (this._footstepSound) {
             this._footstepSound.update();  // Update footstep sound system
         }
+        //Done audio update
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates
