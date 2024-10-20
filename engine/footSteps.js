@@ -177,11 +177,16 @@ class FootstepSound {
 
     updatePlaybackRate(rate, surfaceType) {
         const sound = this.getSoundBySurfaceType(surfaceType);
+        let adjustedRate = rate;
 
-        if (sound.playbackRate !== rate) {
-            console.log(`Updating playback rate to: ${rate} for ${surfaceType} surface`);
-            sound.setPlaybackRate(rate);
-
+        if (surfaceType === 'wood') {
+            adjustedRate = rate / 2;
+        }
+    
+        if (sound.playbackRate !== adjustedRate) {
+            console.log(`Updating playback rate to: ${adjustedRate} for ${surfaceType} surface`);
+            sound.setPlaybackRate(adjustedRate);
+    
             if (this.isPlaying) {
                 sound.stop();
                 sound.play();

@@ -38,7 +38,8 @@ class NPC extends Object3D {
       
       this.video.src = 'npc/npc_face_v2.mp4'; 
       this.video.loop = true; 
-      this.video.muted = true; 
+      this.video.muted = true;
+      this.video.volume = 0; 
       this.video.crossOrigin = 'anonymous';
       this.video.style.display = 'none';
 
