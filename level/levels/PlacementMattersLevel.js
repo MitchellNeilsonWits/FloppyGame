@@ -2,10 +2,11 @@ import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
+import FootstepSound from "../../engine/footSteps";
 
 class PlacementMattersLevel extends Level {
 
-    constructor(scene, controller, audioListener, audioLoader) {
+    constructor(scene, controller, audioListener, audioLoader   ) {
         super();
         this._scene = scene;
         this.level_controller = controller;
@@ -15,8 +16,17 @@ class PlacementMattersLevel extends Level {
 
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
+        // SET NPC LINES
+        this.npc_lines = [
+            "line A",
+            "line B",
+            "line C",
+            "line D",
+            "line E"
+        ]
+
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/placement_matters_level3 (1).glb');
+        const meshes = await loadAssets('assets/Level3_placement_matters.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
 

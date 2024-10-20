@@ -134,7 +134,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(4);
             // this.change_level(0);
         
         });
@@ -238,7 +238,7 @@ class LevelController {
         
             case 1:
                 hud.set_level_name('Tutorial');
-                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader, this);
+                this._level = new TutorialLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 2:
@@ -253,7 +253,7 @@ class LevelController {
             
             case 4:
                 hud.set_level_name('Placement Matters');
-                this._level = new PlacementMattersLevel(this._scene, this);
+                this._level = new PlacementMattersLevel(this._scene, this, this.audioListener, this.audioLoader);
 
                 break;
 

@@ -10,7 +10,8 @@ class IntoTheWildLevel extends Level {
         this._scene = scene;
         this.level_controller = controller;
         this.audioListener = audioListener;
-        this.audioLoader = audioLoader
+        this.audioLoader = audioLoader;
+        this.level_controller = controller;
     }
 
     // Function to set the components for the scene
