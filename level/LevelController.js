@@ -238,16 +238,16 @@ class LevelController {
                 break;
 
             case 2:
-                this._level = new IntoTheWildLevel(this._scene, this);
+                this._level = new IntoTheWildLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 3:
-                this._level = new MitchLevel(this._scene, this);
+                this._level = new MitchLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
             
             case 4:
                 // this._level = new PlacementMattersLevel(this._scene, this);
-                this._level = new IntoTheWildLevel(this._scene, this);
+                this._level = new IntoTheWildLevel(this._scene, this, this.audioListener, this.audioLoader);
 
                 break;
 
