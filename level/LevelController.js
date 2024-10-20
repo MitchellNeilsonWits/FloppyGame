@@ -220,6 +220,8 @@ class LevelController {
             if (prev_level._level) {
                 prev_level._level.clear();
             }
+            this._scene.remove(this._level._level);
+
             this._level = null;
 
         }
