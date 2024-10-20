@@ -12,7 +12,7 @@ class FootstepSound {
         audioLoader.load(metalSoundFilePath, (buffer) => {
             this.metalSound.setBuffer(buffer);
             this.metalSound.setLoop(true); 
-            this.metalSound.setVolume(0.2);  
+            this.metalSound.setVolume(0.05);  
         });
 
         // Grass footsteps
@@ -20,7 +20,7 @@ class FootstepSound {
         audioLoader.load(grassSoundFilePath, (buffer) => {
             this.grassSound.setBuffer(buffer);
             this.grassSound.setLoop(true); 
-            this.grassSound.setVolume(0.2);
+            this.grassSound.setVolume(0.05);
         });
 
         // Wood footsteps
@@ -28,7 +28,7 @@ class FootstepSound {
         audioLoader.load(woodSoundFilePath, (buffer) => {
             this.woodSound.setBuffer(buffer);
             this.woodSound.setLoop(true); 
-            this.woodSound.setVolume(0.2);  
+            this.woodSound.setVolume(0.05);  
         });
 
         // Rock footsteps
@@ -36,7 +36,7 @@ class FootstepSound {
         audioLoader.load(rockSoundFilePath, (buffer) => {
             this.rockSound.setBuffer(buffer);
             this.rockSound.setLoop(true); 
-            this.rockSound.setVolume(0.2);  
+            this.rockSound.setVolume(0.05);  
         });
 
         // Jump sound
@@ -44,7 +44,7 @@ class FootstepSound {
         audioLoader.load(jumpSoundFilePath, (buffer) => {
             this.jumpSound.setBuffer(buffer);
             this.jumpSound.setLoop(false); // Play once
-            this.jumpSound.setVolume(0.2);
+            this.jumpSound.setVolume(0.05);
         });
 
         this.raycaster = new THREE.Raycaster();

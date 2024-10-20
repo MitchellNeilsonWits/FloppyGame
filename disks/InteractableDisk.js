@@ -47,6 +47,18 @@ class InteractableDisk extends interactableObject {
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(1.0);
             
+            // SOUND.PLAY()
+            const audioListener = new THREE.AudioListener();
+            const load_disk_sound = new THREE.Audio(audioListener);
+            const audioLoader = new THREE.AudioLoader();
+
+            audioLoader.loadAsync('sounds/zapsplat_science_fiction_robot_power_up_60619.mp3').then((buffer) => {
+                load_disk_sound.setBuffer(buffer);
+                load_disk_sound.setLoop(false); 
+                load_disk_sound.setVolume(0.05);  
+            }).then(() => {
+                load_disk_sound.play();
+            });
 
             addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
@@ -61,7 +73,7 @@ class InteractableDisk extends interactableObject {
                 
                 controls.busy_loading_disk = false;
 
-                // SOUND.PLAY()
+                
 
             })
             this._disk_action = action;        
@@ -76,7 +88,19 @@ class InteractableDisk extends interactableObject {
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(200.0);
             console.log(currently_loaded_disk);
-            
+
+            // SOUND.PLAY()
+            const audioListener = new THREE.AudioListener();
+            const load_disk_sound = new THREE.Audio(audioListener);
+            const audioLoader = new THREE.AudioLoader();
+
+            audioLoader.loadAsync('sounds/zapsplat_fantasy_magic_water_rush_magic_swirl_fast_003_71751.mp3').then((buffer) => {
+                load_disk_sound.setBuffer(buffer);
+                load_disk_sound.setLoop(false); 
+                load_disk_sound.setVolume(0.05);  
+            }).then(() => {
+                load_disk_sound.play();
+            });
 
             addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
@@ -90,7 +114,7 @@ class InteractableDisk extends interactableObject {
                 hud.update_loaded_disk(object_to_use.power);
                 hud.update_holding_disk(currently_loaded_disk.power);
 
-                // SOUND.PLAY()
+                
             })
             this._disk_action = action;        
             this._disk_action.play();
@@ -120,7 +144,21 @@ class InteractableDisk extends interactableObject {
     }
     
     start_interaction_static(controls, object_interacted_with, level) {
+
         // console.log(object_interacted_with.object.collider);
+        // SOUND.PLAY()
+        const audioListener = new THREE.AudioListener();
+        const load_disk_sound = new THREE.Audio(audioListener);
+        const audioLoader = new THREE.AudioLoader();
+
+        audioLoader.loadAsync('sounds/zapsplat_household_aerosol_metal_insect_spray_can_grab_pick_up_001_98511.mp3').then((buffer) => {
+            load_disk_sound.setBuffer(buffer);
+            load_disk_sound.setLoop(false); 
+            load_disk_sound.setVolume(0.08);  
+        }).then(() => {
+            load_disk_sound.play();
+        });
+        
         console.log("starting interaction, with this=",this);
         if (this._disk_action) {
             this._disk_action.stop();
@@ -181,7 +219,19 @@ class InteractableDisk extends interactableObject {
         
         console.log("drop disk:",object_to_drop);
         
-        
+        // SOUND.PLAY()
+        const audioListener = new THREE.AudioListener();
+        const load_disk_sound = new THREE.Audio(audioListener);
+        const audioLoader = new THREE.AudioLoader();
+
+        audioLoader.loadAsync('sounds/zapsplat_science_fiction_robot_failure_glitch_shutdown_001_26447.mp3').then((buffer) => {
+            load_disk_sound.setBuffer(buffer);
+            load_disk_sound.setLoop(false); 
+            load_disk_sound.setVolume(0.05);  
+        }).then(() => {
+            load_disk_sound.play();
+        });
+
         // change position of object to drop to position of character
         // object_to_drop.object.position.copy(controls._target.position);
         const player_pos = controls._target.position;
