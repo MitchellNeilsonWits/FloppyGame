@@ -16,6 +16,7 @@ import hud from "../hud/Hud";
 import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 import MitchLevel from "./levels/MitchLevel";
+import * as THREE from 'three';
 
 class LevelController {
     constructor(params) {
@@ -29,6 +30,18 @@ class LevelController {
         this._camera = params.camera;
         this._mouse_listener = params.mouse_listener;
         this._menu = params.menu;
+
+        // Create audio listener and loader
+        this.audioListener = new THREE.AudioListener();
+        this.audioLoader = new THREE.AudioLoader();
+
+    
+        // Attach audio listener to the actual camera object
+        this._camera.get_camera().add(this.audioListener);
+
+
+
+
         this.reset_current_level_bound = this.reset_current_level.bind(this);
         this._menu.set_restart_level_function(this.reset_current_level_bound);
 
@@ -182,11 +195,11 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
-                this._level = new LobbyLevel(this._scene, this.change_level);
+                this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader);
                 break;
         
             case 1:
-                this._level = new TutorialLevel(this._scene);
+                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader);
                 break;
 
             case 2:
