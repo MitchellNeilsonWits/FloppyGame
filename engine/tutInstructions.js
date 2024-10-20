@@ -9,12 +9,13 @@ class TutInstructions {
         this.targetObjects = {
             "tut_1": "<strong>Welcome to the tutorial! Use WASD to move!</strong>",
             "tut_2": "<strong>Now, try jumping to reach the next platform. Press Space to jump and Shift to sprint.</strong>",
-            "tut_3": "<strong>Hmmm, this gap is too wide to jump across. Press E to pick up the flight disk! Press Q to equip the disk. Press Space to ascend and C to descend!</strong>",
+            "tut_3": "<strong>Hmmm, this gap is too wide to jump across. Press E to pick up the flight disk! We can hold 2 disks at once. Press Q to swith the disks while you have a disk loaded! Press Space to ascend and C to descend!</strong>",
             "tut_4": "<strong>Great! Press Z to drop the disk and continue!</strong>",
-            "tut_5": "<strong>Oh no! We can't get through! Have strength disk equiped and break through the walls!</strong>",
-            "tut_6": "<strong>Another obstacle! Pick up the shrink disk, but you do not have to drop the flight disk! Press Q to switch between disks!</strong>",
+            "tut_5": "<strong>Oh no! We can't get through! Have strength disk equiped by pressing Q and break through the walls!</strong>",
+            "tut_6": "<strong>Another obstacle! Pick up the shrink disk to shrink down and get through!</strong>",
             "tut_7": "<strong>Great! All levels will have the same goal as in front of you. Good luck!</strong>",
-            "tut_8": "<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>"
+            "tut_8": "<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>",
+            "tut_9": "<strong>Alas! We cannot move the lever without our strength disk! Walk up to the strength disk and press E to pick it up. Press Q to equip it!<strong>"
         };
 
         // Create tutorial HTML element
