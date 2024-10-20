@@ -221,6 +221,8 @@ class HUD {
             this.add_description("Walk into boxes to push");
             this.add_power('Break glass', 'strength');
             this.add_description("Left click glass to break");
+            this.add_power('Pull levers', 'strength');
+            this.add_description("Click E next to levers to use");
         } else if (main_power === "flight") {
             this.add_power('Flight', 'flight');
             this.add_description("Space to go up");

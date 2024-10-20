@@ -9,17 +9,26 @@
 import addOneTimeEventListener from './common/SingleUseListener.js';
 import GameController from './game/GameController.js';
 import music_controller from './music/MusicController.js';
+import './main.css'
 
 // Create the dynamic menu
 const load_menu = () => { 
+
+    const start_menu = document.createElement('div');
     // Set up the background image
-    document.body.style.backgroundImage = "url('assets/FloopyIntro.jpeg')"; 
-    document.body.style.backgroundSize = '100% 100%'; // Ensure it covers the entire viewport
-    document.body.style.backgroundPosition = 'center'; // Center the image
-    document.body.style.backgroundRepeat = 'no-repeat'; // Prevent the image from repeating
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
+    start_menu.style.width = '100dvw';
+    start_menu.style.height = '100dvh';
+
+    start_menu.style.backgroundImage = "url('assets/FloopyIntro.jpeg')"; 
+    start_menu.style.backgroundSize = '100% 100%'; // Ensure it covers the entire viewport
+    start_menu.style.backgroundPosition = 'center'; // Center the image
+    start_menu.style.backgroundRepeat = 'no-repeat'; // Prevent the image from repeating
+    start_menu.style.margin = '0';
+    start_menu.style.padding = '0';
+    start_menu.style.overflow = 'hidden';
+
+    document.body.appendChild(start_menu);
+    
 
     music_controller.load_music('sounds/TitleSong.mp3');
     music_controller.play_music();
@@ -57,11 +66,13 @@ const load_menu = () => {
         startButton.style.color = 'white'; // Restore text color
     });
 
-    document.body.appendChild(startButton);
+    start_menu.appendChild(startButton);   
     // Add event listener for "Start Game" button
     startButton.addEventListener('click', () => {
         // Hide the start button and play the intro video
         startButton.style.display = 'none';
+        document.body.removeChild(start_menu);
+        music_controller.pause_music();
         play_intro_video();
     });
 };

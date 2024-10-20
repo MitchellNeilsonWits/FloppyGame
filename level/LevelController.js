@@ -230,22 +230,27 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
+                hud.set_level_name('Lobby');
                 this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader, this);
                 break;
         
             case 1:
+                hud.set_level_name('Tutorial');
                 this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader, this);
                 break;
 
             case 2:
+                hud.set_level_name('Into the Wild');
                 this._level = new IntoTheWildLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 3:
+                hud.set_level_name('Floating Labyrinth');
                 this._level = new MitchLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
             
             case 4:
+                hud.set_level_name('Placement Matters');
                 this._level = new PlacementMattersLevel(this._scene, this);
 
                 break;

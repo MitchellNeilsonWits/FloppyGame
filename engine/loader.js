@@ -9,7 +9,7 @@ dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 const loaderGlb = new GLTFLoader()
 
 // const ktx2Loader = new KTX2Loader();
-// this.ktx2Loader.setTranscoderPath(
+// ktx2Loader.setTranscoderPath('three-stdlib')
 
 
 // loaderGlb.setKTX2Loader(ktx2Loader);

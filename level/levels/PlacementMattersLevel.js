@@ -16,7 +16,7 @@ class PlacementMattersLevel extends Level {
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/placement_matters_level3.glb');
+        const meshes = await loadAssets('assets/placement_matters_level3 (1).glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
 
