@@ -144,7 +144,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(4);
+            this.change_level(0);
             // this.change_level(0);
         
         });
