@@ -35,7 +35,7 @@ class PlacementMattersLevel extends Level {
         ]
 
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/Level3_placement_matters_optimized.glb');
+        const meshes = await loadAssets('assets/Level3_placement_matters_optimized_v2.glb');
         this.placement_matters_meshes = meshes.placement_matters_meshes;
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         this.load_pml_objects();

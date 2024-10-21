@@ -103,6 +103,7 @@ export default async function loadAssets(path) {
     } else if (mesh.type === 'Mesh') {
       if (mesh.name.includes("lever")) {
         const lever_name = mesh.name.split('_')[1];
+        console.log("NEW LEVER!", lever_name)
         if (!lever_gates[lever_name]) {
           lever_gates[lever_name] = {
             name: lever_name,
@@ -116,7 +117,7 @@ export default async function loadAssets(path) {
         const gate_name = mesh.name.split('_')[1];
         if (!lever_gates[gate_name]) {
           lever_gates[gate_name] = {
-            name: lever_name,
+            name: gate_name,
             gate: mesh
           }
         } else {
