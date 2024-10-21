@@ -24,27 +24,6 @@ class TutRender {
         this.tutorialMessage.innerHTML = '<p>Press E go to the tutorial level</p>';
         document.body.appendChild(this.tutorialMessage);
 
-        // Event listener for the tutorial button
-        // const startButton = document.getElementById('start-tutorial-button');
-        // startButton.addEventListener('click', () => {
-        //     this.hideTutorialMessage();
-        //     if (this.onStartTutorial) {
-        //         this.onStartTutorial(); // Trigger tutorial start callback
-        //     }
-        // });
-
-        // Add listener for 'E' key to show tutorial HTML
-        // window.addEventListener('keydown', (event) => {
-        //     console.log("here!!!");
-        //     if (event.key === 'e' || event.key === 'E') {
-        //         if (this.isPlayerNear) {
-        //             // this.showTutorialMessage();
-        //             this.hideTutorialMessage();
-        //             this.onStartTutorial();
-        //             // console.log("YAYYYYY");
-        //         }
-        //     }
-        // });
     }
 
     update() {
