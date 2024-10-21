@@ -3,6 +3,7 @@ import ProximityScreenRenderer from '../../engine/proxRender';
 import loadAssets from '../../engine/loader';
 import TutRender from '../../engine/tutRender';
 import FootstepSound from '../../engine/footSteps';
+import LevelSelectRender from '../../engine/levelSelector';
 
 
 /**
@@ -56,6 +57,10 @@ class LobbyLevel extends Level {
             'sounds/zapsplat_foley_footstep_single_boys_sneaker_wood_004_50920.mp3',
             'sounds/zapsplat_foley_rock_heavy_chunk_set_down_onto_rubble_002_110534.mp3'
         );
+        this._levelSelectRenderer = new LevelSelectRender(character_controller, this._scene, (levelNumber) => {
+            this.change_level(levelNumber);
+        });
+        
 
         // Get the skybox
         this._skybox = meshes.skybox;
@@ -111,10 +116,11 @@ class LobbyLevel extends Level {
             this._footstepSound.update();  // Update footstep sound system
         }
 
-        //Audio update
-        if (this._footstepSound) {
-            this._footstepSound.update();  // Update footstep sound system
+        //level select screen update
+        if (this._levelSelectRenderer) {
+            this._levelSelectRenderer.update();
         }
+        
 
         this._skybox.rotateX(Math.PI/10000);
         this._skybox.rotateY(-Math.PI/10000);
