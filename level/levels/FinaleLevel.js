@@ -5,7 +5,7 @@ import { Quaternion } from "cannon";
 import FootstepSound from "../../engine/footSteps";
 import * as THREE from 'three';
 import FinalePlatform from "../../finale_platform/FinalePlatform";
-import music_controller from "../../music/MusicController";
+import music_controller from '../../music/MusicController';
 
 class FinaleLevel extends Level {
 

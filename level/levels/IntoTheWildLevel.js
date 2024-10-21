@@ -3,8 +3,7 @@ import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
 import FootstepSound from "../../engine/footSteps";
-import music_controller from "../../music/MusicController";
-
+import music_controller from '../../music/MusicController';
 
 class IntoTheWildLevel extends Level {
 

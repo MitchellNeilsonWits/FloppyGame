@@ -32,6 +32,17 @@ class LobbyLevel extends Level {
 
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
+
+        // SET NPC LINES
+        this.npc_lines = [
+            "PEE PEE",
+            "POO POO",
+            "YOU SMELL LIKE",
+            "DOO DOO",
+            "LMAO NERD GET WRECKED"
+        ]
+        
+
         // Load the meshes for the lobby and load the base of the level's scene and other objects
         const meshes = await loadAssets('assets/lobbyFinalAnand.glb');
         await this.base_load(this, meshes, character_controller, camera, this._scene);
