@@ -92,6 +92,16 @@ class PlacementMattersLevel extends Level {
         this.render_main_level_components(this);
     }
 
+    failed() {
+        this.level_controller.reset_current_level();
+    }
+
+    reset_level() {
+        this.time_left = timer.max_time;
+        this.button.pressed = false;
+        timer.hide_timer();
+    }
+
     // -------------------- LEVEL SPECIFIC FUNCTIONS -----------------------------
     load_pml_objects() {
         console.log("-------------LOADING PML OBJECTS-------------");

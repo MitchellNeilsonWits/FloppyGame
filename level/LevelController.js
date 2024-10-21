@@ -72,6 +72,10 @@ class LevelController {
     }
 
     reset_current_level() {
+        if (this._level.reset_level) {
+            this._level.reset_level();
+        }
+
         // ---------- RESET PLAYER ----------
         const starting_positions = this._level.get_starting_positions();
         this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
@@ -145,7 +149,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(2);
+            this.change_level(4);
             // this.change_level(0);
         
         });
