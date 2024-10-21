@@ -18,6 +18,7 @@ import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 import MitchLevel from "./levels/MitchLevel";
 import * as THREE from 'three';
 import music_controller from "../music/MusicController";
+import FinaleLevel from "./levels/FinaleLevel";
 
 class LevelController {
     constructor(params) {
@@ -72,6 +73,10 @@ class LevelController {
     }
 
     reset_current_level() {
+        if (this._level.reset_level) {
+            this._level.reset_level();
+        }
+
         // ---------- RESET PLAYER ----------
         const starting_positions = this._level.get_starting_positions();
         this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
@@ -145,7 +150,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(4);
             // this.change_level(0);
         
         });
@@ -265,6 +270,12 @@ class LevelController {
             case 4:
                 hud.set_level_name('Placement Matters');
                 this._level = new PlacementMattersLevel(this._scene, this, this.audioListener, this.audioLoader);
+
+                break;
+            
+            case 5:
+                hud.set_level_name('Finale');
+                this._level = new FinaleLevel(this._scene, this, this.audioListener, this.audioLoader, this._controls);
 
                 break;
 

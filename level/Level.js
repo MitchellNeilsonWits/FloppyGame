@@ -119,6 +119,7 @@ class Level {
     
     async create_portal(level, portal_object, character_controller) {
         if (portal_object) {
+            console.log(portal_object);
             
             const portal = new Portal(character_controller, portal_object, level);
             level.portal = portal;

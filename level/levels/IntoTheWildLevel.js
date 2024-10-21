@@ -2,6 +2,7 @@ import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
+import FootstepSound from "../../engine/footSteps";
 
 class IntoTheWildLevel extends Level {
 
@@ -16,8 +17,17 @@ class IntoTheWildLevel extends Level {
 
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
+        this.npc_lines = [
+            "Welcome to your FIRST simulation!",
+            "This simulation is aimed at testing if you will be able to complete basic tasks",
+            "To test this, we laid out some simple graphics and puzzles in this simulation.",
+            "Your three disks have been spread across the simulation",
+            "Heres a hint: the final platform is hidden inside a SMALL object",
+            "Good luck!"
+        ]
+
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/intothewildlevel.glb');
+        const meshes = await loadAssets('assets/intothewildlevel_v2.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         

@@ -21,11 +21,12 @@ class MitchLevel extends Level {
             "Here, we will be testing if you can keep your focus regardless of the environment",
             "Although there is wonderful scenery around, you need to be able to focus on the task",
             "So don't get distracted.",
+            "Here's a hint: The final platform is hidden in a set of mossy rocks",
             "Your first disk is behind you. Good luck!"
         ]
 
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/islands_optmized_with_clouds_renewed.glb');
+        const meshes = await loadAssets('assets/islands_optmized_with_clouds_renewed_v2.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         
