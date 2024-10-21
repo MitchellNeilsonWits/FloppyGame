@@ -102,7 +102,7 @@ class LevelSelectRender {
     confirmSelection() {
         this.hideLevelSelectScreen();
         if (this.onLevelSelect) {
-            this.onLevelSelect(this.selectedLevel);
+            this.onLevelSelect(this.selectedLevel+1);
         }
     }
 

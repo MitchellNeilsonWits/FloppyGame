@@ -5,6 +5,7 @@ import { Quaternion } from "cannon";
 import FootstepSound from "../../engine/footSteps";
 import * as THREE from 'three';
 import FinalePlatform from "../../finale_platform/FinalePlatform";
+import music_controller from "../../music/MusicController";
 
 class FinaleLevel extends Level {
 
@@ -86,6 +87,10 @@ class FinaleLevel extends Level {
     // --------------------------------------------------------------------------
 
     render_level() {
+        music_controller.pause_music();
+        music_controller.load_music('sounds/Outro.mp3');
+        music_controller.play_music();
+        music_controller.change_volume(0.1);
         this.render_main_level_components(this);
         this.add_lights();
         this.add_platform();
@@ -137,10 +142,6 @@ class FinaleLevel extends Level {
         if (this.time_passed >= 5) {
             this.lights[4].intensity = this.light_on;
         }
-    }
-
-    update_platform() {
-
     }
 
 

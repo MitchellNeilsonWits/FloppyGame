@@ -3,6 +3,8 @@ import loadAssets from '../../engine/loader';
 import { AmbientLight, Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
 import FootstepSound from "../../engine/footSteps";
+import music_controller from "../../music/MusicController";
+
 
 class MitchLevel extends Level {
 

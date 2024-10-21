@@ -1,6 +1,9 @@
 import { Object3D } from "three";
 import physic from "../engine/physic";
 import { createRigidBodyFixed } from "../engine/function";
+import credits from "../credits/Credits";
+import hud from "../hud/Hud";
+import music_controller from "../music/MusicController";
 
 class FinalePlatform extends Object3D {
     constructor(controls, platform, level) {
@@ -33,8 +36,14 @@ class FinalePlatform extends Object3D {
 
     change_level_unbound(event) {
         if (event.key === "e" || event.key === "E") {
-            this.level_controller.change_level(this.level_controller._current_level + 1);
             this.hide_message();
+            credits.show_credits();
+            this.level_controller.clear_level();
+            hud.remove_hud();
+            music_controller.pause_music();
+            music_controller.load_music('sounds/TitleSong.mp3');
+            music_controller.play_music();
+            music_controller.change_volume(0.5);
         }
     }
 

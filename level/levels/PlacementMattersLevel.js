@@ -9,6 +9,7 @@ import InteractableButton from "../../button/InteractableButton";
 import timer from "../../timer/Timer";
 import physic from "../../engine/physic";
 import Platform from "../../platform/Platform";
+import music_controller from '../../music/MusicController'
 
 class PlacementMattersLevel extends Level {
 
@@ -27,15 +28,15 @@ class PlacementMattersLevel extends Level {
 
         // SET NPC LINES
         this.npc_lines = [
-            "line A",
-            "line B",
-            "line C",
-            "line D",
-            "line E"
+            "Welcome! A skill much needed for success is to manage where your disks are placed. This will be your hardest and final challenge. ",
+            "In this level, you will see three different platforms. One for each power, strength, flight, and shrink.",
+            "The platforms will light up in a specific order in a race against time. You must stand on the lit up platform, with the corresponding power for that platform, to gain time.",
+            "If your time runs out, you fail the challenge. Remember... placement matters.",
+            "To begin the challenge, press the button on my right. Good luck!"
         ]
 
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/Level3_placement_matters_optimized_v2.glb');
+        const meshes = await loadAssets('assets/Level3_placement_matters_optimized_v3.glb');
         this.placement_matters_meshes = meshes.placement_matters_meshes;
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         this.load_pml_objects();
@@ -100,9 +101,13 @@ class PlacementMattersLevel extends Level {
     }
 
     reset_level() {
-        this.time_left = timer.max_time;
+        this.current_power_order_index = 0;
+        this.time_left = 35;
         this.button.pressed = false;
         timer.hide_timer();
+        this.strength_light.intensity = this.original_light_level;
+        this.flight_light.intensity = this.original_light_level;
+        this.shrink_light.intensity = this.original_light_level;
     }
 
     // -------------------- LEVEL SPECIFIC FUNCTIONS -----------------------------
@@ -151,7 +156,7 @@ class PlacementMattersLevel extends Level {
         }
     
         console.log(this.button);
-        this.time_left = 20;
+        this.time_left = 35;
         this.current_power_order_index = 0;
         this.current_active_power = null;
         console.log("------------------------------------------");
@@ -187,23 +192,58 @@ class PlacementMattersLevel extends Level {
             {
                 id: 0,
                 power: "shrink",
-                time_added: 10
-            }
+                time_added: 15,
+                set_time: false
+            },
             // {
             //     id: 1,
             //     power: "flight",
-            //     time_added: 5
+            //     time_added: 75,
+            //     set_time: true
             // },
             // {
             //     id: 2,
             //     power: "strength",
-            //     time_added: 10
+            //     time_added: 25,
+            //     set_time: true
             // },
             // {
             //     id: 3,
+            //     power: "flight",
+            //     time_added: 10,
+            //     set_time: false
+            // },
+            // {
+            //     id: 4,
             //     power: "shrink",
-            //     time_added: 5
-            // }
+            //     time_added: 35,
+            //     set_time: false
+            // },
+            // {
+            //     id: 5,
+            //     power: "strength",
+            //     time_added: 35,
+            //     set_time: false
+            // },
+            // {
+            //     id: 6,
+            //     power: "shrink",
+            //     time_added: 10,
+            //     set_time: false
+            // },
+            // {
+            //     id: 6,
+            //     power: "flight",
+            //     time_added: 25,
+            //     set_time: true
+            // },
+            // {
+            //     id: 6,
+            //     power: "strength",
+            //     time_added: 0,
+            //     set_time: false
+            // },
+
         ]
 
         this.current_active_power = this.power_order[0];
@@ -228,7 +268,7 @@ class PlacementMattersLevel extends Level {
     }
 
     end_game_unbound() {
-        console.log("next level");
+        this.level_controller.change_level(this.level_controller._current_level+1);
         this.hide_end_screen();
     }
 
@@ -247,6 +287,9 @@ class PlacementMattersLevel extends Level {
     }
 
     update_game_state(time_elapsed_in_seconds) {
+        if (this.time_left <= 0) {
+            this.failed();
+        }
 
         // if (this.button.pressed && (this.time_left > 0) && this.current_active_power) {
         if (this.button.pressed && this.current_active_power) {
@@ -318,7 +361,13 @@ class PlacementMattersLevel extends Level {
 
         if (touched_platform) {
             this.changed = true;
-            var updated_time = this.time_left + active.time_added;
+            // var updated_time = this.time_left + active.time_added;
+            if (active.set_time) {
+                var updated_time = active.time_added;
+            } else {
+                var updated_time = this.time_left + active.time_added;
+            }
+
             if (updated_time > timer.max_time) {
                 updated_time = timer.max_time;
             }
