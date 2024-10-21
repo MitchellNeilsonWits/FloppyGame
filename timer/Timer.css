@@ -46,6 +46,7 @@
     font-size: 16px;
     font-weight: 400;
     color: white;
+    width: 30px;
 }
 .timer-time-left-header {
     margin: 0;
@@ -53,6 +54,14 @@
     font-size: 16px;
     font-weight: 400;
     color: white;
+    width: 60px;
+}
+.timer-time-left-seconds {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: white; 
 }
 
 .timer-bottom {

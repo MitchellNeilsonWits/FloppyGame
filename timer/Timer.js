@@ -27,8 +27,12 @@ class Timer {
         timerTimeLeft.id = 'timer-time-left';
         timerTimeLeft.textContent = '10:00';
 
+        const timerTimeSeconds = document.createElement('h2');
+        timerTimeSeconds.className = 'timer-time-left-seconds';
+        timerTimeSeconds.textContent = 'seconds';
+
         // Append timer header and time left to top section
-        timerTop.append(timerTimeLeftHeader, timerTimeLeft);
+        timerTop.append(timerTimeLeftHeader, timerTimeLeft, timerTimeSeconds);
 
         // Timer bottom section
         const timerBottom = document.createElement('div');
