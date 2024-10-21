@@ -17,6 +17,7 @@ import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 import MitchLevel from "./levels/MitchLevel";
 import * as THREE from 'three';
+import music_controller from "../music/MusicController";
 
 class LevelController {
     constructor(params) {
@@ -200,7 +201,7 @@ class LevelController {
 
     change_level_unbound(level_number) {
         this.changing_level = true;
-
+        music_controller.pause_music();
         this._current_level = level_number;
         // this._scene.clear(); // clear the scene
         if (this._level) {

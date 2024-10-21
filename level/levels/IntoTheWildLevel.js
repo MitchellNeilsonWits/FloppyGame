@@ -67,6 +67,9 @@ class IntoTheWildLevel extends Level {
     // --------------------------------------------------------------------------
 
     render_level() {
+        music_controller.load_music('sounds/MartinLevel.mp3');
+        music_controller.play_music();
+        music_controller.change_volume(0.1);
         this.render_main_level_components(this);
     }
 
