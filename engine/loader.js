@@ -39,6 +39,8 @@ export default async function loadAssets(path) {
   let npc_spawn;
   let portal;
 
+  let placement_matters_meshes = {};
+
   const lever_gates = {}
 
 
@@ -46,7 +48,33 @@ export default async function loadAssets(path) {
 
   console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
-    if (mesh.name.includes("level_end")) {
+    if (mesh.name.includes("start_button")) {
+      placement_matters_meshes['button'] = mesh;
+    } else if (mesh.name.includes("strength_platform")) {
+      placement_matters_meshes['strength_platform'] = mesh;
+      ground_objects.push(mesh);
+      // colliders.push(mesh);
+      // visuals.push(mesh);
+    } else if (mesh.name.includes("flight_platform")) {
+      placement_matters_meshes['flight_platform'] = mesh;
+      ground_objects.push(mesh);
+      // colliders.push(mesh);
+      // visuals.push(mesh);  
+    } else if (mesh.name.includes("shrink_platform")) {
+      placement_matters_meshes['shrink_platform'] = mesh;
+      ground_objects.push(mesh);
+      // colliders.push(mesh);
+      // visuals.push(mesh);  
+    } else if (mesh.name.includes("strength_light")) {
+      placement_matters_meshes['strength_light'] = mesh;
+      // pointLights.push(mesh);
+    } else if (mesh.name.includes("flight_light")) {
+      placement_matters_meshes['flight_light'] = mesh;
+      // pointLights.push(mesh);
+    } else if (mesh.name.includes("shrink_light")) {
+      placement_matters_meshes['shrink_light'] = mesh;
+      // pointLights.push(mesh);
+    } else if (mesh.name.includes("level_end")) {
       portal = mesh;
     } else if (mesh.name.includes("npc_spawn")) {
       console.log("GOT AN NPC_SPAWN")
@@ -75,6 +103,7 @@ export default async function loadAssets(path) {
     } else if (mesh.type === 'Mesh') {
       if (mesh.name.includes("lever")) {
         const lever_name = mesh.name.split('_')[1];
+        console.log("NEW LEVER!", lever_name)
         if (!lever_gates[lever_name]) {
           lever_gates[lever_name] = {
             name: lever_name,
@@ -88,7 +117,7 @@ export default async function loadAssets(path) {
         const gate_name = mesh.name.split('_')[1];
         if (!lever_gates[gate_name]) {
           lever_gates[gate_name] = {
-            name: lever_name,
+            name: gate_name,
             gate: mesh
           }
         } else {
@@ -131,5 +160,5 @@ export default async function loadAssets(path) {
   }
   
 
-  return { portal, npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
+  return { placement_matters_meshes, portal, npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
 }

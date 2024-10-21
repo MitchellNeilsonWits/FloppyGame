@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap');
+
+* {
+    font-family: "Agdasima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#pml-display-root {
+    position: absolute;
+    left: 0;
+    top: 70px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#timer-root {
+    /* position: absolute;
+    left: calc(50% - 200px);
+    top: 70px; */
+    
+    width: 400px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid white;
+    border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-top {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+#timer-time-left {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    width: 30px;
+}
+.timer-time-left-header {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    width: 60px;
+}
+.timer-time-left-seconds {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: white; 
+}
+
+.timer-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0px 10px;
+}
+
+.timer-icon-container {
+    width: 15px;
+    height: 15px;
+}
+.timer-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.timer-bar-container {
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#timer-bar {
+    width: 300px;
+    height: 12px;
+    background: white;
+    border-radius: 4px;
+    transition: 0.05s;
+}
+
+.blank-div {
+    width: 150px;
+}
+
+.pml-active-root {
+    border: 1px solid white;
+    width: 150px;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pml-active-header {
+    margin: 0;
+    padding: 0;
+
+    font-size: 18px;
+    color:white;
+}
+
+.pml-active-platform {
+    margin: 0;
+    padding: 0;
+
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.pml-active-next {
+    display: flex;
+    flex-direction: row;
+    gap: 0px 5px;
+    margin-top: 10px;
+}
+
+.pml-active-next-header {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color:white;
+}
+.pml-active-next-platform {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 800;
+
+}

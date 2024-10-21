@@ -164,7 +164,7 @@ class LevelController {
             this.loading_screen.set_progress(95);
             // Get the ground objects of the level
             this._ground_objects = this._level.get_ground_objects();
-            // console.log(this._ground_objects);
+            console.log(this._ground_objects);
 
             this.loading_screen.set_text("Finalizing");
             this.loading_screen.set_progress(99);
