@@ -4,6 +4,7 @@ import { Euler, Vector3 } from "three";
 import { Quaternion } from "cannon";
 import TutInstructions from "../../engine/tutInstructions";
 import FootstepSound from "../../engine/footSteps";
+import music_controller from "../../music/MusicController";
 
 class TutorialLevel extends Level {
 
@@ -72,6 +73,9 @@ class TutorialLevel extends Level {
     // --------------------------------------------------------------------------
 
     render_level() {
+        music_controller.load_music('sounds/TutLevel.mp3');
+        music_controller.play_music();
+        music_controller.change_volume(0.05);
         this.render_main_level_components(this);
     }
 

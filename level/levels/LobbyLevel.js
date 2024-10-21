@@ -4,6 +4,7 @@ import loadAssets from '../../engine/loader';
 import TutRender from '../../engine/tutRender';
 import FootstepSound from '../../engine/footSteps';
 import LevelSelectRender from '../../engine/levelSelector';
+import music_controller from '../../music/MusicController';
 
 
 /**
@@ -92,6 +93,9 @@ class LobbyLevel extends Level {
     }
 
     get_ground_objects() {
+        music_controller.load_music('sounds/TitleSong.mp3');
+        music_controller.play_music();
+        music_controller.change_volume(0.1);
         return this._ground_colliders;
     }
     // --------------------------------------------------------------------------

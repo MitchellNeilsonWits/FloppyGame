@@ -17,9 +17,13 @@ class MusicController {
     }
 
     pause_music() {
-        // Stop the background music
-        this.music.pause(); // Pause the music
-        this.music.currentTime = 0; // Reset the music to the beginning
+        if (this.music)
+        {
+            // Stop the background music
+            this.music.pause(); // Pause the music
+            this.music.currentTime = 0; // Reset the music to the beginning
+        }
+
     }
 
     change_volume(new_volumne) {
