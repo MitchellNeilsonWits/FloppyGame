@@ -22,7 +22,7 @@ class CharacterHeightController {
                 }
 
                 if (rounded.x == 0 && rounded.y == 1 && rounded.z == 0) {
-                    console.log("we on the ground!");
+                    
                     this.controls.height_state = "on ground";
                     has_touched_ground = true;
                     return;

@@ -64,11 +64,9 @@ class FootstepSound {
     }
 
     update() {
-        console.log("Character controller: ", this.character_controller);
 
         // No footsteps on idle state
         if (this.character_controller._state_machine._current_name === 'idle') {
-            console.log('Character is idle, stopping footstep sound');
             this.stopFootstepSound();
             return;  
         }
@@ -83,7 +81,6 @@ class FootstepSound {
             // Loop through all objects in the level
             console.log(this.level);
             const objectsInLevel = this.level.children[2].children; 
-            console.log('Objects in level: ', objectsInLevel);
             let isOnSurface = false;
 
             for (let obj of objectsInLevel) {
@@ -134,10 +131,8 @@ class FootstepSound {
         if (intersects.length > 0) {
             const closestIntersection = intersects[0];
             const distance = closestIntersection.distance;
-            const onSurfaceThreshold = 1.2;  
-            console.log(`Distance to surface: ${distance}`);
+            const onSurfaceThreshold = 1.2; 
             if (distance < onSurfaceThreshold) {
-                console.log('Player is on surface, exact intersection found.');
                 return true;
             }
         }
@@ -153,7 +148,6 @@ class FootstepSound {
             sound.position.copy(playerPos); 
             sound.play();
             this.isPlaying = true;
-            console.log(`Playing ${surfaceType} footstep sound at player position`);
         }
     }
 
@@ -173,7 +167,6 @@ class FootstepSound {
         }
 
         this.isPlaying = false;
-        console.log('Stopping footstep sound');
     }
 
     updatePlaybackRate(rate, surfaceType) {
@@ -185,7 +178,6 @@ class FootstepSound {
         }
     
         if (sound.playbackRate !== adjustedRate) {
-            console.log(`Updating playback rate to: ${adjustedRate} for ${surfaceType} surface`);
             sound.setPlaybackRate(adjustedRate);
     
             if (this.isPlaying) {
@@ -199,7 +191,6 @@ class FootstepSound {
     playJumpSound() {
         if (!this.jumpSound.isPlaying) {
             this.jumpSound.play();
-            console.log('Playing jump sound');
         }
     }
 
