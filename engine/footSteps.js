@@ -80,34 +80,36 @@ class FootstepSound {
 
             // Loop through all objects in the level
             console.log(this.level);
-            const objectsInLevel = this.level.children[2].children; 
             let isOnSurface = false;
+            if (this.level.children[2]) {
+                const objectsInLevel = this.level.children[2].children; 
 
-            for (let obj of objectsInLevel) {
-                if (obj.name.includes('_metal') || obj.name.includes('_grass') || obj.name.includes('_wood') || obj.name.includes('_rock')) {
-                    let surfaceType = null;
+                for (let obj of objectsInLevel) {
+                    if (obj.name.includes('_metal') || obj.name.includes('_grass') || obj.name.includes('_wood') || obj.name.includes('_rock')) {
+                        let surfaceType = null;
 
-                    if (obj.name.includes('_metal')) {
-                        surfaceType = 'metal';
-                    } else if (obj.name.includes('_grass')) {
-                        surfaceType = 'grass';
-                    } else if (obj.name.includes('_wood')) {
-                        surfaceType = 'wood';
-                    } else if (obj.name.includes('_rock')) {
-                        surfaceType = 'rock';
-                    }
+                        if (obj.name.includes('_metal')) {
+                            surfaceType = 'metal';
+                        } else if (obj.name.includes('_grass')) {
+                            surfaceType = 'grass';
+                        } else if (obj.name.includes('_wood')) {
+                            surfaceType = 'wood';
+                        } else if (obj.name.includes('_rock')) {
+                            surfaceType = 'rock';
+                        }
 
-                    if (this.checkIfOnSurface(playerPos, obj)) {
-                        isOnSurface = true;  // Player is on a surface (metal, grass, wood, or rock)
+                        if (this.checkIfOnSurface(playerPos, obj)) {
+                            isOnSurface = true;  // Player is on a surface (metal, grass, wood, or rock)
 
-                        // Play the appropriate sound based on surface type
-                        if (this.isPlayerOnObject !== obj.name) {
-                            this.isPlayerOnObject = obj.name;
-                            this.playFootstepSound(playerPos, playbackRate, surfaceType); 
-                        } else if (!this.getSoundBySurfaceType(surfaceType).isPlaying) {
-                            this.playFootstepSound(playerPos, playbackRate, surfaceType);
-                        } else {
-                            this.updatePlaybackRate(playbackRate, surfaceType);
+                            // Play the appropriate sound based on surface type
+                            if (this.isPlayerOnObject !== obj.name) {
+                                this.isPlayerOnObject = obj.name;
+                                this.playFootstepSound(playerPos, playbackRate, surfaceType); 
+                            } else if (!this.getSoundBySurfaceType(surfaceType).isPlaying) {
+                                this.playFootstepSound(playerPos, playbackRate, surfaceType);
+                            } else {
+                                this.updatePlaybackRate(playbackRate, surfaceType);
+                            }
                         }
                     }
                 }

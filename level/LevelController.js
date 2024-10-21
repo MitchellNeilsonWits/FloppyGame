@@ -120,6 +120,16 @@ class LevelController {
         }
         // ------------------------------
 
+        // ---------- RESET LEVERS and GATES ----------
+        const lever_gates = this._level._lever_gates;
+        for (const key of Object.keys(lever_gates)) {
+            const lever = lever_gates[key].lever_object;
+            if (lever.lever_on) {
+                lever.toggle_lever_on();
+            }
+        }        
+        // ------------------------------
+
         // Reset the user HUD
         hud.reset_hud();
         
