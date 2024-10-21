@@ -134,7 +134,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(4);
             // this.change_level(0);
         
         });
@@ -164,7 +164,7 @@ class LevelController {
             this.loading_screen.set_progress(95);
             // Get the ground objects of the level
             this._ground_objects = this._level.get_ground_objects();
-            // console.log(this._ground_objects);
+            console.log(this._ground_objects);
 
             this.loading_screen.set_text("Finalizing");
             this.loading_screen.set_progress(99);
@@ -220,6 +220,8 @@ class LevelController {
             if (prev_level._level) {
                 prev_level._level.clear();
             }
+            this._scene.remove(this._level._level);
+
             this._level = null;
 
         }
@@ -236,7 +238,7 @@ class LevelController {
         
             case 1:
                 hud.set_level_name('Tutorial');
-                this._level = new TutorialLevel(this._scene, this.audioListener, this.audioLoader, this);
+                this._level = new TutorialLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 2:
@@ -251,7 +253,7 @@ class LevelController {
             
             case 4:
                 hud.set_level_name('Placement Matters');
-                this._level = new PlacementMattersLevel(this._scene, this);
+                this._level = new PlacementMattersLevel(this._scene, this, this.audioListener, this.audioLoader);
 
                 break;
 
