@@ -45,10 +45,17 @@ export default async function loadAssets(path) {
 
 
   const glass = []
+  const finale_point_lights = {}
+  let finale_platform;
 
   console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
-    if (mesh.name.includes("start_button")) {
+    if (mesh.name.includes("finaleplatform")) {
+      finale_platform = mesh;
+    } else if (mesh.name.includes("finalepoint")) {
+      const name = mesh.name.split('_')[1];
+      finale_point_lights[name] = mesh;
+    } else if (mesh.name.includes("start_button")) {
       placement_matters_meshes['button'] = mesh;
     } else if (mesh.name.includes("strength_platform")) {
       placement_matters_meshes['strength_platform'] = mesh;
@@ -160,5 +167,5 @@ export default async function loadAssets(path) {
   }
   
 
-  return { placement_matters_meshes, portal, npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
+  return { finale_platform, finale_point_lights, placement_matters_meshes, portal, npc_spawn, animations, visuals, colliders, visuals_dynamic, colliders_dynamic, pointLights, players, interactable, pushboxes, ground_objects, spotLights, player_spawn, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn, directionalLights, skybox, lever_gates, glass }
 }

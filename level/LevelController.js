@@ -17,6 +17,7 @@ import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
 import MitchLevel from "./levels/MitchLevel";
 import * as THREE from 'three';
+import FinaleLevel from "./levels/FinaleLevel";
 
 class LevelController {
     constructor(params) {
@@ -144,7 +145,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(2);
             // this.change_level(0);
         
         });
@@ -264,6 +265,12 @@ class LevelController {
             case 4:
                 hud.set_level_name('Placement Matters');
                 this._level = new PlacementMattersLevel(this._scene, this, this.audioListener, this.audioLoader);
+
+                break;
+            
+            case 5:
+                hud.set_level_name('Finale');
+                this._level = new FinaleLevel(this._scene, this, this.audioListener, this.audioLoader, this._controls);
 
                 break;
 
