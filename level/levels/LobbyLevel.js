@@ -127,6 +127,11 @@ class LobbyLevel extends Level {
         this.render_main_level_components(this);
     }
 
+    reset_level() {
+        this._levelSelectRenderer.hideLevelSelectScreen();
+        this._tutorialRenderer.hideTutorialMessage();
+    }
+
     update(time_elapsed_in_seconds) {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
         // Update proximity of player to screen

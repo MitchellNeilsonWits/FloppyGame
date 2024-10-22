@@ -31,6 +31,8 @@ class PlacementMattersLevel extends Level {
             "Welcome! A skill much needed for success is to manage where your disks are placed. This will be your hardest and final challenge. ",
             "In this level, you will see three different platforms. One for each power, strength, flight, and shrink.",
             "The platforms will light up in a specific order in a race against time. You must stand on the lit up platform, with the corresponding power for that platform, to gain time.",
+            "So, for example, if the first platform is 'SHRINK', you need to load the SHRINK disk and stand on the hexagon-tiled shrink platform",
+            "When you click the button, an interface will be shown using your GPU. This allows you to keep track of the time, which platform is active, and which platform will be next",
             "If your time runs out, you fail the challenge. Remember... placement matters.",
             "To begin the challenge, press the button on my right. Good luck!"
         ]
