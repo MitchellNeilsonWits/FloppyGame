@@ -126,6 +126,7 @@ class Level {
             
 
             level._level.add(portal);
+            level._ground_colliders.push(portal.collider);
             level.non_player_colliders.push(portal.collider);
             level.non_player_rigid_bodies.push(portal.rigidBody);
         }

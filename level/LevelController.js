@@ -141,6 +141,35 @@ class LevelController {
         
     }
 
+    clear_level() {
+        if (this._level) {
+            this.reset_current_level();
+            const prev_level = this._level;
+            console.log(this);
+            // need to clear all colliders apart from character
+            if (prev_level.non_player_colliders) {
+                prev_level.non_player_colliders.forEach(collider => {
+                    console.log(collider);
+                    if (collider) {
+                        physic.removeCollider(collider);
+                    }
+                });
+            }
+            
+            if (prev_level._world) {
+                prev_level._world.clear();
+            }
+
+            if (prev_level._level) {
+                prev_level._level.clear();
+            }
+            this._scene.remove(this._level._level);
+
+            this._level = null;
+
+        }
+    }
+
     async _init(params) {
         this.loading_screen.set_text("Creating character");
         this.loading_screen.set_progress(10);
@@ -210,6 +239,7 @@ class LevelController {
         this._current_level = level_number;
         // this._scene.clear(); // clear the scene
         if (this._level) {
+            this._level._footstepSound.stopFootstepSound();
             this.reset_current_level();
             const prev_level = this._level;
             // console.log(this);
