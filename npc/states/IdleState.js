@@ -10,7 +10,7 @@ class IdleState extends State {
     }
 
     enter(prev_state){ 
-        console.log(this);
+        // console.log(this);
         const idle_action = this._parent._animations['idle'].action;
         
         if (prev_state) {

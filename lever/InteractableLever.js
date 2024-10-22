@@ -20,7 +20,7 @@ class InteractableLever extends interactableObject {
         // Change lever status to be the opposite of what it is now
         lever.toggle_lever_on();
 
-        console.log(object_interacted_with)
+        // console.log(object_interacted_with)
     }
 
     end_interaction(controls, object_to_drop, level) {

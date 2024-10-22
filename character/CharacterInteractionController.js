@@ -263,7 +263,7 @@ class CharacterInteractionController {
         // If the distance is within the threshold, we see if the character is facing the object
         if (distance <= distance_threshold) {
             if (!this.can_interact) {
-                    console.log("CLOSE");
+                    // console.log("CLOSE");
                     this.can_interact = true;
                     this._object_to_interact_with = interactable_object; 
                     this._start_interaction = interactable_object.interactable_object.start_interaction;
@@ -430,7 +430,7 @@ class CharacterInteractionController {
                                 }
                 
                                 if ((rounded.x == 1 && rounded.y == 0 && rounded.z == 0) || (rounded.x == 0 && rounded.y == 0 && rounded.z == 1)) {
-                                    console.log("now only touching");
+                                    // console.log("now only touching");
                                     is_pushing = true;
                                     this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                                 } else {

@@ -48,7 +48,7 @@ export default async function loadAssets(path) {
   const finale_point_lights = {}
   let finale_platform;
 
-  console.log(glb.scene.children);
+  // console.log(glb.scene.children);
   for (const mesh of glb.scene.children) {
     if (mesh.name.includes("finaleplatform")) {
       finale_platform = mesh;
@@ -84,7 +84,7 @@ export default async function loadAssets(path) {
     } else if (mesh.name.includes("level_end")) {
       portal = mesh;
     } else if (mesh.name.includes("npc_spawn")) {
-      console.log("GOT AN NPC_SPAWN")
+      // console.log("GOT AN NPC_SPAWN")
       npc_spawn = mesh;
     } else if (mesh.name.includes("glass")) {
       glass.push(mesh);
@@ -110,7 +110,7 @@ export default async function loadAssets(path) {
     } else if (mesh.type === 'Mesh') {
       if (mesh.name.includes("lever")) {
         const lever_name = mesh.name.split('_')[1];
-        console.log("NEW LEVER!", lever_name)
+        // console.log("NEW LEVER!", lever_name)
         if (!lever_gates[lever_name]) {
           lever_gates[lever_name] = {
             name: lever_name,
@@ -144,7 +144,7 @@ export default async function loadAssets(path) {
           };
         }
         if (mesh.name.includes("ground")) {
-          console.log("new ground: ", mesh);
+          // console.log("new ground: ", mesh);
           ground_objects.push(mesh);
         }
         visuals.push(mesh)

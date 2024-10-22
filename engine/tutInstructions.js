@@ -35,7 +35,7 @@ class TutInstructions {
         this.tutorialMessage.style.display = 'none'; // Hidden initially
         document.body.appendChild(this.tutorialMessage);
 
-        console.log('Tutorial message DOM element:', this.tutorialMessage); // Check if it's added to the DOM
+        // console.log('Tutorial message DOM element:', this.tutorialMessage); // Check if it's added to the DOM
     }
 
     update() {
@@ -83,12 +83,12 @@ class TutInstructions {
         const message = this.targetObjects[targetName];
         this.tutorialMessage.innerHTML = `<p>${message}</p>`;
         this.tutorialMessage.style.display = 'block';
-        console.log(`Showing tutorial message for ${targetName}: ${message}`); // Debug log
+        // console.log(`Showing tutorial message for ${targetName}: ${message}`); // Debug log
     }
 
     hideTutorialMessage() {
         this.tutorialMessage.style.display = 'none';
-        console.log('Hiding tutorial message'); // Debug log
+        // console.log('Hiding tutorial message'); // Debug log
     }
 }
 

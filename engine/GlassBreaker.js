@@ -83,7 +83,7 @@ class GlassBreaker {
             // Clear message after break
             this.hideInteractMessage();
         } else {
-            console.log("Glass mesh not found");
+            // console.log("Glass mesh not found");
         }
     }
 

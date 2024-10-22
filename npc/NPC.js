@@ -33,7 +33,7 @@ class NPC extends Object3D {
   async set_npc() {
     const manager = new THREE.LoadingManager();
     manager.onLoad = () => {
-      console.log(this._screen);
+      // console.log(this._screen);
       this.video = document.createElement('video');
       
       this.video.src = 'npc/npc_face_v2.mp4'; 
@@ -63,13 +63,13 @@ class NPC extends Object3D {
       this.video.play(); 
       this.videoPlaying = true;
 
-      console.log(this._screen.material);
+      // console.log(this._screen.material);
     }
     
     const gltf = (new GLTFLoader(manager)).load("../models/npc_idle.glb", (gltf) => {
       gltf.scene.children[0].scale.set(0.3,0.3,0.3);
       this._pure_mesh = gltf.scene.children[0];
-      console.log(this._pure_mesh);
+      // console.log(this._pure_mesh);
       this._screen = this._pure_mesh.children[0].children[0]
 
 
@@ -113,7 +113,7 @@ class NPC extends Object3D {
 
     // Load the marker
     const gltf_2 = (new GLTFLoader()).load("../models/npc_marker.glb", (gltf) => {
-      console.log(gltf.scene);
+      // console.log(gltf.scene);
       gltf.scene.children[0].scale.set(0.1,0.1,0.1);
       this._marker_mesh = gltf.scene.children[0];
       this._marker_mesh.position.set(0,3,0);

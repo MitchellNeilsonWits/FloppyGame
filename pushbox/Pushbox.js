@@ -20,7 +20,7 @@ class Pushbox extends Object3D {
   async set_pushbox() {
     const gltf = await (new GLTFLoader()).loadAsync("../models/pushbox.glb")
     .then((gltf) => {
-        console.log(gltf.scene.children);
+        // console.log(gltf.scene.children);
         this._pushbox_mesh = gltf.scene.children[0];
         // this._pushbox_mesh.position.y = 8;
         // this._pushbox_mesh.position.z = 22;

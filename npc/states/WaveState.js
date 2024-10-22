@@ -12,7 +12,7 @@ class WaveState extends State {
     }
 
     enter(prev_state){ 
-        console.log(this);
+        // console.log(this);
         const wave_action = this._parent._animations['wave'].action;
         
         if (prev_state) {

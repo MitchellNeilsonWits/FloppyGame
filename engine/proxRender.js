@@ -70,7 +70,7 @@ class ProximityScreenRenderer {
 
                 if (xDiff < areaWidth / 2 && zDiff < areaDepth / 2) {
                     if (!this.isPlayerNear) { 
-                        console.log("Player is near the platform, press 'E' to play the video");
+                        // console.log("Player is near the platform, press 'E' to play the video");
                         this.showInteractMessage();
                         this.isPlayerNear = true; //PLayer near the platform run what we want to run
                     }
@@ -126,7 +126,7 @@ class ProximityScreenRenderer {
             this.videoPlaying = true;
             this.hideInteractMessage(); // Hide interaction message after pressing E
         } else {
-            console.log("Screen mesh not found");
+            // console.log("Screen mesh not found");
         }
     }
     
@@ -148,7 +148,7 @@ class ProximityScreenRenderer {
             this.video.currentTime = 0;
             this.videoPlaying = false; 
         } else {
-            console.log("Screen mesh not found for stopping the video");
+            // console.log("Screen mesh not found for stopping the video");
         }
     }
 

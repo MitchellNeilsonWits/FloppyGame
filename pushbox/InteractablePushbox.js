@@ -21,7 +21,7 @@ class InteractablePushbox extends interactableObject {
     }
     
     start_interaction_static(controls, object_interacted_with, level) {
-        console.log("started pushing");
+        // console.log("started pushing");
 
         const direction_of_player = get_cartesian_angle_from_rotation(controls._target.rotation);
 
@@ -37,7 +37,7 @@ class InteractablePushbox extends interactableObject {
 
         object_interacted_with.object.move_pushbox(velocity.x,velocity.y,velocity.z);
 
-        console.log(this._action);
+        // console.log(this._action);
         if (!this._action) {
             const action = controls._state_machine._proxy._animations["pushing"].action;
             action.time = 0.0;

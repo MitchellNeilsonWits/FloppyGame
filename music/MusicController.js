@@ -12,7 +12,7 @@ class MusicController {
 
     play_music() {  
         this.music.play().catch(error => {
-            console.log('Audio playback failed: ', error);
+            // console.log('Audio playback failed: ', error);
         });
     }
 

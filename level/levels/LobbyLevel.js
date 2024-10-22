@@ -147,7 +147,7 @@ class LobbyLevel extends Level {
     }
 
     startTutorial() {
-        console.log("Loading tutorial level...");
+        // console.log("Loading tutorial level...");
     }
     
 }

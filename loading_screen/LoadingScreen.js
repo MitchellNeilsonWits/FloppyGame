@@ -29,7 +29,7 @@ class LoadingScreen {
         this.loading_screen_root.appendChild(loading_bar_container);
 
         this.bar_width = 500;//loading_bar_container.style.width;
-        console.log(this.bar_width);
+        // console.log(this.bar_width);
 
         this.is_shown = false;
 

@@ -37,10 +37,10 @@ class TutRender {
                 // Check proximity
                 const distance = playerPos.distanceTo(targetPos);
                 
-                console.log(distance);
+                // console.log(distance);
                 if (distance < this.proximityThreshold) {
                     if (!this.isPlayerNear) {
-                        console.log("Player is near the tutorial object, press 'E' to start the tutorial");
+                        // console.log("Player is near the tutorial object, press 'E' to start the tutorial");
                         this.isPlayerNear = true;
                         this.showTutorialMessage();
                     }

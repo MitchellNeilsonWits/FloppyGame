@@ -7,7 +7,7 @@ class CharacterSkinController {
         // this.original_mapping = {...this.target.children[0].children[0].children[0].material.map};
         const original_mapping = this.target.children[0].children[0].children[0].material.map;
         this.original_mapping = original_mapping.clone();
-        console.log(this.original_mapping);
+        // console.log(this.original_mapping);
         // this.original_mapping.clone
         this.init();
     }
@@ -22,13 +22,13 @@ class CharacterSkinController {
 
     async new_texture(url, skin) {
         new THREE.TextureLoader().loadAsync(url).then( texture => {
-            console.log(texture);
+            // console.log(texture);
             const new_mapping = this.original_mapping.clone();
             new_mapping.source = texture.source;
 
             this.skins[`${skin}`] = new_mapping;
         
-            console.log(this.skins);
+            // console.log(this.skins);
         })
     }
 

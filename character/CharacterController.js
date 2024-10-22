@@ -67,7 +67,7 @@ class CharacterController {
         gltfLoader.setPath('../models/')
 
         await gltfLoader.loadAsync('floppy_with_reader_remastered_optimized.glb').then((gltf) => {  
-            console.log(this);
+            // console.log(this);
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
             // --- LOBBY ---
@@ -87,7 +87,7 @@ class CharacterController {
             const src = "skins/power_baseColor.jpg";
             
             // gltf.scene.children[0].children[0].children[0].material.map = THREE.ImageUtils. .loadTexture( src );
-            console.log(gltf.scene.children[0].children[0].children[0]);
+            // console.log(gltf.scene.children[0].children[0].children[0]);
 
             this._disks = {
                 disk_0: gltf.scene.children[0].children[0].children[2],
@@ -167,7 +167,7 @@ class CharacterController {
             loader.load('floppy_with_reader_flying_forward_fast.glb', (a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
             loader.load('floppy_with_reader_punch.glb', (a) => {_on_load('punch', a);}); // load the disk animation
 
-            console.log("loaded all models")
+            // console.log("loaded all models")
             _callback();
             return "done";
         })
@@ -574,8 +574,8 @@ class CharacterController {
         // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
 
         this._target.update(forward.x, y_velocity, forward.z);
-        console.log(this._velocity);
-        console.log(this._velocity);
+        // console.log(this._velocity);
+        // console.log(this._velocity);
 
         // this._can_interact = this._interaction_controller.update();
         // console.log(this._can_interact)

@@ -41,7 +41,7 @@ function createColliderGeo(rigidBody, physic, mesh) {
 }
 
 export function createRigidBodyFixed(mesh, physic) {
-  console.log(`Creating fixed rigid body for mesh ${mesh.name}`)
+  // console.log(`Creating fixed rigid body for mesh ${mesh.name}`)
   const position = mesh.position;
   const rigidBodyDesc = RigidBodyDesc.fixed()
   rigidBodyDesc.setTranslation(...position);
@@ -78,8 +78,8 @@ export function createLeverHandle(mesh, position, physic) {
 }
 
 export function createRigidBodyDynamic(mesh, physic) {
-  console.log("creating rigid dynamic body")
-  console.log(mesh)
+  // console.log("creating rigid dynamic body")
+  // console.log(mesh)
   const position = mesh.position;
   const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(0);
   rigidBodyDesc.setTranslation(...position)
@@ -89,10 +89,10 @@ export function createRigidBodyDynamic(mesh, physic) {
 }
 
 export function createRigidBodyEntity(position, physic) {
-  console.log("CREATING ENTITY!!!!");
+  // console.log("CREATING ENTITY!!!!");
   const rigidBodyDesc = RigidBodyDesc.dynamic().setAdditionalMass(1)
   // rigidBodyDesc.ccdEnabled = true;
-  console.log("Position:",position)
+  // console.log("Position:",position)
   rigidBodyDesc.setTranslation(...position)
   const rigidBody = physic.createRigidBody(rigidBodyDesc)
   const collider = createColliderBall(0.18, rigidBody, physic)
