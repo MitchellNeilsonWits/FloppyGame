@@ -6,7 +6,7 @@ class InteractableBox extends interactableObject {
     }
 
     start_interaction() {
-        console.log("BOX INTERACTION!");
+        // console.log("BOX INTERACTION!");
     }
 }
 

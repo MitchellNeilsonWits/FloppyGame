@@ -71,7 +71,7 @@ class GameController {
         // THREE JS RENDERER
         this._threejs = new THREE.WebGLRenderer({antialias: true});
         this._threejs.setSize(window.innerWidth, window.innerHeight);
-        console.log(window.innerHeight);
+        // console.log(window.innerHeight);
         document.body.appendChild(this._threejs.domElement);
         // this._threejs.shadowMap.enabled = true;
         // this._threejs.shadowMap.needsUpdate = true;

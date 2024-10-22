@@ -112,7 +112,7 @@ class PlacementMattersLevel extends Level {
 
     // -------------------- LEVEL SPECIFIC FUNCTIONS -----------------------------
     load_pml_objects() {
-        console.log("-------------LOADING PML OBJECTS-------------");
+        // console.log("-------------LOADING PML OBJECTS-------------");
         timer.hide_timer();
         // handle lights
         const strength_light_mesh = this.placement_matters_meshes.strength_light;
@@ -155,11 +155,11 @@ class PlacementMattersLevel extends Level {
             interactable_object: button_interactable
         }
     
-        console.log(this.button);
-        this.time_left = 35;
+        // console.log(this.button);
+        this.time_left = 20;
         this.current_power_order_index = 0;
         this.current_active_power = null;
-        console.log("------------------------------------------");
+        // console.log("------------------------------------------");
 
         // Create the platforms
         // -- strength
@@ -268,7 +268,7 @@ class PlacementMattersLevel extends Level {
     }
 
     end_game_unbound() {
-        this.level_controller.change_level(this.level_controller._current_level+1);
+        // console.log("next level");
         this.hide_end_screen();
     }
 
@@ -382,7 +382,7 @@ class PlacementMattersLevel extends Level {
                 this.flight_light.intensity = this.original_light_level;
                 this.shrink_light.intensity = this.original_light_level;
 
-                console.log("CHALLENGE COMPLETED!");
+                // console.log("CHALLENGE COMPLETED!");
                 this.show_end_screen();
             }
         }

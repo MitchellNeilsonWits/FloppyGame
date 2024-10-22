@@ -79,7 +79,7 @@ class FootstepSound {
             const playerPos = this.character_controller._target.position;
 
             // Loop through all objects in the level
-            console.log(this.level);
+            // console.log(this.level);
             let isOnSurface = false;
             if (this.level.children[2]) {
                 const objectsInLevel = this.level.children[2].children; 

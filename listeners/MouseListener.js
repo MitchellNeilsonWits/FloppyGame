@@ -9,7 +9,7 @@ class MouseListener {
     }
 
     _update_zoom(event) {
-        console.log(event);
+        // console.log(event);
         // this._mouse_zoom = 
         if (event.deltaY > 0) {
             if (!(this._zoom + 0.5 > 10)) {

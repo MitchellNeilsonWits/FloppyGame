@@ -26,13 +26,13 @@ class CharacterPowerController {
         // Change colour and emission of the disk object
         this.target.children[0].children[0].children[3].material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
         this.target.children[0].children[0].children[3].material.emissiveIntensity = 0.15;
-        console.log(this.target.children[0].children[0].children[2]);
+        // console.log(this.target.children[0].children[0].children[2]);
         
         // this.disk_meshes.disk_1.material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
         // this.disk_meshes.disk_1.material.emissiveIntensity = 20;
 
-        console.log(this.target.rigidBody);
-        console.log(this.target.rigidBody);
+        // console.log(this.target.rigidBody);
+        // console.log(this.target.rigidBody);
         if (this.power === "flight") {
             this.target.rigidBody.setGravityScale(0);
         } else {

@@ -19,7 +19,7 @@ class Shard extends Object3D {
     // this.position.copy(position);
     // this.rotation.copy(rotation);
     // this.scale.copy(scale);
-    console.log(scale);
+    // console.log(scale);
   }
 
   async set_shard(mesh) {

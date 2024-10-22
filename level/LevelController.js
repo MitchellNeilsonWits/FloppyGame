@@ -93,7 +93,7 @@ class LevelController {
         // ---------- RESET DISKS ----------
         // Take off disk being held and loaded disk
         if (this._controls._holding_disk) {
-            console.log(this._controls._holding_disk);
+            // console.log(this._controls._holding_disk);
             this._controls._holding_disk.interactable_object.end_interaction(this._controls, this._controls._holding_disk, this._level._level);
         }
         const loaded = this._controls.power_controller.get_loaded_disk(); 
@@ -105,7 +105,7 @@ class LevelController {
         this._controls._holding_disk = null;
 
         const disks = this._level.get_disks();
-        console.log(disks);
+        // console.log(disks);
         for (const key of Object.keys(disks)) {
             const disk_object = disks[key];
             disk_object.reset_velocity();
@@ -209,7 +209,7 @@ class LevelController {
             this.loading_screen.set_progress(95);
             // Get the ground objects of the level
             this._ground_objects = this._level.get_ground_objects();
-            console.log(this._ground_objects);
+            // console.log(this._ground_objects);
 
             this.loading_screen.set_text("Finalizing");
             this.loading_screen.set_progress(99);
@@ -227,7 +227,7 @@ class LevelController {
 
                 this.changing_level = false;
             },1000);
-            console.log("DONE RENDERING THE SCENE!");
+            // console.log("DONE RENDERING THE SCENE!");
         });
         
         
@@ -242,11 +242,11 @@ class LevelController {
             this._level._footstepSound.stopFootstepSound();
             this.reset_current_level();
             const prev_level = this._level;
-            console.log(this);
+            // console.log(this);
             // need to clear all colliders apart from character
             if (prev_level.non_player_colliders) {
                 prev_level.non_player_colliders.forEach(collider => {
-                    console.log(collider);
+                    // console.log(collider);
                     if (collider) {
                         physic.removeCollider(collider);
                     }

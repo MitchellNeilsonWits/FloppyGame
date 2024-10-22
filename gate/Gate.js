@@ -24,7 +24,7 @@ class Gate extends Object3D {
             this._gate_mesh = gltf.scene.children[0];
             
 
-            console.log(this._disk_mesh);
+            // console.log(this._disk_mesh);
             // this._gate_mesh.scale.set(this.scale);
             // this._gate_mesh.scale.x = this.scale.x;
             // this._gate_mesh.scale.y = this.scale.y;
@@ -39,7 +39,7 @@ class Gate extends Object3D {
             
             this._manager = new THREE.LoadingManager();
             this._manager.onLoad = () => {
-                console.log(this._animation.action)
+                // console.log(this._animation.action)
                 this._animation.action.time = 0.0;
                 this._animation.action.enabled = true;
                 this._animation.action.setEffectiveTimeScale(1);

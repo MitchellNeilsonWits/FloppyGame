@@ -98,7 +98,7 @@ class FinaleLevel extends Level {
 
     add_platform() {
         // this.platform
-        console.log(this.platform_mesh);
+        // console.log(this.platform_mesh);
         const platform = new FinalePlatform(this.character_controller, this.platform_mesh, this);
         this.platform = platform;
         this._ground_colliders.push(platform.collider);
@@ -129,7 +129,7 @@ class FinaleLevel extends Level {
     }
 
     update_lights() {
-        console.log(this.lights);
+        // console.log(this.lights);
         if (this.time_passed >= 2) {
             this.lights[1].intensity = this.light_on;
         }

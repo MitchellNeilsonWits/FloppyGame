@@ -10,7 +10,7 @@ class FinalePlatform extends Object3D {
         super();
         this.controls = controls;
         this.platform = platform;
-        console.log("LEVEL IN PORTAL:",level)
+        // console.log("LEVEL IN PORTAL:",level)
         this.level_controller = level.level_controller;
 
         this.initPhysic();

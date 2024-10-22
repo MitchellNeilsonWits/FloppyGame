@@ -127,7 +127,7 @@ class Timer {
     change_active_platform(new_platform, next_platform) {
         this.next.innerHTML = next_platform;
         
-        console.log("CHANGE TO ",new_platform, next_platform);
+        // console.log("CHANGE TO ",new_platform, next_platform);
 
         if (new_platform === "strength") {
             this.active.innerHTML = "Strength";

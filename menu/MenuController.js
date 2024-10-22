@@ -89,17 +89,17 @@ class MenuController {
 
     // Placeholder methods for buttons
     continue_game() {
-        console.log('Continuing the game...');
+        // console.log('Continuing the game...');
         this.hide_menu(this._pointer_lock_target);
     }
 
     restart_level() {
-        console.log('Restarting the level...');
+        // console.log('Restarting the level...');
         this.handle_restart_level();
     }
 
     exit_to_lobby() {
-        console.log('Exiting to the lobby...');
+        // console.log('Exiting to the lobby...');
     }
 
     show_menu() {

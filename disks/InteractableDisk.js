@@ -29,7 +29,7 @@ class InteractableDisk extends interactableObject {
         // action.crossFadeFrom(fade_from, 0.1, true);
         
         const currently_loaded_disk = controls.power_controller.get_loaded_disk();
-        console.log("after check, the currently loaded disk is",currently_loaded_disk);
+        // console.log("after check, the currently loaded disk is",currently_loaded_disk);
         // if (currently_loaded_disk) {
             // currently_loaded_disk.interactable_object.end_interaction(controls, currently_loaded_disk, level);
         controls._holding_disk = currently_loaded_disk;//object_to_use; // Swap the old disk to be the new one
@@ -62,7 +62,7 @@ class InteractableDisk extends interactableObject {
 
             addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
-                console.log("currently loading:",object_to_use);
+                // console.log("currently loading:",object_to_use);
                 controls.skin_controller.change_skin(object_to_use.power);
                 e.action.stop(); // stop the animation
                 if (currently_loaded_disk) {
@@ -87,7 +87,7 @@ class InteractableDisk extends interactableObject {
             action.clampWhenFinished = true;
             action.setEffectiveTimeScale(1.0);
             action.setEffectiveWeight(200.0);
-            console.log(currently_loaded_disk);
+            // console.log(currently_loaded_disk);
 
             // SOUND.PLAY()
             const audioListener = new THREE.AudioListener();
@@ -104,7 +104,7 @@ class InteractableDisk extends interactableObject {
 
             addOneTimeEventListener(controls._mixer, 'finished', (e) => {
                 controls.power_controller.set_loaded_disk(object_to_use); // Change the disk and power of our character                       
-                console.log("currently loading:",object_to_use);
+                // console.log("currently loading:",object_to_use);
                 controls.skin_controller.change_skin(object_to_use.power);
                 e.action.stop(); // stop the animation
                 if (currently_loaded_disk) {
@@ -159,7 +159,7 @@ class InteractableDisk extends interactableObject {
             load_disk_sound.play();
         });
         
-        console.log("starting interaction, with this=",this);
+        // console.log("starting interaction, with this=",this);
         if (this._disk_action) {
             this._disk_action.stop();
         }
@@ -205,7 +205,7 @@ class InteractableDisk extends interactableObject {
         controls._holding_disk = object_interacted_with;
         hud.update_holding_disk(object_interacted_with.power);
 
-        console.log(object_interacted_with)
+        // console.log(object_interacted_with)
         const disk_color = object_interacted_with.object._color; 
         controls._target.children[0].children[0].children[2].material.emissive = new THREE.Color(disk_color.r,disk_color.g,disk_color.b);
         controls._target.children[0].children[0].children[2].material.emissiveIntensity = 0.15;
@@ -217,7 +217,7 @@ class InteractableDisk extends interactableObject {
             this._disk_action.stop();
         }
         
-        console.log("drop disk:",object_to_drop);
+        // console.log("drop disk:",object_to_drop);
         
         // SOUND.PLAY()
         const audioListener = new THREE.AudioListener();

@@ -234,7 +234,7 @@ class HUD {
     }
 
     update() {
-        console.log(this);
+        // console.log(this);
         this.clear_powers();
         if (!this.loaded_disk) {
             this.loaded.src = 'hud/disk_none.png'

@@ -10,7 +10,7 @@ class Lever extends Object3D {
 
   constructor(position, rotation, gate, level) {
     super();
-    console.log(position);
+    // console.log(position);
     this.position.copy(position);
     this.lever_on = false;
     this.lever_busy_changing = false;
@@ -32,7 +32,7 @@ class Lever extends Object3D {
 
   toggle_lever_on() {
     if (!this.lever_busy_changing) {
-      console.log("toggled lever")
+      // console.log("toggled lever")
       this.lever_on = !this.lever_on;
       if (this.lever_on) {
         this.remove_gate_from_level();
@@ -40,18 +40,18 @@ class Lever extends Object3D {
         this.add_gate_to_level();
       }
     } else {
-      console.log("BUSY!")
+      // console.log("BUSY!")
     }
   }
 
   async set_lever() {
     const gltf = await (new GLTFLoader()).loadAsync("../models/lever2.glb")
     .then((gltf) => {
-        console.log(gltf.scene.children);
+        // console.log(gltf.scene.children);
         
         this._lever_handle = gltf.scene.children[0];
         this._lever_base = gltf.scene.children[1];
-        console.log(this._lever_base, this._lever_handle);
+        // console.log(this._lever_base, this._lever_handle);
         // this._pushbox_mesh = gltf.scene.children[0];
         
         this.initPhysic();
@@ -88,7 +88,7 @@ class Lever extends Object3D {
   }
 
   updateVisual() {
-    console.log(this._lever_handle.rotation);
+    // console.log(this._lever_handle.rotation);
     // this._lever_handle.rotation.y = 0.6698107603586773;
     if (this.lever_on && this._lever_handle.rotation.z < 0.8698107603586773) {
         // this.current_lever_rotation -= Math.PI/12; 

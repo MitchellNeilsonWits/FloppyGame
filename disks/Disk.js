@@ -22,7 +22,7 @@ class Disk extends Object3D {
             this._color = new THREE.Color(disk_color.r, disk_color.g, disk_color.b);
 
 
-            console.log(gltf.scene.children);
+            // console.log(gltf.scene.children);
             this._disk_mesh = gltf.scene.children[0];
 
             // Extract the skinned material so we can set the colour directly
@@ -30,7 +30,7 @@ class Disk extends Object3D {
             this._colour_ring.material.emissive = this._color;
             
 
-            console.log(this._disk_mesh);
+            // console.log(this._disk_mesh);
             this._disk_mesh.scale.setScalar(0.2);
             this._disk_mesh.position.x = position.x;
             this._disk_mesh.position.y = position.y;
@@ -39,7 +39,7 @@ class Disk extends Object3D {
             
             this._manager = new THREE.LoadingManager();
             this._manager.onLoad = () => {
-                console.log(this._animation.action)
+                // console.log(this._animation.action)
                 this._animation.action.time = 0.0;
                 this._animation.action.enabled = true;
                 this._animation.action.setEffectiveTimeScale(0.5);

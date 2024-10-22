@@ -95,7 +95,7 @@ class Level {
         character_controller._target.position.z = player_start_pos.z;
         character_controller._target.quaternion.rotateTowards(player_start_quaternion, 1);
 
-        console.log("PLAYER ROT",player_start_rotation);
+        // console.log("PLAYER ROT",player_start_rotation);
         camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(player_start_rotation)));
         
         
@@ -119,7 +119,7 @@ class Level {
     
     async create_portal(level, portal_object, character_controller) {
         if (portal_object) {
-            console.log(portal_object);
+            // console.log(portal_object);
             
             const portal = new Portal(character_controller, portal_object, level);
             level.portal = portal;
@@ -135,7 +135,7 @@ class Level {
     async create_npc(level, npc_mesh) {
         if (npc_mesh) {
             // level._npc = 
-            console.log(npc_mesh);
+            // console.log(npc_mesh);
 
             const npc = new NPC(npc_mesh.position, npc_mesh.rotation);
             await npc.set_npc();
@@ -148,7 +148,7 @@ class Level {
                 name: `npc`
             }
 
-            console.log("lines to be read:",level.npc_lines);
+            // console.log("lines to be read:",level.npc_lines);
 
             level._interactable_objects[`npc`]['interactable_object'] = new InteractableNPC(`Press E to interact with N.P.C`, level._interactable_objects[`npc`].object, level.npc_lines);
             level.non_player_colliders.push(npc.collider);
@@ -233,7 +233,7 @@ class Level {
     async _create_lever_gates(level, lever_gates) {
         level._lever_gates = {};
 
-        console.log(lever_gates);
+        // console.log(lever_gates);
 
         for (const key of Object.keys(lever_gates)) {
             const lever_gate_name = lever_gates[key].name;
@@ -263,7 +263,7 @@ class Level {
 
             // CREATE THE LEVER
             const l_object = lever_gates[key].lever;
-            console.log(lever_gates[key]);
+            // console.log(lever_gates[key]);
             const lever_object = new Lever(l_object.position, l_object.rotation, gate_object, level._level);
             await lever_object.set_lever();
             const lever_interactable = new InteractableLever("Press E to pull lever",lever_object,1.5,"lever");

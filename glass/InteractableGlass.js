@@ -17,7 +17,7 @@ class InteractableGlass extends interactableObject {
     start_interaction(controls, object_interacted_with, level) {
         const breaker = new ConvexObjectBreaker();
         const glassMesh = object_interacted_with.object;
-        console.log(glassMesh);
+        // console.log(glassMesh);
 
         if (glassMesh) {
             if (!glassMesh.broken) {
@@ -80,7 +80,7 @@ class InteractableGlass extends interactableObject {
             // Clear interaction message after break
             this.hideInteractMessage();
         } else {
-            console.log("Glass mesh not found");
+            // console.log("Glass mesh not found");
         }
     }
 
