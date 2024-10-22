@@ -319,9 +319,9 @@ class HUD {
     }
 
     remove_hud() {
-        console.log("REMOVE HUD 1");
+        // console.log("REMOVE HUD 1");
         if (document.getElementById('hud-root')) {
-            console.log("REMOVE HUD 2");
+            // console.log("REMOVE HUD 2");
             document.body.removeChild(this.hud_root);
         }
     }

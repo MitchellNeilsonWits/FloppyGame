@@ -60,7 +60,7 @@ class Gate extends Object3D {
             }
             
             const loader = new GLTFLoader(this._manager);
-            loader.setPath('../models/');
+            loader.setPath('models/');
             loader.load('force_field_fadeout.glb', (a) => {_on_load_main('wave', a);}); // idle animation
             
             // this._light = new THREE.PointLight(this._color, 5, 0);

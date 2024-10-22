@@ -61,7 +61,7 @@ class Disk extends Object3D {
             }
             
             const loader = new GLTFLoader(this._manager);
-            loader.setPath('../models/');
+            loader.setPath('models/');
             loader.load('disk_org_anim.glb', (a) => {_on_load('floating', a);}); // idle animation
 
             this._light = new THREE.PointLight(this._color, 5, 0);

@@ -195,54 +195,54 @@ class PlacementMattersLevel extends Level {
                 time_added: 15,
                 set_time: false
             },
-            // {
-            //     id: 1,
-            //     power: "flight",
-            //     time_added: 75,
-            //     set_time: true
-            // },
-            // {
-            //     id: 2,
-            //     power: "strength",
-            //     time_added: 25,
-            //     set_time: true
-            // },
-            // {
-            //     id: 3,
-            //     power: "flight",
-            //     time_added: 10,
-            //     set_time: false
-            // },
-            // {
-            //     id: 4,
-            //     power: "shrink",
-            //     time_added: 35,
-            //     set_time: false
-            // },
-            // {
-            //     id: 5,
-            //     power: "strength",
-            //     time_added: 35,
-            //     set_time: false
-            // },
-            // {
-            //     id: 6,
-            //     power: "shrink",
-            //     time_added: 10,
-            //     set_time: false
-            // },
-            // {
-            //     id: 6,
-            //     power: "flight",
-            //     time_added: 25,
-            //     set_time: true
-            // },
-            // {
-            //     id: 6,
-            //     power: "strength",
-            //     time_added: 0,
-            //     set_time: false
-            // },
+            {
+                id: 1,
+                power: "flight",
+                time_added: 75,
+                set_time: true
+            },
+            {
+                id: 2,
+                power: "strength",
+                time_added: 25,
+                set_time: true
+            },
+            {
+                id: 3,
+                power: "flight",
+                time_added: 10,
+                set_time: false
+            },
+            {
+                id: 4,
+                power: "shrink",
+                time_added: 35,
+                set_time: false
+            },
+            {
+                id: 5,
+                power: "strength",
+                time_added: 35,
+                set_time: false
+            },
+            {
+                id: 6,
+                power: "shrink",
+                time_added: 10,
+                set_time: false
+            },
+            {
+                id: 6,
+                power: "flight",
+                time_added: 25,
+                set_time: true
+            },
+            {
+                id: 6,
+                power: "strength",
+                time_added: 0,
+                set_time: false
+            },
 
         ]
 

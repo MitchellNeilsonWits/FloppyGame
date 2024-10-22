@@ -35,11 +35,23 @@ class LobbyLevel extends Level {
 
         // SET NPC LINES
         this.npc_lines = [
-            "Welcome Floopy!",
-            "I am the tutorial bot you can ask me questions by pressing 'E'!",
-            "This is the lobby, you can access all the levels from here!",
-            "Look around and explore!",
-            "I will see you around!"
+            "Welcome Floppy!",
+            "My name is N.P.C. I am here to guide you around simulations. You can talk to me by pressing 'E'!",
+            "You might wonder why you are here, and your purpose...",
+            "You are a robot designed with a very specific ability",
+            "Notice the Floppy Disk Reader on your back: this reader is internally wired to give you impressive powers",
+            "When you load a Floppy Disk of a specific type, the reader is able to format the contents to binary, and installs drivers that make you capable of extraordinary things!",
+            "So far, we have designed 3 disks: strength, flight and shrink",
+            "To pick up a disk, walk close to one, and press E. You can see which disk you are holding at the bottom right of your screen",
+            "Then, whilst holding the disk, press Q to load it into your Reader. This will activate your power. Note that it will install the drivers, so the first time you load it, your GPU may freeze for a second or two",
+            "You can see the currently loaded disk at the bottom left of the screen",
+            "You can hold a separate disk while another one is loaded in your reader. This is important for solving the puzzles you are soon to face",
+            "If you are holding a disk while one is loaded, pressing Q will swap the disks",
+            "To drop a disk in your hands, simply press F. To unload a disk, press Z",
+            "This is the Lobby Mainframe, you can access all the levels from here!",
+            "We have placed the disks here for you to test out",
+            "I will see you around! Look for me at the start of each level for some insight into the level",
+            "You will need to solve each level to prove that you can evolve and survive in the real world. Good luck Floppy!"
         ]
         
 

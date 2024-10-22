@@ -19,12 +19,13 @@ import CharacterSkinController from './CharacterSkinController';
 class CharacterController {
     constructor(params) {
         this._init(params);
-        
     }
 
     /* Initialization function */
     _init(params) {
+        
         // SET IMPORTANT VARIABLES
+        this.character_is_loaded = false;
         this._currently_reading_npc = false;
         this._currently_reading_npc = false;
         this._params = params;
@@ -64,7 +65,7 @@ class CharacterController {
     async _load_models(_callback) {
         // LOAD INITIAL CHARACTER MODEL
         const gltfLoader = new GLTFLoader();
-        gltfLoader.setPath('../models/')
+        gltfLoader.setPath('models/')
 
         await gltfLoader.loadAsync('floppy_with_reader_remastered_optimized.glb').then((gltf) => {  
             // console.log(this);
@@ -147,7 +148,7 @@ class CharacterController {
 
             // LOADER WITH MANAGER AS MEDIATOR
             const loader = new GLTFLoader(this._manager);
-            loader.setPath('../models/');
+            loader.setPath('models/');
             loader.load('floppy_with_reader_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
             loader.load('floppy_with_reader_animated_v4.glb', (a) => {_on_load('walk_not_turning', a);}); // walk animation
             loader.load('floppy_with_reader_turning_left.glb', (a) => {_on_load('walk_turning_left', a);}); // turn left animation
@@ -169,6 +170,7 @@ class CharacterController {
 
             // console.log("loaded all models")
             _callback();
+            this.character_is_loaded = true;
             return "done";
         })
 
@@ -680,6 +682,9 @@ class CharacterController {
     /* Function to update states, movement information and animations */
     update(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         if (!this._target) {
+            return;
+        }
+        if (!this.character_is_loaded) {
             return;
         }
 

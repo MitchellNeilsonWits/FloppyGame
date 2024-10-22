@@ -100,6 +100,10 @@ class MenuController {
 
     exit_to_lobby() {
         // console.log('Exiting to the lobby...');
+        if (this.exit_function) {
+            this.hide_menu();
+            this.exit_function();
+        }
     }
 
     show_menu() {
@@ -171,6 +175,10 @@ class MenuController {
     set_restart_level_function(func) {
         // this.restart_confirm_yes.onclick = func;
         this.restart_button_function = func.bind(this);
+    }
+
+    set_exit_function(func) {
+        this.exit_function = func.bind(this);
     }
 }
 

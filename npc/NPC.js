@@ -100,7 +100,7 @@ class NPC extends Object3D {
         }
 
         const loader = new GLTFLoader(this._manager);
-        loader.setPath('../models/');
+        loader.setPath('models/');
         loader.load('npc_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
         loader.load('npc_wave.glb', (a) => {_on_load('wave', a);}); // idle animation
 

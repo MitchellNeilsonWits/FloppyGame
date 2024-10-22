@@ -58,6 +58,7 @@ class LevelController {
 
         this.reset_current_level_bound = this.reset_current_level.bind(this);
         this._menu.set_restart_level_function(this.reset_current_level_bound);
+        this._menu.set_exit_function(() => {this.change_level(0)});
 
         this.change_level = this.change_level_unbound.bind(this);
 
@@ -145,11 +146,11 @@ class LevelController {
         if (this._level) {
             this.reset_current_level();
             const prev_level = this._level;
-            console.log(this);
+            // console.log(this);
             // need to clear all colliders apart from character
             if (prev_level.non_player_colliders) {
                 prev_level.non_player_colliders.forEach(collider => {
-                    console.log(collider);
+                    // console.log(collider);
                     if (collider) {
                         physic.removeCollider(collider);
                     }

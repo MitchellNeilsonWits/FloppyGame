@@ -62,17 +62,27 @@ class GameController {
         })
     }
 
+    resizeCanvas() {
+        // console.log('resize');
+        const camera = this._camera._camera;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        this._threejs.setSize(window.innerWidth, window.innerHeight);
+    }
+
     /* Init function */
     async _init() {
         // STATS
-        this.stats = new Stats();
-        document.body.appendChild(this.stats.dom);
+        // this.stats = new Stats();
+        // document.body.appendChild(this.stats.dom);
 
         // THREE JS RENDERER
         this._threejs = new THREE.WebGLRenderer({antialias: true});
         this._threejs.setSize(window.innerWidth, window.innerHeight);
         // console.log(window.innerHeight);
+        window.addEventListener('resize', this.resizeCanvas.bind(this), false);
         document.body.appendChild(this._threejs.domElement);
+
         // this._threejs.shadowMap.enabled = true;
         // this._threejs.shadowMap.needsUpdate = true;
         // setTimeout(() => {
@@ -134,6 +144,7 @@ class GameController {
         }
 
         this._level_controller = new LevelController(params);
+
     }
 
     /* Request animation frame function */
@@ -155,7 +166,7 @@ class GameController {
 
     /* Step to update important rendering information */
     _step(time_elapsed) {
-        this.stats.update();
+        // this.stats.update();
         if (this._playing_game) {
             // CONVERT TIME TO SECONDS
             const time_elapsed_in_seconds = time_elapsed * 0.001;
