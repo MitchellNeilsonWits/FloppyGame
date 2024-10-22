@@ -35,11 +35,11 @@ class LobbyLevel extends Level {
 
         // SET NPC LINES
         this.npc_lines = [
-            "PEE PEE",
-            "POO POO",
-            "YOU SMELL LIKE",
-            "DOO DOO",
-            "LMAO NERD GET WRECKED"
+            "Welcome Floopy!",
+            "I am the tutorial bot you can ask me questions by pressing 'E'!",
+            "This is the lobby, you can access all the levels from here!",
+            "Look around and explore!",
+            "I will see you around!"
         ]
         
 
