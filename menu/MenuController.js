@@ -4,6 +4,7 @@ class MenuController {
     constructor(pointer_lock_target) {
         this._init();
         this._pointer_lock_target = pointer_lock_target;
+        this.menu_is_active = true;
         this.restart_button_function = () => {};
     }
 
@@ -107,15 +108,17 @@ class MenuController {
     }
 
     show_menu() {
-        document.exitPointerLock();
-        document.getElementsByTagName('body')[0].appendChild(this._components);
-        
-        // Trigger the animation
-        const menu = document.getElementById('menu_root');
-        menu.style.opacity = '0'; // Ensure it's hidden at first
-        setTimeout(() => {
-            menu.style.opacity = '1'; // Animate in
-        }, 100); // Small delay to ensure DOM update
+        if (this.menu_is_active) {
+            document.exitPointerLock();
+            document.getElementsByTagName('body')[0].appendChild(this._components);
+            
+            // Trigger the animation
+            const menu = document.getElementById('menu_root');
+            menu.style.opacity = '0'; // Ensure it's hidden at first
+            setTimeout(() => {
+                menu.style.opacity = '1'; // Animate in
+            }, 100); // Small delay to ensure DOM update
+        }
     }
     
 
@@ -179,6 +182,14 @@ class MenuController {
 
     set_exit_function(func) {
         this.exit_function = func.bind(this);
+    }
+
+    disable_menu() {
+        this.menu_is_active = false;
+    }
+
+    enable_menu() {
+        this.menu_is_active = true;
     }
 }
 

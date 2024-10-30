@@ -103,7 +103,7 @@ class Timer {
         this.next = pmlActiveNextPlatform;
 
 
-        this.max_time = 20;
+        this.max_time = 100;
         this.max_width = 300;
     }
 

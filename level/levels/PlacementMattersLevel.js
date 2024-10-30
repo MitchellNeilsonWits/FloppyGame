@@ -10,6 +10,7 @@ import timer from "../../timer/Timer";
 import physic from "../../engine/physic";
 import Platform from "../../platform/Platform";
 import music_controller from '../../music/MusicController';
+import addOneTimeEventListener from "../../common/SingleUseListener";
 
 class PlacementMattersLevel extends Level {
 
@@ -158,7 +159,7 @@ class PlacementMattersLevel extends Level {
         }
     
         // console.log(this.button);
-        this.time_left = 20;
+        this.time_left = 35;
         this.current_power_order_index = 0;
         this.current_active_power = null;
         // console.log("------------------------------------------");
@@ -266,19 +267,22 @@ class PlacementMattersLevel extends Level {
         this.game_completed.style.zIndex = '4';
         this.game_completed.style.display = 'flex';
         this.game_completed.style.flexDirection = 'column';
-        this.game_completed.innerHTML = '<p>Congratulations, Floppy! You have completed your challenges!</p> <p>Press any key to go continue...</p>';
+        this.game_completed.innerHTML = '<p>Congratulations, Floppy! You have completed your challenges!</p> <p>Press any E to continue...</p>';
     }
 
-    end_game_unbound() {
+    end_game_unbound(event) {
         // console.log("next level");
-        this.hide_end_screen();
+        if (event.key === 'e' || event.key === 'E') {
+            this.hide_end_screen();
+            this.level_controller.change_level(this.level_controller._current_level + 1);
+        }
     }
 
     show_end_screen() {
         this.message_shown = true;
         document.body.appendChild(this.game_completed);
 
-        window.addEventListener('keypress', this.end_game)
+        window.addEventListener('keypress', this.end_game);
     }
 
     hide_end_screen() {

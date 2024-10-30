@@ -180,7 +180,7 @@ class LevelController {
         this._controls.initialize_player(() => {
 
             // Render the scene
-            this.change_level(0);
+            this.change_level(4);
             // this.change_level(0);
         
         });
@@ -279,32 +279,38 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
+                this._menu.enable_menu();
                 hud.set_level_name('Lobby');
                 this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader, this);
                 break;
         
             case 1:
+                this._menu.enable_menu();
                 hud.set_level_name('Tutorial');
                 this._level = new TutorialLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 2:
+                this._menu.enable_menu();
                 hud.set_level_name('Into the Wild');
                 this._level = new IntoTheWildLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 3:
+                this._menu.enable_menu();
                 hud.set_level_name('Floating Labyrinth');
                 this._level = new MitchLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
             
             case 4:
+                this._menu.enable_menu();
                 hud.set_level_name('Placement Matters');
                 this._level = new PlacementMattersLevel(this._scene, this, this.audioListener, this.audioLoader);
 
                 break;
             
             case 5:
+                this._menu.disable_menu();
                 hud.set_level_name('Finale');
                 this._level = new FinaleLevel(this._scene, this, this.audioListener, this.audioLoader, this._controls);
 
