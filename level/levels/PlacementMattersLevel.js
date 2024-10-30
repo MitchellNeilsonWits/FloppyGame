@@ -107,6 +107,7 @@ class PlacementMattersLevel extends Level {
         this.current_power_order_index = 0;
         this.time_left = 35;
         this.button.pressed = false;
+        this.changed = true;
         timer.hide_timer();
         this.strength_light.intensity = this.original_light_level;
         this.flight_light.intensity = this.original_light_level;
@@ -235,13 +236,13 @@ class PlacementMattersLevel extends Level {
                 set_time: false
             },
             {
-                id: 6,
+                id: 7,
                 power: "flight",
                 time_added: 25,
                 set_time: true
             },
             {
-                id: 6,
+                id: 8,
                 power: "strength",
                 time_added: 0,
                 set_time: false

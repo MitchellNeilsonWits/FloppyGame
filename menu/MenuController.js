@@ -1,10 +1,13 @@
 import './Menu.css';
 
 class MenuController {
-    constructor(pointer_lock_target) {
+    constructor(pointer_lock_target, mouse_listener, camera) {
         this._init();
         this._pointer_lock_target = pointer_lock_target;
         this.menu_is_active = true;
+        this.mouse_listener = mouse_listener;
+        this.camera = camera;
+
         this.restart_button_function = () => {};
     }
 
@@ -43,6 +46,7 @@ class MenuController {
         sensitivity_value.className='sensitivity_value';
         sensitivity_value.textContent = sensitivity_slider.value;
         sensitivity_slider.oninput = () => {
+            this.change_sensitivity(sensitivity_slider.value);
             sensitivity_value.textContent = sensitivity_slider.value;
         };
         sensitivity_container.appendChild(sensitivity_label);
@@ -56,14 +60,15 @@ class MenuController {
         var fov_slider = document.createElement('input');
         fov_slider.type = 'range';
         fov_slider.id = 'fov_slider';
-        fov_slider.min = '60';
-        fov_slider.max = '120';
-        fov_slider.value = '90';
+        fov_slider.min = '30';
+        fov_slider.max = '110';
+        fov_slider.value = '70';
         fov_slider.ondrag = 'none';
         var fov_value = document.createElement('span');
         fov_value.className='fov_value';
         fov_value.textContent = fov_slider.value;
         fov_slider.oninput = () => {
+            this.change_fov(fov_slider.value);
             fov_value.textContent = fov_slider.value;
         };
         fov_container.appendChild(fov_label);
@@ -183,6 +188,29 @@ class MenuController {
     set_exit_function(func) {
         this.exit_function = func.bind(this);
     }
+
+
+    change_sensitivity(val) {
+        // middle is 50%
+        var change_val; 
+        if (val == 50) {
+            change_val = 1
+        } 
+        if (val < 50) {
+            change_val = 1 - (50 - val)/50
+        }
+        if (val > 50) {
+            change_val = 1 + (val-50)/50
+        }
+        console.log("CHANGED TO ",change_val);
+        this.mouse_listener.change_update_speed(change_val);
+    }
+
+    change_fov(val) {
+        // middle is 50%
+        this.camera.change_camera_fov(val);
+    }
+
 
     disable_menu() {
         this.menu_is_active = false;

@@ -81,6 +81,11 @@ class CameraController {
         return false;
     }
 
+    change_camera_fov(val) {
+        this._camera.fov = val;
+        this._camera.updateProjectionMatrix();
+    }
+
     
 }
 

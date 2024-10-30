@@ -67,7 +67,7 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('models/')
 
-        await gltfLoader.loadAsync('floppy_with_reader_remastered_optimized.glb').then((gltf) => {  
+        await gltfLoader.loadAsync('floppy_with_reader_remastered_optimized.glb').then(async (gltf) => {  
             // console.log(this);
             // SET SCALE OF CHARACTER
             // gltf.scene.scale.setScalar(0.002);
@@ -149,24 +149,24 @@ class CharacterController {
             // LOADER WITH MANAGER AS MEDIATOR
             const loader = new GLTFLoader(this._manager);
             loader.setPath('models/');
-            loader.load('floppy_with_reader_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
-            loader.load('floppy_with_reader_animated_v4.glb', (a) => {_on_load('walk_not_turning', a);}); // walk animation
-            loader.load('floppy_with_reader_turning_left.glb', (a) => {_on_load('walk_turning_left', a);}); // turn left animation
-            loader.load('floppy_with_reader_turning_right.glb', (a) => {_on_load('walk_turning_right', a);}); // turn right animation
-            loader.load('floppy_with_reader_running_v2.glb', (a) => {_on_load('run_not_turning', a);}); // turn right animation
-            loader.load('floppy_with_reader_running_turning_left.glb', (a) => {_on_load('run_turning_left', a);}); // turn left animation
-            loader.load('floppy_with_reader_running_turning_right.glb', (a) => {_on_load('run_turning_right', a);}); // turn right animation
-            loader.load('floppy_with_reader_pick_up_v2.glb', (a) => {_on_load('pick_up', a);}); // load the disk animation
-            loader.load('floppy_with_reader_load_disk_v4.glb', (a) => {_on_load('load_disk', a);}); // load the disk animation
-            loader.load('floppy_with_reader_swap_disks.glb', (a) => {_on_load('swap_disks', a);}); // load the disk animation
-            loader.load('floppy_with_reader_holding.glb', (a) => {_on_load('holding_disk', a);}); // load the disk animation
-            loader.load('floppy_with_reader_jump.glb', (a) => {_on_load('jump', a);}); // load the disk animation
-            loader.load('floppy_with_reader_pushing.glb', (a) => {_on_load('pushing', a);}); // load the disk animation
-            loader.load('floppy_with_reader_falling_v2.glb', (a) => {_on_load('falling', a);}); // load the disk animation
-            loader.load('floppy_with_reader_flying_idle.glb', (a) => {_on_load('flying_idle', a);}); // load the disk animation
-            loader.load('floppy_with_reader_flying_forward.glb', (a) => {_on_load('flying_forward', a);}); // load the disk animation
-            loader.load('floppy_with_reader_flying_forward_fast.glb', (a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
-            loader.load('floppy_with_reader_punch.glb', (a) => {_on_load('punch', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_idle.glb').then((a) => {_on_load('idle', a);}); // idle animation
+            await loader.loadAsync('floppy_with_reader_animated_v4.glb').then((a) => {_on_load('walk_not_turning', a);}); // walk animation
+            await loader.loadAsync('floppy_with_reader_turning_left.glb').then((a) => {_on_load('walk_turning_left', a);}); // turn left animation
+            await loader.loadAsync('floppy_with_reader_turning_right.glb').then((a) => {_on_load('walk_turning_right', a);}); // turn right animation
+            await loader.loadAsync('floppy_with_reader_running_v2.glb').then((a) => {_on_load('run_not_turning', a);}); // turn right animation
+            await loader.loadAsync('floppy_with_reader_running_turning_left.glb').then((a) => {_on_load('run_turning_left', a);}); // turn left animation
+            await loader.loadAsync('floppy_with_reader_running_turning_right.glb').then((a) => {_on_load('run_turning_right', a);}); // turn right animation
+            await loader.loadAsync('floppy_with_reader_pick_up_v2.glb').then((a) => {_on_load('pick_up', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_load_disk_v4.glb').then((a) => {_on_load('load_disk', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_swap_disks.glb').then((a) => {_on_load('swap_disks', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_holding.glb').then((a) => {_on_load('holding_disk', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_jump.glb').then((a) => {_on_load('jump', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_pushing.glb').then((a) => {_on_load('pushing', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_falling_v2.glb').then((a) => {_on_load('falling', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_flying_idle.glb').then((a) => {_on_load('flying_idle', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_flying_forward.glb').then((a) => {_on_load('flying_forward', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_flying_forward_fast.glb').then((a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_punch.glb').then((a) => {_on_load('punch', a);}); // load the disk animation
 
             // console.log("loaded all models")
             _callback();
@@ -263,13 +263,14 @@ class CharacterController {
                 -- if positive (with some logical leeway to avoid "glitching" animation) then turn right
                 -- same for negative but we turn left
             */
-            if (mouse_movement_x >= 2) {
-                return "turning_right"
-            } else if (mouse_movement_x <= -2) {
-                return "turning_left"
-            } else {
-                return "not_turning"
-            }
+            // if (mouse_movement_x >= 2) {
+            //     return "turning_right"
+            // } else if (mouse_movement_x <= -2) {
+            //     return "turning_left"
+            // } else {
+            //     return "not_turning"
+            // }
+            return "not_turning"
         }
     }
 

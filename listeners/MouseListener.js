@@ -1,11 +1,12 @@
 class MouseListener {
     constructor() {
         this._init();
+        this.update_speed = 1;
     }
 
     _update_mouse(event) {
-        this._mouse_movement_x = event.movementX;
-        this._mouse_movement_y = event.movementY;
+        this._mouse_movement_x = event.movementX*this.update_speed;
+        this._mouse_movement_y = event.movementY*this.update_speed;
     }
 
     _update_zoom(event) {
@@ -44,6 +45,10 @@ class MouseListener {
     remove_listener() {
         document.removeEventListener('mousemove',this._mouse_move_handler, true);
         document.removeEventListener('wheel',this._update_zoom_handler, true);
+    }
+
+    change_update_speed(val) {
+        this.update_speed = val;
     }
 }
 

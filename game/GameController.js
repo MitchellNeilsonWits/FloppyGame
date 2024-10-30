@@ -92,9 +92,6 @@ class GameController {
             
         // },10000)
 
-        // PAUSE MENU
-        this._menu = new MenuController(this._threejs.domElement);
-
         // MOUSE LISTENER
         this._mouse_listener = new MouseListener();
 
@@ -107,6 +104,9 @@ class GameController {
         // CAMERA
         this._camera = new CameraController(this._threejs);
         this._scene.add(this._camera.get_pivot());
+
+        // PAUSE MENU
+        this._menu = new MenuController(this._threejs.domElement, this._mouse_listener, this._camera);
 
         // INITIALIZE REQUEST ANIMATION FRAME VARIABLE
         this._previousRAF = null;
