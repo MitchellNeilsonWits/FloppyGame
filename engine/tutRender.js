@@ -15,7 +15,7 @@ class TutRender {
         this.tutorialMessage.style.top = '50%';
         this.tutorialMessage.style.left = '50%';
         this.tutorialMessage.style.transform = 'translate(-50%, -50%)';
-        this.tutorialMessage.style.padding = '20px';
+        this.tutorialMessage.style.padding = '20px'; 
         this.tutorialMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         this.tutorialMessage.style.color = 'white';
         this.tutorialMessage.style.fontSize = '24px';

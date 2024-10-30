@@ -5,7 +5,7 @@ import TutRender from '../../engine/tutRender';
 import FootstepSound from '../../engine/footSteps';
 import LevelSelectRender from '../../engine/levelSelector';
 import music_controller from '../../music/MusicController';
-
+import meme from '../../engine/meme.js';
 
 /**
  * Thank you to the following artists whose work was used in this project:
@@ -84,6 +84,8 @@ class LobbyLevel extends Level {
         this._levelSelectRenderer = new LevelSelectRender(character_controller, this._scene, (levelNumber) => {
             this.change_level(levelNumber);
         });
+
+        this._meme = new meme(character_controller, this._scene);
         
 
         // Get the skybox
@@ -151,6 +153,10 @@ class LobbyLevel extends Level {
         //level select screen update
         if (this._levelSelectRenderer) {
             this._levelSelectRenderer.update();
+        }
+
+        if (this._meme) {
+            this._meme.update();
         }
         
 
