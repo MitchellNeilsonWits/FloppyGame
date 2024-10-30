@@ -1,0 +1,70 @@
+.main-menu-header {
+    animation: header_bob 8s linear infinite;
+}
+
+@keyframes header_bob {
+
+    0% {
+        transform: translateY(0px);
+    }
+    25% {
+        transform: translateY(6px);
+    }
+    75% {
+        transform: translateY(-6px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.main-menu-strength {
+    animation: disk_bob_strength 5s ease-in-out infinite;
+}
+
+@keyframes disk_bob_strength {
+
+    25% {
+        transform: translateY(12px);
+    }
+    75% {
+        transform: translateY(-12px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.main-menu-flight {
+    animation: disk_bob_flight 5s ease-in-out infinite;
+}
+
+@keyframes disk_bob_flight {
+
+    0% {
+        transform: translateY(12px);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+    100% {
+        transform: translateY(12px);
+    }
+}
+
+.main-menu-shrink {
+    animation: disk_bob_shrink 5s ease-in-out infinite;
+}
+
+@keyframes disk_bob_shrink {
+
+    25% {
+        transform: translateY(-12px);
+    }
+    75% {
+        transform: translateY(12px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}

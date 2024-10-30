@@ -191,6 +191,7 @@ class LevelController {
         // Set the level: add components in
         this.loading_screen.set_text("Setting up level components");
         this.loading_screen.set_progress(50);
+        this._controls._halt_movement = true;
         await this._level.set_level(this._controls, this._camera, () => {
             this.loading_screen.set_text("Rendering level");
             this.loading_screen.set_progress(70);
@@ -221,15 +222,23 @@ class LevelController {
             
             this._controls.set_level(this._level.get_level());
 
-
+            // console.log("DONE RENDERING THE SCENE!");
+        }).then(() => {
             setTimeout(() => {
                 this.loading_screen.hide_screen();
                 hud.reset_hud();
 
                 this.changing_level = false;
+                this._controls._halt_movement = false;
+                // ---------- SETUP PLAYER ----------
+                const starting_positions = this._level.get_starting_positions();
+                this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
+                this._controls._velocity = new Vector3(0,0,0);
+                this._camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(starting_positions.player_rotation)));
+                this._controls.busy_loading_disk = false;
+                // ------------------------------
             },1000);
-            // console.log("DONE RENDERING THE SCENE!");
-        });
+        })
         
         
     }

@@ -26,7 +26,7 @@ class MouseListener {
     _init() {
         this._mouse_movement_x = 0;
         this._mouse_movement_y = 0;
-        this._zoom = 3.5;
+        this._zoom = 1.5;
         this._mouse_move_handler = this._update_mouse.bind(this);
         this._update_zoom_handler = this._update_zoom.bind(this);
     }

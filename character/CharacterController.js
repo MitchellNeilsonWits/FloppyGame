@@ -27,7 +27,7 @@ class CharacterController {
         // SET IMPORTANT VARIABLES
         this.character_is_loaded = false;
         this._currently_reading_npc = false;
-        this._currently_reading_npc = false;
+        this._halt_movement = false;
         this._params = params;
         this._decceleration = new THREE.Vector3(-0.5, 0, -0.5);
         this._acceleration = new THREE.Vector3(1.0, 0, 1.0);
@@ -695,7 +695,7 @@ class CharacterController {
         }
 
         // If user is reading npc lines, don't let them move
-        if (this._currently_reading_npc) {
+        if (this._currently_reading_npc || this._halt_movement) {
             this._target.rigidBody.setGravityScale(0);
             this._target.update(0,0,0);
             return;
