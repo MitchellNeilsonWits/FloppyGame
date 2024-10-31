@@ -40,7 +40,7 @@ class ProximityScreenRenderer {
         this.interactMessage.style.color = 'white';
         this.interactMessage.style.fontSize = '16px';
         this.interactMessage.style.display = 'none'; //Want it hidden first only want to show when on platofrm
-        this.interactMessage.innerHTML = 'Press E to interact';
+        this.interactMessage.innerHTML = 'Press E to interact. Zoom out for a better view';
         document.body.appendChild(this.interactMessage);
 
         //listender for the above key and element we just kmade
@@ -86,49 +86,60 @@ class ProximityScreenRenderer {
             }
         }
     }
-    playVideo(translateAmount = 0.1) {
+    playVideo() {
         const screenMesh = this.scene.getObjectByName(this.screenName);
         
         if (screenMesh) {
             const existingMaterial = screenMesh.material;
-        
+            
             if (existingMaterial.map) {
-                existingMaterial.map.dispose();
+                existingMaterial.map.dispose();  // Free up resources for the previous map
             }
     
-            // Create the video texture
+            // Update the video texture settings
             this.videoTexture = new THREE.VideoTexture(this.video);
             this.videoTexture.minFilter = THREE.LinearFilter; 
             this.videoTexture.magFilter = THREE.LinearFilter;
             this.videoTexture.format = THREE.RGBAFormat;
     
-            // Ensure the texture wraps and stretches
-            this.videoTexture.wrapS = THREE.ClampToEdgeWrapping;
-            this.videoTexture.wrapT = THREE.ClampToEdgeWrapping;
+            // // Set texture wrapping to stretch across the whole mesh
+            // this.videoTexture.wrapS = THREE.RepeatWrapping;
+            // this.videoTexture.wrapT = THREE.RepeatWrapping;
+            // this.videoTexture.repeat.set(1, 1);  // Adjust if needed for stretching
+            // this.videoTexture.offset.set(0, 0);  // Center the texture
     
             existingMaterial.map = this.videoTexture;
             existingMaterial.needsUpdate = true;
     
-            // Apply UV transformation for 90-degree rotation and translate upwards
-            const uvAttribute = screenMesh.geometry.attributes.uv;
-            for (let i = 0; i < uvAttribute.count; i++) {
-                const u = uvAttribute.getX(i);
-                const v = uvAttribute.getY(i);
-    
-                // Rotate UVs by 90 degrees and correct the upside-down orientation
-                uvAttribute.setXY(i, v , 1 - u);  // Translate upwards by adjusting v coordinate
-            }
-            uvAttribute.needsUpdate = true;
+            // const uvAttribute = screenMesh.geometry.attributes.uv;
+            // const shiftAmount = 0.1; // Adjust this value as needed to control how far left the texture shifts
+            
+            // for (let i = 0; i < uvAttribute.count; i++) {
+            //     let u = uvAttribute.getX(i);
+            //     const v = uvAttribute.getY(i);
+                
+            //     // Shift the texture to the left by subtracting from 'u'
+            //     u -= shiftAmount;
+                
+            //     // Ensure 'u' stays within the [0,1] range to prevent wrapping issues
+            //     if (u < 0) u = 1 + u;
+                
+            //     uvAttribute.setXY(i, u, v);
+            // }
+            // uvAttribute.needsUpdate = true;
+            
     
             // Start video playback
             this.video.muted = false; 
+            this.video.volume = 0.5;
             this.video.play(); 
             this.videoPlaying = true;
-            this.hideInteractMessage(); // Hide interaction message after pressing E
+            this.hideInteractMessage();
         } else {
-            // console.log("Screen mesh not found");
+            console.log("Screen mesh not found");
         }
     }
+    
     
     
     
