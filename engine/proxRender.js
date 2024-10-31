@@ -17,7 +17,7 @@ class ProximityScreenRenderer {
 
         // Create video element
         this.video = document.createElement('video');
-        this.video.src = 'Videos/Floppy Intro - Made with Clipchamp.mp4'; 
+        this.video.src = 'assets/FloppyDogginOnOthers.mp4'; 
         this.video.loop = true; 
         this.video.muted = true; 
         this.video.crossOrigin = 'anonymous'; 
