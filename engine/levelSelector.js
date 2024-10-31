@@ -32,6 +32,7 @@ class LevelSelectRender {
                     <div id="level1" style="margin: 10px; padding: 10px;">> Level 1</div>
                     <div id="level2" style="margin: 10px; padding: 10px;">Level 2</div>
                     <div id="level3" style="margin: 10px; padding: 10px;">Level 3</div>
+                    <div id="level4" style="margin: 10px; padding: 10px;">Finale</div>
                 </div>
                 <p>Press Enter to select the level</p>
             `;
@@ -87,7 +88,7 @@ class LevelSelectRender {
     }
 
     selectNextLevel() {
-        if (this.selectedLevel < 3) {
+        if (this.selectedLevel < 4) {
             this.selectedLevel++;
             console.log(this.selectedLevel);
             this.updateLevelSelection();
@@ -99,6 +100,7 @@ class LevelSelectRender {
         document.getElementById('level1').innerHTML = 'Level 1';
         document.getElementById('level2').innerHTML = 'Level 2';
         document.getElementById('level3').innerHTML = 'Level 3';
+        document.getElementById('level4').innerHTML = 'Finale';
 
         // Highlight the selected level
         document.getElementById(`level${this.selectedLevel}`).innerHTML = `> Level ${this.selectedLevel}`;
