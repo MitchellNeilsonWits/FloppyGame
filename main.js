@@ -17,7 +17,6 @@ const load_menu = () => {
     main_menu.load_menu();
 };
 
-
 const container = document.createElement('div');
 container.style.width = '100vw';
 container.style.height = '100vh';

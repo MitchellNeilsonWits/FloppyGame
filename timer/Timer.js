@@ -1,14 +1,14 @@
 /**
- * File: Pushbox.js
+ * File: Timer.js
  * 
  * Description:
- *  Pushbox object
+ *  Timer system for the placement matters level
  */
-
 
 import './Timer.css'
 
 class Timer {
+    // Timer to setup display of the timer interface
     constructor() {
 
         // Root div
@@ -115,28 +115,30 @@ class Timer {
         this.max_width = 300;
     }
 
+    // Function to show the timer
     show_timer() {
         if (!document.getElementById('timer-root')) {
             document.body.appendChild(this.root);
         }
     }
 
+    // Function to hide the timer
     hide_timer() {
         if (document.getElementById('timer-root')) {
             document.body.removeChild(this.root);
         }
     }
 
+    // Function to update the time shown and the bar
     update_time(time_left) {
         this.time.innerText = time_left;
         this.bar.style.width = `${((time_left)/this.max_time)*this.max_width}px`
     }
 
+    // Function to change the active and next platform being shown
     change_active_platform(new_platform, next_platform) {
         this.next.innerHTML = next_platform;
         
-        // console.log("CHANGE TO ",new_platform, next_platform);
-
         if (new_platform === "strength") {
             this.active.innerHTML = "Strength";
             this.active.style.color = "rgb(255,30,86)";
@@ -148,6 +150,7 @@ class Timer {
             this.active.style.color = "rgb(229,0,255)";
         }
 
+        // Update colours for better UX
         if (next_platform === "strength") {
             this.next.innerHTML = "Strength";
             this.next.style.color = "rgb(255,30,86)";
