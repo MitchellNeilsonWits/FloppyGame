@@ -94,9 +94,9 @@ class LobbyLevel extends Level {
             this.change_level(levelNumber);
         });
 
-        // Meme video
-        this._meme = new meme(character_controller, this._scene);
+        // this._meme = new meme(character_controller, this._scene);
         
+
         // Get the skybox
         this._skybox = meshes.skybox;
 
@@ -165,10 +165,9 @@ class LobbyLevel extends Level {
             this._levelSelectRenderer.update();
         }
 
-        // Meme screen
-        if (this._meme) {
-            this._meme.update();
-        }
+        // if (this._meme) {
+        //     this._meme.update();
+        // }
         
 
         this._skybox.rotateX(Math.PI/10000);
