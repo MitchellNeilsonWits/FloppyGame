@@ -15,6 +15,12 @@ class LoadingScreen {
         this.loading_screen_root = document.createElement('div');
         this.loading_screen_root.id = 'loading_screen_root';
 
+        var floppy_img = document.createElement('img');
+        floppy_img.className = 'loading_screen_img';
+        floppy_img.src = 'loading_screen/floppy_image.png';
+
+        this.loading_screen_root.appendChild(floppy_img);
+
         this.loading_screen_text = document.createElement('h1');
         this.loading_screen_text.className = 'loading_screen_text';
         this.loading_screen_text.innerHTML = this.text;
@@ -80,5 +86,6 @@ class LoadingScreen {
         this.loading_screen_text.innerHTML = this.text;
     }
 }
+const loading_screen = new LoadingScreen();
 
-export default LoadingScreen;
+export default loading_screen;

@@ -165,9 +165,6 @@ class LobbyLevel extends Level {
             this._levelSelectRenderer.update();
         }
 
-        // if (this._meme) {
-        //     this._meme.update();
-        // }
         
 
         this._skybox.rotateX(Math.PI/10000);

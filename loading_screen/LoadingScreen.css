@@ -11,6 +11,11 @@
     left: 0;
 }
 
+.loading_screen_img {
+    width: 80px;
+    height: 80px;
+}
+
 .loading_screen_text {
     color: white;
 }

@@ -19,10 +19,11 @@ import * as THREE from 'three';
 import music_controller from "../music/MusicController";
 import FinaleLevel from "./levels/FinaleLevel";
 import FloatingLabyrinthLevel from "./levels/FloatingLabyrinthLevel";
+import loading_screen from "../loading_screen/LoadingScreen";
 
 class LevelController {
     constructor(params) {
-        this.loading_screen = new LoadingScreen();
+        this.loading_screen = loading_screen;
         this.loading_screen.set_text("Setting up parameters");
         this.loading_screen.set_progress(0);
         this.loading_screen.show_screen();

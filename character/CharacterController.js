@@ -15,6 +15,7 @@ import CharacterInteractionController from './CharacterInteractionController';
 import CharacterHeightController from './CharacterHeightController';
 import CharacterPowerController from './CharacterPowerController';
 import CharacterSkinController from './CharacterSkinController';
+import loading_screen from '../loading_screen/LoadingScreen';
 
 class CharacterController {
     constructor(params) {
@@ -123,23 +124,59 @@ class CharacterController {
             // LOADER WITH MANAGER AS MEDIATOR
             const loader = new GLTFLoader(this._manager);
             loader.setPath('models/');
+            loading_screen.set_text("Creating character: Loading idle animation");
+            loading_screen.set_progress(12);
             await loader.loadAsync('floppy_with_reader_idle.glb').then((a) => {_on_load('idle', a);}); // idle animation
+            loading_screen.set_text("Creating character: Loading walking animation");
+            loading_screen.set_progress(12);
             await loader.loadAsync('floppy_with_reader_animated_v4.glb').then((a) => {_on_load('walk_not_turning', a);}); // walk animation
+            loading_screen.set_text("Creating character: Loading turning left animation");
+            loading_screen.set_progress(14);
             await loader.loadAsync('floppy_with_reader_turning_left.glb').then((a) => {_on_load('walk_turning_left', a);}); // turn left animation
+            loading_screen.set_text("Creating character: Loading turning right animation");
+            loading_screen.set_progress(16);
             await loader.loadAsync('floppy_with_reader_turning_right.glb').then((a) => {_on_load('walk_turning_right', a);}); // turn right animation
+            loading_screen.set_text("Creating character: Loading running animation");
+            loading_screen.set_progress(18);
             await loader.loadAsync('floppy_with_reader_running_v2.glb').then((a) => {_on_load('run_not_turning', a);}); // turn right animation
+            loading_screen.set_text("Creating character: Loading running left animation");
+            loading_screen.set_progress(20);
             await loader.loadAsync('floppy_with_reader_running_turning_left.glb').then((a) => {_on_load('run_turning_left', a);}); // turn left animation
+            loading_screen.set_text("Creating character: Loading running right animation");
+            loading_screen.set_progress(22);
             await loader.loadAsync('floppy_with_reader_running_turning_right.glb').then((a) => {_on_load('run_turning_right', a);}); // turn right animation
+            loading_screen.set_text("Creating character: Loading disk pickup animation");
+            loading_screen.set_progress(24);
             await loader.loadAsync('floppy_with_reader_pick_up_v2.glb').then((a) => {_on_load('pick_up', a);}); // pickup the disk animation
+            loading_screen.set_text("Creating character: Loading disk load animation");
+            loading_screen.set_progress(26);
             await loader.loadAsync('floppy_with_reader_load_disk_v4.glb').then((a) => {_on_load('load_disk', a);}); // load the disk animation
+            loading_screen.set_text("Creating character: Loading disk swap animation");
+            loading_screen.set_progress(28);
             await loader.loadAsync('floppy_with_reader_swap_disks.glb').then((a) => {_on_load('swap_disks', a);}); // swap the disks animation
+            loading_screen.set_text("Creating character: Loading disk hold animation");
+            loading_screen.set_progress(30);
             await loader.loadAsync('floppy_with_reader_holding.glb').then((a) => {_on_load('holding_disk', a);}); // holding disk animation
+            loading_screen.set_text("Creating character: Loading jump animation");
+            loading_screen.set_progress(32);
             await loader.loadAsync('floppy_with_reader_jump.glb').then((a) => {_on_load('jump', a);}); // jump animation
+            loading_screen.set_text("Creating character: Loading pushing animation");
+            loading_screen.set_progress(34);
             await loader.loadAsync('floppy_with_reader_pushing.glb').then((a) => {_on_load('pushing', a);}); // pushing box animation
+            loading_screen.set_text("Creating character: Loading falling animation");
+            loading_screen.set_progress(36);
             await loader.loadAsync('floppy_with_reader_falling_v2.glb').then((a) => {_on_load('falling', a);}); // falling animation
+            loading_screen.set_text("Creating character: Loading flying idle animation");
+            loading_screen.set_progress(38);
             await loader.loadAsync('floppy_with_reader_flying_idle.glb').then((a) => {_on_load('flying_idle', a);}); // idle flying animation
+            loading_screen.set_text("Creating character: Loading flying forward animation");
+            loading_screen.set_progress(40);
             await loader.loadAsync('floppy_with_reader_flying_forward.glb').then((a) => {_on_load('flying_forward', a);}); // flying forward animation
+            loading_screen.set_text("Creating character: Loading flying forward fast animation");
+            loading_screen.set_progress(44);
             await loader.loadAsync('floppy_with_reader_flying_forward_fast.glb').then((a) => {_on_load('flying_forward_fast', a);}); // fast flying forward animation
+            loading_screen.set_text("Creating character: Loading punch animation");
+            loading_screen.set_progress(48);
             await loader.loadAsync('floppy_with_reader_punch.glb').then((a) => {_on_load('punch', a);}); // punch animation
 
             // console.log("loaded all models")
