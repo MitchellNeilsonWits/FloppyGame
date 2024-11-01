@@ -35,7 +35,7 @@ class FloatingLabyrinthLevel extends Level {
         ]
 
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/islands_optmized_with_clouds_renewed_v2.glb');
+        const meshes = await loadAssets('assets/floatinglabyrinthlevel.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         

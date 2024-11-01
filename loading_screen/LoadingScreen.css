@@ -37,3 +37,7 @@
     background: white;
     transition: 2s;
 }
+
+.loading_screen_sub_text {
+    color: gray;
+}

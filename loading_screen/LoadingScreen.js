@@ -36,10 +36,15 @@ class LoadingScreen {
         this.loading_screen_progress = document.createElement('h2');
         this.loading_screen_progress.className = 'loading_screen_progress';
         this.loading_screen_progress.innerHTML = this.progress;
+        
+        var sub_text = document.createElement('h2');
+        sub_text.className = 'loading_screen_sub_text';
+        sub_text.innerHTML = "(Please note, this may take a while - our models are complex)";
 
         this.loading_screen_root.appendChild(this.loading_screen_text);
         this.loading_screen_root.appendChild(this.loading_screen_progress);
         this.loading_screen_root.appendChild(loading_bar_container);
+        this.loading_screen_root.appendChild(sub_text);
 
         this.bar_width = 500;//loading_bar_container.style.width;
         // console.log(this.bar_width);
