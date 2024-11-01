@@ -1,3 +1,10 @@
+/**
+ * File: tutInstructions.js
+ * 
+ * Description:
+ *  Class to handle instruction display of instructions during the tutorial
+ */
+
 import * as THREE from 'three';
 
 class TutInstructions {
@@ -34,10 +41,9 @@ class TutInstructions {
         this.tutorialMessage.style.zIndex = '1000'; // Ensure it's on top of other elements
         this.tutorialMessage.style.display = 'none'; // Hidden initially
         document.body.appendChild(this.tutorialMessage);
-
-        // console.log('Tutorial message DOM element:', this.tutorialMessage); // Check if it's added to the DOM
     }
 
+    // Function to handle instruction updates based on player proximity
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
@@ -79,16 +85,16 @@ class TutInstructions {
         }
     }
 
+    // Function to show message
     showTutorialMessage(targetName) {
         const message = this.targetObjects[targetName];
         this.tutorialMessage.innerHTML = `<p>${message}</p>`;
         this.tutorialMessage.style.display = 'block';
-        // console.log(`Showing tutorial message for ${targetName}: ${message}`); // Debug log
     }
 
+    // Function to hide message
     hideTutorialMessage() {
         this.tutorialMessage.style.display = 'none';
-        // console.log('Hiding tutorial message'); // Debug log
     }
 }
 

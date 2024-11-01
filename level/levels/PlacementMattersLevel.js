@@ -1,3 +1,10 @@
+/**
+ * File: PlacementMattersLevel.js
+ * 
+ * Description:
+ *  Placement matters level
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
@@ -99,10 +106,12 @@ class PlacementMattersLevel extends Level {
         this.render_main_level_components(this);
     }
 
+    // Handle the level fail
     failed() {
         this.level_controller.reset_current_level();
     }
 
+    // Function to reset the level (handled differently for this level)
     reset_level() {
         this.current_power_order_index = 0;
         this.time_left = 35;
@@ -116,12 +125,14 @@ class PlacementMattersLevel extends Level {
 
     // -------------------- LEVEL SPECIFIC FUNCTIONS -----------------------------
     load_pml_objects() {
-        // console.log("-------------LOADING PML OBJECTS-------------");
+        // Hide the timer initially
         timer.hide_timer();
+
         // handle lights
         const strength_light_mesh = this.placement_matters_meshes.strength_light;
         const flight_light_mesh = this.placement_matters_meshes.flight_light;
         const shrink_light_mesh = this.placement_matters_meshes.shrink_light;
+        
         // create and place in scene
         this.original_light_level = strength_light_mesh.intensity/100; 
         this.light_on = strength_light_mesh.intensity/100;
@@ -133,15 +144,13 @@ class PlacementMattersLevel extends Level {
         fl.position.copy(flight_light_mesh.position);
         shl.position.copy(shrink_light_mesh.position);
 
-
+        // Lighting setup
         this.strength_light = stl;
         this.flight_light = fl;
         this.shrink_light = shl;
-
         this._level.add(this.strength_light);
         this._level.add(this.flight_light);
         this._level.add(this.shrink_light);
-
 
         // handle button
         this.button = new Button(this.placement_matters_meshes.button);
@@ -150,6 +159,7 @@ class PlacementMattersLevel extends Level {
         this.non_player_colliders.push(this.button.collider);
         this.non_player_rigid_bodies.push(this.button.rigidBody);
 
+        // Setup interactable object
         const button_interactable = new InteractableButton('Press E to start the timer', this.button);
 
         this._interactable_objects[`pml_button`] = {
@@ -159,12 +169,10 @@ class PlacementMattersLevel extends Level {
             interactable_object: button_interactable
         }
     
-        // console.log(this.button);
         this.time_left = 35;
         this.current_power_order_index = 0;
         this.current_active_power = null;
-        // console.log("------------------------------------------");
-
+    
         // Create the platforms
         // -- strength
         const strength_mesh = this.placement_matters_meshes.strength_platform;
@@ -188,6 +196,7 @@ class PlacementMattersLevel extends Level {
         this.setup_pml_order();
     }
 
+    // Setup the order of placement matters platform setup
     setup_pml_order() {
         this.changed = true;
 
@@ -250,10 +259,11 @@ class PlacementMattersLevel extends Level {
 
         ]
 
+        // Intialize power
         this.current_active_power = this.power_order[0];
-
     }
 
+    // Setup the ending screen on completion
     setup_ending_screen() {
         this.game_completed = document.createElement('div');
         this.game_completed.style.position = 'absolute';
@@ -271,14 +281,15 @@ class PlacementMattersLevel extends Level {
         this.game_completed.innerHTML = '<p>Congratulations, Floppy! You have completed your challenges!</p> <p>Press any E to continue...</p>';
     }
 
+    // Setup end game screen
     end_game_unbound(event) {
-        // console.log("next level");
         if (event.key === 'e' || event.key === 'E') {
             this.hide_end_screen();
             this.level_controller.change_level(this.level_controller._current_level + 1);
         }
     }
 
+    // Show end game screen
     show_end_screen() {
         this.message_shown = true;
         document.body.appendChild(this.game_completed);
@@ -286,6 +297,7 @@ class PlacementMattersLevel extends Level {
         window.addEventListener('keypress', this.end_game);
     }
 
+    // Hide end game screen
     hide_end_screen() {
         this.message_shown = false;
         document.body.removeChild(this.game_completed);
@@ -293,12 +305,14 @@ class PlacementMattersLevel extends Level {
         window.removeEventListener('keypress', this.end_game)
     }
 
+    // Function to update the placement matters level game state
     update_game_state(time_elapsed_in_seconds) {
+        // Level failure
         if (this.time_left <= 0) {
             this.failed();
         }
 
-        // if (this.button.pressed && (this.time_left > 0) && this.current_active_power) {
+        // Update timer
         if (this.button.pressed && this.current_active_power) {
             this.time_left  = this.time_left - time_elapsed_in_seconds;
             timer.update_time(Math.round(this.time_left * 100)/100);
@@ -310,6 +324,7 @@ class PlacementMattersLevel extends Level {
         const active = this.power_order[this.current_power_order_index];
         const power_name = active.power;
 
+        // Update changes to active platform
         if (this.changed) {
             // If the active power has changed, update the lights
             this.current_active_power = active;
@@ -347,6 +362,7 @@ class PlacementMattersLevel extends Level {
             collider = this.shrink_platform.collider;
         } 
 
+        // Check if player made contact with the platform
         var touched_platform = false;
         physic.contactPair(this.character_controller._target.collider, collider, (manifold, flipped) => {
             
@@ -366,9 +382,10 @@ class PlacementMattersLevel extends Level {
             }                
         })
 
+        // If player touched the platform, update the game state
         if (touched_platform) {
             this.changed = true;
-            // var updated_time = this.time_left + active.time_added;
+
             if (active.set_time) {
                 var updated_time = active.time_added;
             } else {
@@ -403,11 +420,9 @@ class PlacementMattersLevel extends Level {
             this._footstepSound.update();  // Update footstep sound system
         }
 
+        // Update the game state
         this.update_game_state(time_elapsed_in_seconds);
 
-        // this._skybox.rotateX(Math.PI/10000);
-        // this._skybox.rotateY(-Math.PI/10000);
-        // this._skybox.rotateZ(Math.PI/10000);
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates

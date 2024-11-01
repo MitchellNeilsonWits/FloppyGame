@@ -1,3 +1,10 @@
+/**
+ * File: directional_lights.js
+ * 
+ * Description:
+ *  Sample lights for testing
+ */
+
 import * as THREE from 'three';
 
 const directional_light = new THREE.DirectionalLight( 0xffffff, 10 );

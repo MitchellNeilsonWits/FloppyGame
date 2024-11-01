@@ -1,3 +1,10 @@
+/**
+ * File: RunTurningLeftState.js
+ * 
+ * Description:
+ *  State to handle character running and turning left
+ */
+
 import State from "../State";
 
 class RunTurningLeftState extends State {

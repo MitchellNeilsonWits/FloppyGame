@@ -1,16 +1,14 @@
+/**
+ * File: Hud.js
+ * 
+ * Description:
+ *  Handles the HUD (overlay interface) display to the user
+ */
+
 import './Hud.css'
 
-
-
-// const loaded = document.getElementById("hud-loaded-img");
-// const holding = document.getElementById("hud-holding-img");
-// const load_indicator = document.getElementById("hud-holding-load");
-// const drop_indicator = document.getElementById("hud-holding-drop");
-// const unload_indicator = document.getElementById("hud-loaded-unload");
-// const loaded_header_disk = document.getElementById("hud-loaded-header-disk");
-// const holding_header_disk = document.getElementById("hud-holding-header-disk");
-
 class HUD {
+    // Intialize important variables
     constructor() {
         this.loaded_disk = null;
         this.holding_disk = null;
@@ -157,6 +155,7 @@ class HUD {
         document.body.append(hudRoot);
 
 
+        // Setup necessary variables for use in the class
         this.hud_root = hudRoot;
         this.loaded = hudLoadedImg;
         this.holding = hudHoldingImg;
@@ -172,22 +171,26 @@ class HUD {
         this.bottom_bar = hudBottom;
     }
 
+    // Function to change the disk being held
     update_holding_disk(new_disk) {
         this.holding_disk = new_disk;
         this.update()
     }
 
+    // Function to change the disk loaded
     update_loaded_disk(new_disk) {
         this.loaded_disk = new_disk;
         this.update();
     }
 
+    // Function to clear the power list
     clear_powers() {
         while (this.power_list.firstChild) {
             this.power_list.removeChild(this.power_list.lastChild);
         }
     }
 
+    // Function to add a power to the list
     add_power(name, main_power) {
         const new_power = document.createElement('li');
         new_power.className = 'hud-power-item';
@@ -203,6 +206,7 @@ class HUD {
         this.power_list.appendChild(new_power);
     }
 
+    // Function to add a description to a power
     add_description(name) {
         const new_power = document.createElement('li');
         new_power.className = 'hud-power-description';
@@ -210,17 +214,20 @@ class HUD {
         this.power_list.appendChild(new_power);
     }
 
+    // Function to set the power list
     set_power_list(main_power) {
         const header = document.createElement('li');
         header.className = 'hud-power-header';
         header.innerHTML = "Powers";
         this.power_list.appendChild(header);
 
+        // Set the relevant powers for each ability
         if (main_power === "strength") {
             this.add_power('Push boxes', 'strength');
             this.add_description("Walk into boxes to push");
-            this.add_power('Break glass', 'strength');
-            this.add_description("Left click glass to break");
+            // -- Break glass was deprecated: not needed in any level
+            // this.add_power('Break glass', 'strength');
+            // this.add_description("Left click glass to break");
             this.add_power('Pull levers', 'strength');
             this.add_description("Click E next to levers to use");
         } else if (main_power === "flight") {
@@ -233,8 +240,8 @@ class HUD {
         }
     }
 
+    // Function to update the HUD after changes made
     update() {
-        // console.log(this);
         this.clear_powers();
         if (!this.loaded_disk) {
             this.loaded.src = 'hud/disk_none.png'
@@ -244,7 +251,6 @@ class HUD {
             this.loaded_header_disk.style.color = "lightgray";
             // this.top_bar.style.background = 'linear-gradient(to bottom, rgb(0,0,0,0.5), rgb(0,0,0,0))';
             // this.bottom_bar.style.background = 'linear-gradient(to top, rgb(0,0,0,0.5), rgb(0,0,0,0))';
-
 
         } else {
             this.loaded.style.opacity = 1
@@ -314,24 +320,26 @@ class HUD {
         }
     }
 
+    // Function to set the level name
     set_level_name(name) {
         this.level_name.innerHTML = name;
     }
 
+    // Function to remove the HUD from display
     remove_hud() {
-        // console.log("REMOVE HUD 1");
         if (document.getElementById('hud-root')) {
-            // console.log("REMOVE HUD 2");
             document.body.removeChild(this.hud_root);
         }
     }
 
+    // Function to add the HUD to display
     add_hud() {
         if (!document.getElementById('hud-root')) {
             document.body.appendChild(this.hud_root);
         }
     }
 
+    // Function to reset the HUD variables and display
     reset_hud() {
         this.holding_disk = null;
         this.loaded_disk = null;

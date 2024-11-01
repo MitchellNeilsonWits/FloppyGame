@@ -1,3 +1,10 @@
+/**
+ * File: WaveState.js
+ * 
+ * Description:
+ *  Implements NPC State to handle wave animations
+ */
+
 import { AnimationAction } from "three";
 import State from "../State";
 import * as THREE from 'three';
@@ -12,7 +19,6 @@ class WaveState extends State {
     }
 
     enter(prev_state){ 
-        // console.log(this);
         const wave_action = this._parent._animations['wave'].action;
         
         if (prev_state) {

@@ -1,3 +1,10 @@
+/**
+ * File: sample_plane.js
+ * 
+ * Description:
+ *  Simple plane object for testing purposes
+ */
+
 import * as THREE from 'three';
 
 const plane = new THREE.Mesh(

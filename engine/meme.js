@@ -1,3 +1,10 @@
+/**
+ * File: meme.js
+ * 
+ * Description:
+ *  Handles meme display on big screen
+ */
+
 import * as THREE from 'three';
 
 class meme {
@@ -48,6 +55,7 @@ class meme {
         });
     }
 
+    // Function to update message showing based on character distance
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
@@ -75,6 +83,7 @@ class meme {
         }
     }
 
+    // Function to play the video
     playVideo() {
         const targetObject = this.level.getObjectByName(this.targetObjectName);
 
@@ -102,6 +111,7 @@ class meme {
         }
     }
 
+    // Function to stop the video
     stopVideo() {
         const targetObject = this.level.getObjectByName(this.targetObjectName);
 
@@ -117,10 +127,12 @@ class meme {
         }
     }
 
+    // Function to show the message
     showTutorialMessage() {
         this.tutorialMessage.style.display = 'block';
     }
 
+    // Function to hide the message
     hideTutorialMessage() {
         this.tutorialMessage.style.display = 'none';
     }

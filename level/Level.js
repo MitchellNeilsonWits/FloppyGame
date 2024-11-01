@@ -1,3 +1,10 @@
+/**
+ * File: Level.js
+ * 
+ * Description:
+ *  Base parent level class implemented by other levels
+ */
+
 import * as THREE from 'three';
 import DynamicObject from '../engine/dynamicObject';
 import physic from '../engine/physic';
@@ -24,6 +31,8 @@ class Level {
 
     }
 
+    // Base load for the level
+    // -- loads different objects and handles overall level setup
     async base_load(level, meshes, character_controller, camera, scene) {
         level.non_player_colliders =  [];
         level.non_player_rigid_bodies =  [];
@@ -99,11 +108,12 @@ class Level {
         camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(player_start_rotation)));
         
         
-
+        // Setup positions for pushboxes
         const pushbox_positions = [];
         meshes.pushboxes.forEach(mesh => {
             pushbox_positions.push(new THREE.Vector3(0,0,0).copy(mesh.position))          
         })
+
         level.level_start_state = {
             player_position: new THREE.Vector3(0,0,0).copy(meshes.player_spawn.position),
             player_quaternion: new Quaternion(0,0,0,1).copy(meshes.player_spawn.quaternion),
@@ -117,9 +127,9 @@ class Level {
         }
     }
     
+    // Function to create end-of-level portal
     async create_portal(level, portal_object, character_controller) {
         if (portal_object) {
-            // console.log(portal_object);
             
             const portal = new Portal(character_controller, portal_object, level);
             level.portal = portal;
@@ -132,11 +142,9 @@ class Level {
         }
     }
 
+    // Function to create the NPC
     async create_npc(level, npc_mesh) {
         if (npc_mesh) {
-            // level._npc = 
-            // console.log(npc_mesh);
-
             const npc = new NPC(npc_mesh.position, npc_mesh.rotation);
             await npc.set_npc();
             level._npc = npc;
@@ -147,15 +155,13 @@ class Level {
                 type: 'static',
                 name: `npc`
             }
-
-            // console.log("lines to be read:",level.npc_lines);
-
             level._interactable_objects[`npc`]['interactable_object'] = new InteractableNPC(`Press E to interact with N.P.C`, level._interactable_objects[`npc`].object, level.npc_lines);
             level.non_player_colliders.push(npc.collider);
             level.non_player_rigid_bodies.push(npc.rigidBody);
         }
     }
 
+    // Function to load all level animations
     load_animations(level, animations) {
         level.mixer = new THREE.AnimationMixer(level._level)
         level._level.animations = []
@@ -167,6 +173,7 @@ class Level {
         }
     }
 
+    // Function to create glass in the level
     async create_glass(level, glass) {
         level._glass = [];
         let glass_id = 0;
@@ -191,6 +198,7 @@ class Level {
         }
     }
 
+    // Function to handle pushbox setup
     async _create_pushboxes(level, pushboxes) {
         level._pushboxes = [];
         let pushbox_num = 0;
@@ -229,11 +237,9 @@ class Level {
         }
     }
     
-
+    // Function to setup lever-gate systems
     async _create_lever_gates(level, lever_gates) {
         level._lever_gates = {};
-
-        // console.log(lever_gates);
 
         for (const key of Object.keys(lever_gates)) {
             const lever_gate_name = lever_gates[key].name;
@@ -260,10 +266,9 @@ class Level {
                 interactable_object: gate_interactable
             }
 
-
             // CREATE THE LEVER
             const l_object = lever_gates[key].lever;
-            // console.log(lever_gates[key]);
+
             const lever_object = new Lever(l_object.position, l_object.rotation, gate_object, level._level);
             await lever_object.set_lever();
             const lever_interactable = new InteractableLever("Press E to pull lever",lever_object,1.5,"lever");
@@ -289,10 +294,12 @@ class Level {
         }
     }
 
+    // Function to create other interactable objects (no need for this at the moment)
     _create_interactable_objects(level) {
         // this._interactable_objects['dynamic_cube_interactable']['interactable_object'] = new InteractableBox('Press E to pick up box', this._interactable_objects['dynamic_cube_interactable'].object, 2.5, "push");
     }
 
+    // Function to create all disks in the level
     async _create_disks(level, strength_disk_spawn, flight_disk_spawn, shrink_disk_spawn) {
 
         const disk_types = ['strength', 'flight', 'shrink'];
@@ -326,6 +333,7 @@ class Level {
         
     }
 
+    // Function to create lights in the level
     create_lights(level, point_lights, spot_lights, directionalLights) {
         level._lights = []
         for (const light of point_lights) {
@@ -370,12 +378,14 @@ class Level {
         }
     }
 
+    // Function to set up static objects in the level
     create_static_objects(level, objects) {
         for (const mesh of objects) {
             level._level.add(mesh);
         }
     }
 
+    // Function to create dynamic objects in the level
     create_dynamic_objects(level, objects) {
         level._dynamic_objects = [];
         for (const mesh of objects) {
@@ -387,6 +397,7 @@ class Level {
         }
     }
 
+    // Function to render all main level components (lights) and add the level to the main scene
     render_main_level_components(level) {
         // Render the lights for the level
         for (const light of level._lights) {
@@ -397,15 +408,11 @@ class Level {
         level._scene.add(level._level);
     }
 
+    // Function to remove broken glass shards
     remove_broken_glass(level, glass) {
         const id = glass.id;
-        // delete level._interactable_objects[`glass_${id}`];
         const new_glass = [];
-        // for (let i = 0; i < level._glass.length; i++) {
-        //     if (i != id) {
-        //         new_glass.push(level._glass[i]);
-        //     }
-        // }
+
         for (const glass_i of level._glass) {
             if (id != glass_i.id) {
                 new_glass.push(glass_i);
@@ -414,6 +421,7 @@ class Level {
         level._glass = new_glass;
     }
 
+    // Function to update the main parts of the level (standard accross all levels)
     main_update(level, time_elapsed_in_seconds) {
         // Update the NPC
         if (level._npc) {
@@ -440,6 +448,7 @@ class Level {
             }
         }
 
+        // Update the glass
         if (level._glass) {
             for (const glass of level._glass) {
                 glass.object.update(time_elapsed_in_seconds, (object) => {

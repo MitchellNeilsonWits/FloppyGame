@@ -1,3 +1,10 @@
+/**
+ * File: LoadingScreen.js
+ * 
+ * Description:
+ *  Handles showing of loading screen
+ */
+
 import './LoadingScreen.css'
 
 class LoadingScreen {
@@ -36,16 +43,19 @@ class LoadingScreen {
         
     }
 
+    // Function to setup base variables
     initialize() {
         this.progress = 0;
         this.text = "";
     }
 
+    // Function to show the loading screen
     show_screen() {
         this.is_shown = true;
         document.getElementsByTagName('body')[0].appendChild(this.loading_screen_root);
     }
 
+    // Function to hide the loading screen
     hide_screen() {
         this.is_shown = false;
         const el = document.getElementById('loading_screen_root');
@@ -54,16 +64,17 @@ class LoadingScreen {
         }
     }
 
+    // Function to manually set the progress
     set_progress(new_progress) {
         const prev_progress = this.progress;
         this.loading_bar.style.width = `${new_progress/100 * this.bar_width}px`
-        // console.log(new_progress/100 * this.bar_width);
         for (let i = prev_progress; i <= new_progress; i++) {
             this.loading_screen_progress.innerHTML = i;
         }
         this.progress = new_progress;
     }
     
+    // Function to manually set the text of the loading screen
     set_text(new_text) {
         this.text = new_text;
         this.loading_screen_text.innerHTML = this.text;

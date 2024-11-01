@@ -34,6 +34,9 @@ class CharacterController {
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._character_is_turning = "not_turning"; // note when the character is turning
         this.height_state = "on ground";
+        this._holding_disk = null;
+        this.busy_loading_disk = false;
+        this._level = null;
 
         // INITIALIZE ANIMATIONS
         this._animations = {};
@@ -44,18 +47,16 @@ class CharacterController {
             new BasicCharacterControllerProxy(this._animations) // proxy for character controlling
         );
 
+        // Variable to halt the characters movement if needed
         this._halt_character = {
             status: false,
             status_verified: false,
             time_to_completion: 0
         };
 
-        this._holding_disk = null;
-        this.busy_loading_disk = false;
-
-        this._level = null;
     }
 
+    // Function to initialize the player setup with async
     async initialize_player(_callback) {
         // LOAD MODELS
         await this._load_models(_callback);
@@ -67,46 +68,19 @@ class CharacterController {
         const gltfLoader = new GLTFLoader();
         gltfLoader.setPath('models/')
 
+        // Load our character file
         await gltfLoader.loadAsync('floppy_with_reader_remastered_optimized.glb').then(async (gltf) => {  
-            // console.log(this);
-            // SET SCALE OF CHARACTER
-            // gltf.scene.scale.setScalar(0.002);
-            // --- LOBBY ---
+            // Set the character scale
             gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
-            // gltf.scene.children[0].position.y = 5;
-            // gltf.scene.children[0].position.z = 25;
-
-
-            // const texture_loader = new THREE.TextureLoader();
-            // const power_texture = texture_loader.load('./skins/power_baseColor.jpg');
-            // power_texture.wrapS = THREE.RepeatWrapping;
-            // power_texture.wrapT = THREE.RepeatWrapping;
-            // power_texture.repeat.set( 4, 4 );
-            // power_texture.needsUpdate = true;
-            // power_texture.imag
-            // gltf.scene.children[0].children[0].children[0].material.image = './skins/power_baseColor.jpg';
+            
             const src = "skins/power_baseColor.jpg";
             
-            // gltf.scene.children[0].children[0].children[0].material.map = THREE.ImageUtils. .loadTexture( src );
-            // console.log(gltf.scene.children[0].children[0].children[0]);
-
             this._disks = {
                 disk_0: gltf.scene.children[0].children[0].children[2],
                 disk_1: gltf.scene.children[0].children[0].children[1],
             }
         
-            // --- TUTORIAL --- 
-            // gltf.scene.children[0].scale.set(0.5, 0.5, 0.5);
-            // gltf.scene.children[0].position.x = -51.35;
-            // gltf.scene.children[0].position.y = 2;
-            // gltf.scene.children[0].position.z = 0.2933;
-            //gltf.scene.children[0].setRotationFromEuler( new THREE.Euler(-Math.PI, Math.PI/2, -Math.PI, "XYZ"));
-
-            // gltf.scene.
-
-            // SET SCENE INFORMATION
-            // this._target = gltf.scene;
-            
+            // Setup the player physics
             this._target = new Player(gltf.scene.children[0], this._params.physic);
             this._target.set_player(gltf.scene.children[0]);
 
@@ -156,17 +130,17 @@ class CharacterController {
             await loader.loadAsync('floppy_with_reader_running_v2.glb').then((a) => {_on_load('run_not_turning', a);}); // turn right animation
             await loader.loadAsync('floppy_with_reader_running_turning_left.glb').then((a) => {_on_load('run_turning_left', a);}); // turn left animation
             await loader.loadAsync('floppy_with_reader_running_turning_right.glb').then((a) => {_on_load('run_turning_right', a);}); // turn right animation
-            await loader.loadAsync('floppy_with_reader_pick_up_v2.glb').then((a) => {_on_load('pick_up', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_pick_up_v2.glb').then((a) => {_on_load('pick_up', a);}); // pickup the disk animation
             await loader.loadAsync('floppy_with_reader_load_disk_v4.glb').then((a) => {_on_load('load_disk', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_swap_disks.glb').then((a) => {_on_load('swap_disks', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_holding.glb').then((a) => {_on_load('holding_disk', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_jump.glb').then((a) => {_on_load('jump', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_pushing.glb').then((a) => {_on_load('pushing', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_falling_v2.glb').then((a) => {_on_load('falling', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_flying_idle.glb').then((a) => {_on_load('flying_idle', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_flying_forward.glb').then((a) => {_on_load('flying_forward', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_flying_forward_fast.glb').then((a) => {_on_load('flying_forward_fast', a);}); // load the disk animation
-            await loader.loadAsync('floppy_with_reader_punch.glb').then((a) => {_on_load('punch', a);}); // load the disk animation
+            await loader.loadAsync('floppy_with_reader_swap_disks.glb').then((a) => {_on_load('swap_disks', a);}); // swap the disks animation
+            await loader.loadAsync('floppy_with_reader_holding.glb').then((a) => {_on_load('holding_disk', a);}); // holding disk animation
+            await loader.loadAsync('floppy_with_reader_jump.glb').then((a) => {_on_load('jump', a);}); // jump animation
+            await loader.loadAsync('floppy_with_reader_pushing.glb').then((a) => {_on_load('pushing', a);}); // pushing box animation
+            await loader.loadAsync('floppy_with_reader_falling_v2.glb').then((a) => {_on_load('falling', a);}); // falling animation
+            await loader.loadAsync('floppy_with_reader_flying_idle.glb').then((a) => {_on_load('flying_idle', a);}); // idle flying animation
+            await loader.loadAsync('floppy_with_reader_flying_forward.glb').then((a) => {_on_load('flying_forward', a);}); // flying forward animation
+            await loader.loadAsync('floppy_with_reader_flying_forward_fast.glb').then((a) => {_on_load('flying_forward_fast', a);}); // fast flying forward animation
+            await loader.loadAsync('floppy_with_reader_punch.glb').then((a) => {_on_load('punch', a);}); // punch animation
 
             // console.log("loaded all models")
             _callback();
@@ -176,21 +150,23 @@ class CharacterController {
 
     }
 
+    // Function to set the level the character is playing
     set_level(level) {
         this._level = level; 
         this._interaction_controller._level = level;
     }
 
+    // Function to get the target of this controller
     get_target() {
         return this._target;
     }
 
+    // Function to get children of the target
     async get_children() {
-        // return this._target_children;
         return this._target.children;
     }
 
-    /* Function to determine direction of offset based on key input */
+    // Function to determine direction of offset based on key input
     _direction_of_offset() {
         var direction_of_offset = 0;
 
@@ -219,16 +195,16 @@ class CharacterController {
         return direction_of_offset;
     }
 
-    /* function to get angle from a quaternion */
+    // Function to get angle from a quaternion
     _get_angle(quaternion) {
         const angle = 2 * Math.acos(quaternion.w);
         return angle;
     }
 
-    /* Function to determine if character is turning and in which direction */
+    // Function to determine if character is turning and in which direction
     _is_turning(quaternion_current, quaternion_goal_direction, mouse_movement_x) {
         
-        /* If the current mouse movement is zero, then we are moving according to keys
+        /*
             - handle by looking at direction the player is going to look in (goal direction) and current direction
             - If we goal = current, we are not turning
             - We also handle based on cartesian quadrants using whether our rotation is negative or not (see cases below)
@@ -258,26 +234,16 @@ class CharacterController {
                 
             }
         } else {
-            /* 
-                If mouse movement is non-zero, move according to mouse movement:
-                -- if positive (with some logical leeway to avoid "glitching" animation) then turn right
-                -- same for negative but we turn left
-            */
-            // if (mouse_movement_x >= 2) {
-            //     return "turning_right"
-            // } else if (mouse_movement_x <= -2) {
-            //     return "turning_left"
-            // } else {
-            //     return "not_turning"
-            // }
             return "not_turning"
         }
     }
 
+    // Set dynamic objects in the scene ysing async
     async set_dynamic_objects(objects) {
         this._interaction_controller.set_dynamic_objects(objects);
     }
 
+    // Update function for when no ability is loaded
     update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y) {
     
         // UPDATE FSM
@@ -346,54 +312,29 @@ class CharacterController {
         }
 
         let y_velocity = this._velocity.y;
-        // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
+        // Jumping threshold (can only jump when between -0.5 and 0.5 and when on ground)
         if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 4.5;
             }
             else{
-                // y_velocity = this._target.rigidBody.linvel().y;
                 y_velocity = 0;
                 this._target.rigidBody.setGravityScale(0);
             }
         } else {
             y_velocity = 0;
-            // y_velocity = this._target.rigidBody.linvel().y;
             this._target.rigidBody.setGravityScale(1);
             y_velocity = this._target.rigidBody.linvel().y;
         }
         
-
-        // if (this._input._keys.space) {
-        //     y_velocity = 4;
-        // } else if (this._input._keys.crouch) {
-        //     y_velocity = -4;
-        // } else {
-        //     y_velocity = 0;
-        //     // y_velocity = this._target.rigidBody.linvel().y;
-        // }
-
-        // if (this._input._keys.space) {
-        //     y_velocity = 4;
-        // } else if (this._input._keys.crouch) {
-        //     y_velocity = -4;
-        // } else {
-        //     y_velocity = 0;
-        //     // y_velocity = this._target.rigidBody.linvel().y;
-        // }
-        
+        // Update the camera pivot and character physics
         const v = new THREE.Vector3();
         control_object.getWorldPosition(v);
         this._params.camera.move_pivot(v);
-        // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
-
         this._target.update(forward.x, y_velocity, forward.z);
-
-
-        // this._can_interact = this._interaction_controller.update();
-        // console.log(this._can_interact)
     }
 
+    // Function to update character when strength disk loaded
     update_strength(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         // UPDATE FSM
         this._state_machine.update(this._character_is_turning, this._input, this.height_state, "strength");
@@ -461,13 +402,12 @@ class CharacterController {
         }
 
         let y_velocity = this._velocity.y;
-        // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
+        // Jumping threshold (can only jump when between -0.5 and 0.5 and when on ground)
         if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.5)) {
             if (this._input._keys.space) {
                 y_velocity += 3;
             }
             else{
-                // y_velocity = this._target.rigidBody.linvel().y;
                 y_velocity = 0;
                 this._target.rigidBody.setGravityScale(0);
                 this._target.rigidBody.setGravityScale(0);
@@ -478,18 +418,15 @@ class CharacterController {
             y_velocity = this._target.rigidBody.linvel().y;
         }
         
+        // Update the camera pivot and character physics
         const v = new THREE.Vector3();
         control_object.getWorldPosition(v);
         this._params.camera.move_pivot(v);
-        // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
-
         this._target.update(forward.x, y_velocity, forward.z);
-
-        // this._can_interact = this._interaction_controller.update();
-        // console.log(this._can_interact)
     }
     
 
+    // Update the character when flight disk is loaded
     update_flight(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         // UPDATE FSM
         this._state_machine.update(this._character_is_turning, this._input, this.height_state, "flight");
@@ -553,37 +490,27 @@ class CharacterController {
 
             forward.x *= speed;
             forward.z *= speed;
-            // forward.multiplyScalar(speed);
         }
 
         let y_velocity = this._velocity.y;
         // Jumping threshold (can only jump when between -0.07 and 0.07 and when on ground)
-        // if (this.height_state == "on ground" && (Math.abs(y_velocity) <= 0.07)) {
-            if (this._input._keys.space) {
-                y_velocity = 4;
-            } else if (this._input._keys.crouch) {
-                y_velocity = -4;
-            } else {
-                y_velocity = 0;
-                // y_velocity = this._target.rigidBody.linvel().y;
-            }
-        // } else {
-            // y_velocity = this._target.rigidBody.linvel().y;
-        // }
+        if (this._input._keys.space) {
+            y_velocity = 4;
+        } else if (this._input._keys.crouch) {
+            y_velocity = -4;
+        } else {
+            y_velocity = 0;
+        }
         
+        // Update the camera pivot and character physics
         const v = new THREE.Vector3();
         control_object.getWorldPosition(v);
         this._params.camera.move_pivot(v);
-        // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
-
         this._target.update(forward.x, y_velocity, forward.z);
-        // console.log(this._velocity);
-        // console.log(this._velocity);
-
-        // this._can_interact = this._interaction_controller.update();
-        // console.log(this._can_interact)
+        
     }
 
+    // Update character when shrink disk loaded
     update_shrink(time_in_seconds, mouse_movement_x, mouse_movement_y) {
         // UPDATE FSM
         this._state_machine.update(this._character_is_turning, this._input, this.height_state, "shrink");
@@ -647,7 +574,6 @@ class CharacterController {
 
             forward.x *= speed;
             forward.z *= speed;
-            // forward.multiplyScalar(speed);
         }
 
         let y_velocity = this._velocity.y;
@@ -657,7 +583,6 @@ class CharacterController {
                 y_velocity += 5;
             }
             else{
-                // y_velocity = this._target.rigidBody.linvel().y;
                 y_velocity = 0;
                 this._target.rigidBody.setGravityScale(0);
             }
@@ -666,25 +591,22 @@ class CharacterController {
             this._target.rigidBody.setGravityScale(1);
         }
         
+        // Update the camera pivot and character physics
         const v = new THREE.Vector3();
         control_object.getWorldPosition(v);
         this._params.camera.move_pivot(v);
-        // this._params.camera.move_pivot(forward.x, this._target.rigidBody.linvel().y, forward.z);
-
         this._target.update(forward.x, y_velocity, forward.z);
-
-        
-
-        // this._can_interact = this._interaction_controller.update();
-        // console.log(this._can_interact)
     }
     
 
-    /* Function to update states, movement information and animations */
+    // Function to update states, movement information and animations based on the disc loaded
     update(time_in_seconds, mouse_movement_x, mouse_movement_y) {
+        // Only update if target has been set
         if (!this._target) {
             return;
         }
+
+        // Only update if character has been loaded
         if (!this.character_is_loaded) {
             return;
         }
@@ -694,7 +616,7 @@ class CharacterController {
             this._mixer.update(time_in_seconds);
         }
 
-        // If user is reading npc lines, don't let them move
+        // If user is reading npc lines (or we forcefully halt movement), don't let them move
         if (this._currently_reading_npc || this._halt_movement) {
             this._target.rigidBody.setGravityScale(0);
             this._target.update(0,0,0);
@@ -703,6 +625,7 @@ class CharacterController {
             this._target.rigidBody.setGravityScale(1);
         }
 
+        // Update based on character's loaded disk
         if (this.power_controller.power === "none") {
             this.update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y);
         } else if (this.power_controller.power === "strength") {
@@ -713,6 +636,7 @@ class CharacterController {
             this.update_shrink(time_in_seconds, mouse_movement_x, mouse_movement_y);
         }
 
+        // If we have created the power controller, update it
         if (this.power_controller) {
             this.power_controller.update();
         }

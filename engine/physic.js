@@ -1,3 +1,10 @@
+/**
+ * File: physic.js
+ * 
+ * Description:
+ *  Main file to export the Rapier world used in many files
+ */
+
 import Rapier from '@dimforge/rapier3d-compat'
 await Rapier.init()
 

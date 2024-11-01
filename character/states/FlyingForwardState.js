@@ -1,3 +1,10 @@
+/**
+ * File: FlyingForwardState.js
+ * 
+ * Description:
+ *  State to handle user flying forward
+ */
+
 import State from "../State";
 
 class FlyingForwardState extends State {

@@ -1,12 +1,15 @@
-// import { get_cartesian_angle_from_rotation } from "../common/Angle";
+/**
+ * File: InteractablePushbox.js
+ * 
+ * Description:
+ *  Interactable pushbox that implements interactableObject to allow character interaction with a pushbox
+ */
+
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import interactableObject from "../engine/interactableObject";
-import * as THREE from 'three';
-// import physic from "../engine/physic";
-// import { ActiveCollisionTypes } from "@dimforge/rapier3d-compat";
-// import { create_collider_for_disk } from "../engine/function";
 
 class InteractablePushbox extends interactableObject {
+
     constructor(interaction_display, object, distance_threshold, interaction_trigger) {
         super(interaction_display, object, distance_threshold, interaction_trigger);
 
@@ -15,14 +18,15 @@ class InteractablePushbox extends interactableObject {
         this.use_object = this.use_object_static.bind(this);
 
     }
-    
+
+    // Use the object: none
     use_object_static(controls, object_to_use, level) {
         
     }
     
+    // Start interaction: move the pushbox
     start_interaction_static(controls, object_interacted_with, level) {
-        // console.log("started pushing");
-
+        
         const direction_of_player = get_cartesian_angle_from_rotation(controls._target.rotation);
 
         // Check which direction to push the object: will be the most prominent direction of the player
@@ -37,8 +41,9 @@ class InteractablePushbox extends interactableObject {
 
         object_interacted_with.object.move_pushbox(velocity.x,velocity.y,velocity.z);
 
-        // console.log(this._action);
+
         if (!this._action) {
+            // Play the pushing animation of the character
             const action = controls._state_machine._proxy._animations["pushing"].action;
             action.time = 0.0;
             action.enabled = true;
@@ -52,6 +57,7 @@ class InteractablePushbox extends interactableObject {
         this._action.play();
     }
 
+    // End itneraction: stop the pushing animation
     end_interaction_static(controls, object_to_drop, level) {
         if (this._action) {
             this._action.stop();

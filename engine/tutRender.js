@@ -1,3 +1,10 @@
+/**
+ * File: tutRender.js
+ * 
+ * Description:
+ *  Function to render the "start tutorial" message from lobby
+ */
+
 import * as THREE from 'three';
 
 class TutRender {
@@ -26,6 +33,7 @@ class TutRender {
 
     }
 
+    // Function to handle display based on character distance
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
@@ -40,7 +48,6 @@ class TutRender {
                 // console.log(distance);
                 if (distance < this.proximityThreshold) {
                     if (!this.isPlayerNear) {
-                        // console.log("Player is near the tutorial object, press 'E' to start the tutorial");
                         this.isPlayerNear = true;
                         this.showTutorialMessage();
                     }
@@ -60,10 +67,12 @@ class TutRender {
         }
     }
 
+    // Function to handle show message
     showTutorialMessage() {
         this.tutorialMessage.style.display = 'block';
     }
 
+    // Function to hide message
     hideTutorialMessage() {
         this.tutorialMessage.style.display = 'none';
     }

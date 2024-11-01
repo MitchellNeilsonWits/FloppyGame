@@ -1,3 +1,10 @@
+/**
+ * File: WalkState.js
+ * 
+ * Description:
+ *  State to handle character walking without turning
+ */
+
 import State from "../State";
 
 class WalkState extends State {

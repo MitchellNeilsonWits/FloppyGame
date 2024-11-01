@@ -1,3 +1,10 @@
+/**
+ * File: MainMenu.js
+ * 
+ * Description:
+ *  Handles display of the main menu
+ */
+
 import GameController from "../game/GameController";
 import music_controller from "../music/MusicController";
 import './MainMenu.css'
@@ -83,12 +90,8 @@ class MainMenu {
     
         // Add hover effect for the floppy disk icon
         startButton.addEventListener('mouseover', () => {
-            // startButton.style.backgroundImage = "url('assets/floppyDisk.png')"; 
-            // startButton.style.backgroundSize = 'contain'; // Make sure it fits the button
-            // startButton.style.backgroundRepeat = 'no-repeat'; // Prevent repetition
             startButton.style.color = 'black';
             startButton.style.background = 'white';
-            // startButton.style.backgroundPosition = 'center'; // Center the image
         });
     
         startButton.addEventListener('mouseout', () => {
@@ -116,7 +119,7 @@ class MainMenu {
         disk_container.style.gap = '0px 40px';
         mid_container.appendChild(disk_container);
     
-        // Create each disk
+        // Create each disk and set up listeners
         const strength = document.createElement('img');
         strength.src = 'main_menu/strength_resized_v2.png';
         strength.style.width = '55px';
@@ -158,14 +161,9 @@ class MainMenu {
         shrink.addEventListener('mouseout', () => {
             start_menu.style.background = "black";
         })
-    
-    
-        // Add empty div to even out contents
-        // const empty_div = document.createElement('div');
-        // empty_div.style.height = '227px';
-        // start_menu.appendChild(empty_div);
     };
     
+    // Function to play the intro video
     play_intro_video = () => {
         // Create the video element
         const video = document.createElement('video');

@@ -15,10 +15,10 @@ import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import hud from "../hud/Hud";
 import PlacementMattersLevel from "./levels/PlacementMattersLevel";
 import IntoTheWildLevel from "./levels/IntoTheWildLevel";
-import MitchLevel from "./levels/MitchLevel";
 import * as THREE from 'three';
 import music_controller from "../music/MusicController";
 import FinaleLevel from "./levels/FinaleLevel";
+import FloatingLabyrinthLevel from "./levels/FloatingLabyrinthLevel";
 
 class LevelController {
     constructor(params) {
@@ -308,7 +308,7 @@ class LevelController {
             case 3:
                 this._menu.enable_menu();
                 hud.set_level_name('Floating Labyrinth');
-                this._level = new MitchLevel(this._scene, this, this.audioListener, this.audioLoader);
+                this._level = new FloatingLabyrinthLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
             
             case 4:

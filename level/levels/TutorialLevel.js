@@ -1,3 +1,10 @@
+/**
+ * File: TutorialLevel.js
+ * 
+ * Description:
+ *  Tutorial level
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
@@ -89,7 +96,6 @@ class TutorialLevel extends Level {
         if (this._footstepSound) {
             this._footstepSound.update();  // Update footstep sound system
         }
-        //Done audio update
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates

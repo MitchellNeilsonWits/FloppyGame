@@ -1,3 +1,10 @@
+/**
+ * File: Shard.js
+ * 
+ * Description:
+ *  Shard object
+ */
+
 import * as THREE from 'three';
 import { Object3D } from "three";
 import physic from "../engine/physic";
@@ -16,34 +23,24 @@ class Shard extends Object3D {
     this._shard_rotation = rotation;
     this.is_active = false;
     this.added_forces = false;
-    // this.position.copy(position);
-    // this.rotation.copy(rotation);
-    // this.scale.copy(scale);
-    // console.log(scale);
   }
 
+  // Function to set the object with async
   async set_shard(mesh) {
     this._shard_mesh = mesh;
-    // this.initPhysic();
-    // this.initVisual();
     this.inactive_initialization();
   }
 
+  // Function to intialze inactive shards
   inactive_initialization() {
     this._shard_mesh.position.set(0, 0, 0);
     this._shard_mesh.castShadow = true;
     const new_pos = new THREE.Vector3(this._shard_pos.x, this._shard_pos.y, this._shard_pos.z )
     this.position.copy(new_pos);
     this.add(this._shard_mesh);
-    // this._shard_reflector = new Reflector(this._shard_mesh.geometry, {
-    //   clipBias: 0.003,
-    //   textureWidth: window.innerWidth * window.devicePixelRatio,
-    //   textureHeight: window.innerHeight * window.devicePixelRatio,
-    //   color: 0xb5b5b5
-    // })
-    // this.add(this._shard_reflector);
   }
 
+  // Function to initialize the physic
   initPhysic() {
     const rigid_body_pos = new THREE.Vector3(this._world_offset.x + this._shard_pos.x, this._world_offset.y + this._shard_pos.y, this._world_offset.z + this._shard_pos.z);
     const { rigidBody, collider } = createShard(rigid_body_pos, this._shard_mesh, physic);
@@ -51,6 +48,7 @@ class Shard extends Object3D {
     this.collider = collider;
   }
 
+  // Function to initialize the visual
   initVisual() {
     this._shard_mesh.position.set(0, 0, 0);
     this._shard_mesh.castShadow = true;
@@ -59,6 +57,7 @@ class Shard extends Object3D {
     this.add(this._shard_mesh);
   }
 
+  // Function to update the shard physic and visual
   update() {
     if (this.is_active) {
       this.updatePhysic();
@@ -66,12 +65,9 @@ class Shard extends Object3D {
     }
   }
 
+  // Function to update physic
   updatePhysic(broken_status) {
     if (this.is_active) { 
-      // const x = this.rigidBody.linvel().y;
-      // const y = this.rigidBody.linvel().y;
-      // const z = this.rigidBody.linvel().y;
-      // this.rigidBody.setLinvel({ x:x , y: y, z: z }, true);
       if (this.added_forces) {
         this.rigidBody.resetForces(true);
         this.added_forces = false;
@@ -81,6 +77,7 @@ class Shard extends Object3D {
     }
   }
 
+  // Function to activate the shard
   activate() {
     this.initPhysic();
     
@@ -96,6 +93,7 @@ class Shard extends Object3D {
     this.added_forces = true;
   }
 
+  // Function to update the visual
   updateVisual() {
     const new_pos = new THREE.Vector3(this.rigidBody.translation().x - this._world_offset.x, this.rigidBody.translation().y - this._world_offset.y, this.rigidBody.translation().z - this._world_offset.z )
     this.position.copy(new_pos);

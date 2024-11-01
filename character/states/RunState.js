@@ -1,3 +1,10 @@
+/**
+ * File: RunState.js
+ * 
+ * Description:
+ *  State to handle character running
+ */
+
 import State from "../State";
 
 class RunState extends State {

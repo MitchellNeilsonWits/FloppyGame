@@ -1,9 +1,18 @@
+/**
+ * File: CharacterInteractionController.js
+ * 
+ * Description:
+ *  Controller to handle character interactions with variety of InteractionObject components
+ */
+
 import * as THREE from 'three';
 import { get_cartesian_angle_from_rotation } from '../common/Angle';
 import physic from '../engine/physic';
 import hud from '../hud/Hud';
 
 class CharacterInteractionController {
+
+    // Setup some base variables
     constructor(controls, input) {
         this._controls = controls;
         this._level = controls._level;
@@ -17,7 +26,7 @@ class CharacterInteractionController {
 
         this.can_interact = false;
 
-        // E interact message popup making
+        // Create the standard popup message to be displayed
         this.interactMessage = document.createElement('div');
         this.interactMessage.id = 'interact_message';
         this.interactMessage.style.position = 'absolute';
@@ -28,23 +37,22 @@ class CharacterInteractionController {
         this.interactMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
         this.interactMessage.style.color = 'white';
         this.interactMessage.style.fontSize = '16px';
-        // this.interactMessage.style.display = 'none'; //Want it hidden first only want to show when on platofrm
         this.interactMessage.innerHTML = 'Press E to interact';
 
 
 
-        // initialize a "start interaction" function to not do anything
+        // initialize a "start interaction" function to not do anything; and state that we are not interacting with an object
         this._start_interaction = () => {};
-
         this._object_being_interacted_with = null;
     }
 
+    // Function to show an interact message
     _show_interact_message(message) {
-
         this.interactMessage.innerHTML = `${message}`;
         document.body.appendChild(this.interactMessage);  
     }
 
+    // Function to hide the interact message
     _hide_interact_message() {
 
         this._start_interaction = () => {};
@@ -52,9 +60,9 @@ class CharacterInteractionController {
         if (el) {
             document.body.removeChild(el);
         }
-        // document.body.removeChild(document.getElementById('interact_display'));
     }
 
+    // Function to get the distance to an object
     _distance_to_object(object) {
         const pos_o = object.position;
         const pos_p = this._target.position;
@@ -68,6 +76,7 @@ class CharacterInteractionController {
         return get_cartesian_angle_from_rotation(this._target.rotation);
     }
 
+    // Function to get desired angle to an object
     _desired_angle_to_object(object) {
         const pos_o = object.position;
         const pos_p = this._target.position;
@@ -89,6 +98,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to check angular range is valid
     _check_angle_range(desired_angle, current_angle, view_range) {
         const upper_view_range = desired_angle + view_range;
         const lower_view_range = desired_angle - view_range;
@@ -120,10 +130,12 @@ class CharacterInteractionController {
         return false;
     }
 
+    // Function to determine whether the character is able to interact
     get_can_interact() {
         return this.can_interact;
     }
 
+    // Function to handle "E" interactions
     handle_press_e_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -158,6 +170,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to handle "push" (touch) interaction
     handle_touch_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -214,6 +227,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to handle right click interactions
     handle_right_click_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -251,6 +265,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to handle interactions with a gate
     handle_gate_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -276,6 +291,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to handle interactions with glass
     handle_glass_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -315,6 +331,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to handle interactions with an NPC
     handle_npc_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -349,6 +366,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Function to handle interactions with a button
     handle_button_interaction(interactable_object) {
         // Get the object of the interactable object
         const object = interactable_object.object;
@@ -383,6 +401,7 @@ class CharacterInteractionController {
         }
     }
 
+    // Update to handle interactability with various objects
     update(interactable_objects) {
         this.is_pushing = false;
 
@@ -393,6 +412,7 @@ class CharacterInteractionController {
                 
                 if (this._input._keys) {
                     if (interaction_trigger === 'disk') {
+                        // DISK INTERACTION
                         // press_e objects will start an interaction only when E is pressed on keyboard
                         if (this._input._keys.interact) {
                             this._object_being_interacted_with = this._object_to_interact_with;
@@ -407,6 +427,7 @@ class CharacterInteractionController {
                             }
                         }
                     } else if (interaction_trigger === 'pushbox') {
+                        // PUSHBOX INTERACTION
                         this._object_to_interact_with.interactable_object.end_interaction(this._controls, this._object_to_interact_with, this._level);
                         if (this._controls.power_controller.power === "strength") {
                         
@@ -435,52 +456,29 @@ class CharacterInteractionController {
                                     this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                                 } else {
                                     this._end_interaction(this._controls, this._object_to_interact_with, this._level);
-                                }
-                                
-                                // if (rounded.x == 0 && rounded.y == 1 && rounded.z == 0) {
-                                //     console.log("we on the ground!");
-                                //     this.controls.height_state = "on ground";
-                                //     has_touched_ground = true;
-                                //     return;
-                                // }                
+                                }           
                             })
                             if (!is_pushing) {
                                 this._end_interaction(this._controls, this._object_to_interact_with, this._level);
                             } else {
                                 this.is_pushing = true;
                             }
-
-
-                            // if (vertical_distance < vertical_distance_threshold) {
-                            //     const desired_angle = this._desired_angle_to_object(this._object_to_interact_with.object);
-                            //     const current_angle = this._find_2d_angle();
-                            //     const view_range = Math.PI/8;
-
-                            //     const correct_direction = this._check_angle_range(desired_angle, current_angle, view_range);
-                            //     if (!this._controls._input._keys.shift && (this._controls._input._keys.forward || this._controls._input._keys.backward || this._controls._input._keys.left || this._controls._input._keys.right)) {
-                            //         if (correct_direction) {
-                            //             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
-                            //         } else {
-                            //             this._end_interaction(this._controls, this._object_to_interact_with, this._level);
-                            //         }
-                            //     } else {
-                            //         this._end_interaction(this._controls, this._object_to_interact_with, this._level);
-                            //     }
-                            // } else {
-                            //     this._end_interaction(this._controls, this._object_to_interact_with, this._level);
-                            // }
                         }
                     } else if (interaction_trigger === "lever") {
+                        // LEVER INTERACTION
                         if (this._input._keys.interact) {
                             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                         }
                     } else if (interaction_trigger === "gate") {
+                        // GATE INTERACTION
                         // nothing to trigger for a gate
                     } else if (interaction_trigger === "glass") {
+                        // GLASS INTERACTION
                         if (this._input._keys.left_click) {
                             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                         }
                     } else if (interaction_trigger === "npc") {
+                        // NPC INTERACTION
                         if (!this._controls._currently_reading_npc) { 
                             if (this._input._keys.interact) {
                                 this._start_interaction(this._controls, this._object_to_interact_with, this._level);
@@ -488,6 +486,7 @@ class CharacterInteractionController {
                             }
                         }
                     } else if (interaction_trigger === "button") {
+                        // BUTTON INTERACTION
                         if (this._input._keys.interact) {
                             this._start_interaction(this._controls, this._object_to_interact_with, this._level);
                             this._hide_interact_message();
@@ -498,6 +497,7 @@ class CharacterInteractionController {
             }
         }
 
+        // Check if a disk is currently loaded, and handle if the user wishes to unload the disk
         if (this._controls.power_controller.loaded_disk) {
             if (this._input._keys.unload_disk) {
                 const loaded_disk = this._controls.power_controller.loaded_disk;
@@ -510,26 +510,23 @@ class CharacterInteractionController {
             }
         }
 
+        // Check if holding a disk, and handle if want to drop the disk or use the disk
         if (this._controls._holding_disk) {
 
             if (!this._controls.busy_loading_disk) {    
                 // If character is holding a disk, handle the dropping and using of the disk
                 // -- cannot interact with other objects if holding an objects already
-                // this._object_being_interacted_with = this._controls._holding_disk;
                 if (this._input._keys.drop) {
-                    // if (this._object_being_interacted_with) {
-                        this._end_interaction = this._controls._holding_disk.interactable_object.end_interaction;
-                        this._end_interaction(this._controls, this._controls._holding_disk, this._level);
-                        this._controls._holding_disk = null;
-                        hud.update_holding_disk(null);
-                    // }
+                    this._end_interaction = this._controls._holding_disk.interactable_object.end_interaction;
+                    this._end_interaction(this._controls, this._controls._holding_disk, this._level);
+                    this._controls._holding_disk = null;
+                    hud.update_holding_disk(null);
+                    
                     this._object_being_interacted_with = null;
                     this.can_interact = false;
                 } else if (this._input._keys.use) {
-                    // if (this._object_being_interacted_with) {
-                        this._use_object = this._controls._holding_disk.interactable_object.use_object;
-                        this._use_object(this._controls, this._controls._holding_disk, this._level);
-                    // }
+                    this._use_object = this._controls._holding_disk.interactable_object.use_object;
+                    this._use_object(this._controls, this._controls._holding_disk, this._level);
                     this._object_being_interacted_with = null;
                     this.can_interact = false;
                 }
@@ -543,12 +540,10 @@ class CharacterInteractionController {
                     // Go through each dynamic object
                     for (var key in interactable_objects) {
 
-                        // We test the type of interaction to occur:
-                        // - touch
-                        // - pickup
                         const trigger = interactable_objects[key].interactable_object.interaction_trigger;
 
                         if (trigger === "disk") {
+                            // DISK INTERACTION
                             if (!this._controls.busy_loading_disk) {
                                 const interaction_started = this.handle_press_e_interaction(interactable_objects[key]);
                                 if (interaction_started) {
@@ -556,6 +551,7 @@ class CharacterInteractionController {
                                 };
                             }
                         } else if (trigger === "pushbox") {
+                            // PUSHBOX INTERACTION
                             const interaction_started = this.handle_touch_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
@@ -564,12 +560,13 @@ class CharacterInteractionController {
                                 interactable_objects[key].interactable_object.end_interaction(this._controls, this._object_to_interact_with, this._level);
                             }
                         } else if (trigger === "lever") {
-                            
+                            // LEVER INTERACTIOn
                             const interaction_started = this.handle_right_click_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
                             }
                         }  else if (trigger === "gate") {
+                            // GATE INTERACTION
                             // Check if the lever is pulled
                             const lever_name = `lever_${interactable_objects[key].name.split('_')[1]}`;
                             const lever = interactable_objects[lever_name];
@@ -583,6 +580,7 @@ class CharacterInteractionController {
                                 }
                             }
                         } else if (trigger === "glass") {
+                            // GLASS INTERACTION
                             if (!interactable_objects[key].object.broken) {
                                 const interaction_started = this.handle_glass_interaction(interactable_objects[key]);
                                 if (interaction_started) {
@@ -590,12 +588,14 @@ class CharacterInteractionController {
                                 }
                             }
                         } else if (trigger === "npc") {
+                            // NPC INTERACTION
                             const interaction_started = this.handle_npc_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
                             }
                             
                         } else if (trigger === "button") {
+                            // BUTTON INTERACTION
                             const interaction_started = this.handle_button_interaction(interactable_objects[key]);
                             if (interaction_started) {
                                 return;
@@ -605,6 +605,8 @@ class CharacterInteractionController {
                         
                     }
 
+                    // If user can interact, and they haven't interacted with the above, then it means they don't want to
+                    // or have moved away: so disable the message and reset the interactions
                     if (this.can_interact) {
                         this.can_interact = false;
                         this._hide_interact_message();

@@ -3,6 +3,8 @@
  * 
  * Description:
  *  Main controller to bind scene, renderer, camera and other controllers
+ *  Handles updates to all components of the game
+ *  Also handles listener changes
  */
 
 import * as THREE from 'three';
@@ -45,6 +47,7 @@ class GameController {
         this._menu.show_menu();
     }
 
+    // Function to setup the first pointer lock
     _setup_first_pointer_lock() {
         this._threejs.domElement.addEventListener("click", async () => {
             this._threejs.domElement.requestPointerLock();
@@ -63,7 +66,6 @@ class GameController {
     }
 
     resizeCanvas() {
-        // console.log('resize');
         const camera = this._camera._camera;
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -72,25 +74,12 @@ class GameController {
 
     /* Init function */
     async _init() {
-        // STATS
-        // this.stats = new Stats();
-        // document.body.appendChild(this.stats.dom);
-
+        
         // THREE JS RENDERER
         this._threejs = new THREE.WebGLRenderer({antialias: true});
         this._threejs.setSize(window.innerWidth, window.innerHeight);
-        // console.log(window.innerHeight);
         window.addEventListener('resize', this.resizeCanvas.bind(this), false);
         document.body.appendChild(this._threejs.domElement);
-
-        // this._threejs.shadowMap.enabled = true;
-        // this._threejs.shadowMap.needsUpdate = true;
-        // setTimeout(() => {
-        //     this._threejs.shadowMap.autoUpdate = false;
-        //     this._threejs.shadowMap.enabled = false;
-        //     this._threejs.shadowMap.needsUpdate = true;
-            
-        // },10000)
 
         // MOUSE LISTENER
         this._mouse_listener = new MouseListener();
@@ -114,11 +103,9 @@ class GameController {
         // Load the level
         this._load_level()
 
-
         // AUDIO: Attach the audio listener to the actual camera object
         this._audioListener = new THREE.AudioListener();
         this._camera.get_camera().add(this._audioListener); // Access the actual camera object via get_camera()
-
 
         // REQUEST ANIMATION FRAME
         this._raf();
@@ -174,6 +161,7 @@ class GameController {
             //step for physics
             physic.step();
 
+            // Update the level
             if (this._level_controller) {
                 this._level_controller.update(time_elapsed_in_seconds);
             }

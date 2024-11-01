@@ -1,3 +1,10 @@
+/**
+ * File: IntoTheWildLevel.js
+ * 
+ * Description:
+ *  Into the wild level
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
@@ -84,6 +91,7 @@ class IntoTheWildLevel extends Level {
         this.render_main_level_components(this);
     }
 
+    // Function to handle level updates
     update(time_elapsed_in_seconds) {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
         if (this._footstepSound) {

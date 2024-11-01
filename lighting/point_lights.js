@@ -1,3 +1,10 @@
+/**
+ * File: point_lights.js
+ * 
+ * Description:
+ *  Sample point lights for testing
+ */
+
 import * as THREE from 'three';
 
 const light = new THREE.PointLight( 0xffffff, 5000, 100 );

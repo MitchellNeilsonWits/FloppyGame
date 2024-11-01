@@ -1,3 +1,10 @@
+/**
+ * File: CharacterFSM.js
+ * 
+ * Description:
+ *  Finite state machine handling states and transitions for character animations
+ */
+
 import FiniteStateMachine from "../common/FiniteStateMachine";
 import IdleState from "./states/IdleState";
 import RunState from "./states/RunState";
@@ -19,6 +26,7 @@ class CharacterFSM extends FiniteStateMachine {
         this._init();
     }
 
+    // Initialize each state
     _init() {
         this._add_state('idle', IdleState);
         this._add_state('walk_not_turning', WalkState);
@@ -32,9 +40,6 @@ class CharacterFSM extends FiniteStateMachine {
         this._add_state('flying_idle', FlyingIdleState);
         this._add_state('flying_forward', FlyingForwardState);
         this._add_state('flying_forward_fast', FlyingForwardFastState);
-
-
-
     }
 }
 

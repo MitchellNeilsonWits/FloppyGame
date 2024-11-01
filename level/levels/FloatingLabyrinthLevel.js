@@ -1,3 +1,10 @@
+/**
+ * File: FloatingLabyrinth.js
+ * 
+ * Description:
+ *  Floating labyrinth level
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { AmbientLight, Euler, Vector3 } from "three";
@@ -6,7 +13,7 @@ import FootstepSound from "../../engine/footSteps";
 import music_controller from "../../music/MusicController";
 
 
-class MitchLevel extends Level {
+class FloatingLabyrinthLevel extends Level {
 
     constructor(scene, controller, audioListener, audioLoader) {
         super();
@@ -100,4 +107,4 @@ class MitchLevel extends Level {
     
 }
 
-export default MitchLevel
+export default FloatingLabyrinthLevel

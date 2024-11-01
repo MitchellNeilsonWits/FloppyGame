@@ -1,3 +1,10 @@
+/**
+ * File: InteractableBox.js
+ * 
+ * Description:
+ *  Standard sample box interactable for testing
+ */
+
 import interactableObject from "../../engine/interactableObject";
 
 class InteractableBox extends interactableObject {

@@ -1,3 +1,10 @@
+/**
+ * File: FinaleLevel.js
+ * 
+ * Description:
+ *  Finale Level for the game
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
@@ -96,9 +103,8 @@ class FinaleLevel extends Level {
         this.add_platform();
     }
 
+    // Add the finale platform
     add_platform() {
-        // this.platform
-        // console.log(this.platform_mesh);
         const platform = new FinalePlatform(this.character_controller, this.platform_mesh, this);
         this.platform = platform;
         this._ground_colliders.push(platform.collider);
@@ -106,6 +112,7 @@ class FinaleLevel extends Level {
         this._level.add(platform);
     }
 
+    // Add level lights (to be switched on one by one)
     add_lights() {
         for (const key of Object.keys(this.lights)) {
             const light = this.lights[key];
@@ -128,8 +135,8 @@ class FinaleLevel extends Level {
         
     }
 
+    // Update lights: switch on incrementally
     update_lights() {
-        // console.log(this.lights);
         if (this.time_passed >= 2) {
             this.lights[1].intensity = this.light_on;
         }
@@ -145,6 +152,7 @@ class FinaleLevel extends Level {
     }
 
 
+    // Function to update the level state
     update(time_elapsed_in_seconds) {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
         if (this._footstepSound) {

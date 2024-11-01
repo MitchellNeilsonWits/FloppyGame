@@ -1,3 +1,10 @@
+/**
+ * File: FinalePlatform.js
+ * 
+ * Description:
+ *  Object in the final platform to handle end of game
+ */
+
 import { Object3D } from "three";
 import physic from "../engine/physic";
 import { createRigidBodyFixed } from "../engine/function";
@@ -10,7 +17,6 @@ class FinalePlatform extends Object3D {
         super();
         this.controls = controls;
         this.platform = platform;
-        // console.log("LEVEL IN PORTAL:",level)
         this.level_controller = level.level_controller;
 
         this.initPhysic();
@@ -34,6 +40,7 @@ class FinalePlatform extends Object3D {
         this.change_level = this.change_level_unbound.bind(this);
     }
 
+    // Change level function is just loading the credits and clearing everythinf
     change_level_unbound(event) {
         if (event.key === "e" || event.key === "E") {
             this.hide_message();
@@ -47,6 +54,7 @@ class FinalePlatform extends Object3D {
         }
     }
 
+    // Show message function
     show_message() {
         this.message_shown = true;
         document.body.appendChild(this.next_level);
@@ -54,6 +62,7 @@ class FinalePlatform extends Object3D {
         window.addEventListener('keypress', this.change_level)
     }
 
+    // Hide message function
     hide_message() {
         this.message_shown = false;
         document.body.removeChild(this.next_level);
@@ -61,18 +70,20 @@ class FinalePlatform extends Object3D {
         window.removeEventListener('keypress', this.change_level)
     }
 
+    // Initialize the physic
     initPhysic() {
         const { rigidBody, collider } = createRigidBodyFixed(this.platform, physic);
         this.rigidBody = rigidBody;
         this.collider = collider;
     }
 
+    // Initialize the visual
     initVisual() {
-        // this.platform.position.set(0, 0, 0);
         this.platform.castShadow = true;
         this.add(this.platform);
     }
 
+    // Function to update showing message based on if character is on the platform
     update() {
         
         let on_platform = false;
