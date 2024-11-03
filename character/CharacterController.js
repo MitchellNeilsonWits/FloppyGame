@@ -280,6 +280,16 @@ class CharacterController {
         this._interaction_controller.set_dynamic_objects(objects);
     }
 
+    force_update_player(position, velocity, loading_disk) {
+        this.player_force_update = true;
+        this.player_force_update_data = {
+            position: position,
+            velocity: velocity,
+            loading_disk: loading_disk
+        }
+    }
+
+
     // Update function for when no ability is loaded
     update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y) {
     
@@ -645,6 +655,15 @@ class CharacterController {
 
         // Only update if character has been loaded
         if (!this.character_is_loaded) {
+            return;
+        }
+
+        // Check for force update
+        if (this.player_force_update) {
+            this._target.rigidBody.setTranslation(this.player_force_update_data.position);
+            this._target.update(this.player_force_update_data.velocity.x, this.player_force_update_data.velocity.y, this.player_force_update_data.velocity.z);
+            this.busy_loading_disk = false;
+            this.player_force_update = false;
             return;
         }
 

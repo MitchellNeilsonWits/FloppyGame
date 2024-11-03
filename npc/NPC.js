@@ -68,6 +68,24 @@ class NPC extends Object3D {
       this.video.play(); 
       this.videoPlaying = true;
 
+      // Load the marker above NPC head
+      const gltf_2 = (new GLTFLoader()).loadAsync("../models/npc_marker.glb").then((gltf) => {
+        
+        gltf.scene.children[0].scale.set(0.1,0.1,0.1);
+        this._marker_mesh = gltf.scene.children[0];
+        this._marker_mesh.position.set(0,3,0);
+        this.add(this._marker_mesh);
+        const loader = new GLTFLoader();
+        const action = this._mixer.clipAction(gltf.animations[0])
+        this._marker_animation = action;
+        this._marker_animation.play();
+        
+
+
+        this._marker_light = new THREE.PointLight(0xffffff,10,0);
+        this._marker_light.position.set(0,2,0);
+        this.add(this._marker_light);
+      }) 
     }
     
     // Load the mesh for the NPC model
@@ -109,29 +127,11 @@ class NPC extends Object3D {
 
       this.initPhysic();
       this.initVisual();
+
+      
     })
 
-    // Load the marker above NPC head
-    const gltf_2 = (new GLTFLoader()).load("../models/npc_marker.glb", (gltf) => {
-      
-      gltf.scene.children[0].scale.set(0.1,0.1,0.1);
-      this._marker_mesh = gltf.scene.children[0];
-      this._marker_mesh.position.set(0,3,0);
-      this.add(this._marker_mesh);
-      
-      const loader = new GLTFLoader();
-      // Load the marker bob and rotate animation
-      loader.load('../models/npc_marker.glb', (a) => {
-        const action = this._mixer.clipAction(a.animations[0])
-        this._marker_animation = action;
-        this._marker_animation.play();
-      });
-
-
-      this._marker_light = new THREE.PointLight(0xffffff,10,0);
-      this._marker_light.position.set(0,2,0);
-      this.add(this._marker_light);
-  }) 
+    
   }
 
 

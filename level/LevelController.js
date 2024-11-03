@@ -95,7 +95,6 @@ class LevelController {
         // ---------- RESET DISKS ----------
         // Take off disk being held and loaded disk
         if (this._controls._holding_disk) {
-            // console.log(this._controls._holding_disk);
             this._controls._holding_disk.interactable_object.end_interaction(this._controls, this._controls._holding_disk, this._level._level);
         }
         const loaded = this._controls.power_controller.get_loaded_disk(); 
@@ -107,7 +106,7 @@ class LevelController {
         this._controls._holding_disk = null;
 
         const disks = this._level.get_disks();
-        // console.log(disks);
+
         for (const key of Object.keys(disks)) {
             const disk_object = disks[key];
             disk_object.reset_velocity();
@@ -223,21 +222,32 @@ class LevelController {
             
             this._controls.set_level(this._level.get_level());
 
-            // console.log("DONE RENDERING THE SCENE!");
+            console.log("DONE RENDERING THE SCENE!");
         }).then(() => {
             setTimeout(() => {
                 this.loading_screen.hide_screen();
                 hud.reset_hud();
 
-                this.changing_level = false;
-                this._controls._halt_movement = false;
-                // ---------- SETUP PLAYER ----------
-                const starting_positions = this._level.get_starting_positions();
-                this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
-                this._controls._velocity = new Vector3(0,0,0);
-                this._camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(starting_positions.player_rotation)));
-                this._controls.busy_loading_disk = false;
-                // ------------------------------
+                
+                setTimeout(() => {
+                    console.log("Reverting character changes!");
+                    // this._controls._halt_character = false;
+                    
+                    // ---------- SETUP PLAYER ----------
+                    const starting_positions = this._level.get_starting_positions();
+                    this._camera.set_rotation((Math.PI  + get_cartesian_angle_from_rotation(starting_positions.player_rotation)));
+                    // this._controls._target.rigidBody.setTranslation(starting_positions.player_position);
+                    const position = starting_positions.player_position;
+                    // this._controls._velocity = new Vector3(0,0,0);
+                    const velocity = new Vector3(0,0,0);
+                    // this._controls.busy_loading_disk = false;
+                    const loading_disk = false;
+                    this._controls.force_update_player(position, velocity, loading_disk);
+                    // ------------------------------
+                    this.changing_level = false;
+                    this._controls._halt_movement = false;
+
+                },500)
             },1000);
         })
         
@@ -246,29 +256,37 @@ class LevelController {
 
     change_level_unbound(level_number) {
         this.changing_level = true;
+        this._controls._halt_movement = true;
         music_controller.pause_music();
         this._current_level = level_number;
-        // this._scene.clear(); // clear the scene
+        // clear the scene
         if (this._level) {
-            this._level._footstepSound.stopFootstepSound();
+            if (this._level._footstepSound) {
+                this._level._footstepSound.stopFootstepSound();
+            }
             this.reset_current_level();
             const prev_level = this._level;
-            // console.log(this);
+
+            // Turn off all gates
+            const lever_gates = this._level._lever_gates;
+            for (const key of Object.keys(lever_gates)) {
+                const lever = lever_gates[key].lever_object;
+                const gate = lever_gates[key].gate_object;
+
+                if (lever.lever_on == false) {
+                    lever.remove_gate_from_level();
+                }
+            }
+
             // need to clear all colliders apart from character
             if (prev_level.non_player_colliders) {
                 prev_level.non_player_colliders.forEach(collider => {
-                    // console.log(collider);
+
                     if (collider) {
                         physic.removeCollider(collider);
                     }
                 });
             }
-
-            // prev_level.non_player_rigid_bodies.forEach(rigidBody => {
-            //     // console.log(object);
-            //     // physic.removeRigidBody(object.rigidBody);
-            //     physic.removeRigidBody(rigidBody);
-            // });
             
             if (prev_level._world) {
                 prev_level._world.clear();
@@ -289,30 +307,35 @@ class LevelController {
         this.loading_screen.set_progress(40);
         switch (level_number) {
             case 0:
+                // LOBBY LEVEL
                 this._menu.enable_menu();
                 hud.set_level_name('Lobby');
                 this._level = new LobbyLevel(this._scene, this.change_level, this.audioListener, this.audioLoader, this);
                 break;
         
             case 1:
+                // TUTORIAL LEVEL
                 this._menu.enable_menu();
                 hud.set_level_name('Tutorial');
                 this._level = new TutorialLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 2:
+                // INTO THE WILD LEVEL
                 this._menu.enable_menu();
                 hud.set_level_name('Into the Wild');
                 this._level = new IntoTheWildLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
 
             case 3:
+                // FLOATING LABYRINTH LEVEL
                 this._menu.enable_menu();
                 hud.set_level_name('Floating Labyrinth');
                 this._level = new FloatingLabyrinthLevel(this._scene, this, this.audioListener, this.audioLoader);
                 break;
             
             case 4:
+                // PLACEMENT MATTERS LEVEL
                 this._menu.enable_menu();
                 hud.set_level_name('Placement Matters');
                 this._level = new PlacementMattersLevel(this._scene, this, this.audioListener, this.audioLoader);
@@ -320,6 +343,7 @@ class LevelController {
                 break;
             
             case 5:
+                // FINALE LEVEL
                 this._menu.disable_menu();
                 hud.set_level_name('Finale');
                 this._level = new FinaleLevel(this._scene, this, this.audioListener, this.audioLoader, this._controls);
@@ -331,11 +355,11 @@ class LevelController {
         }
 
         this._render_scene();
-        // console.log(this._scene);
     }
 
     update(time_elapsed_in_seconds) {
         if (!this.changing_level) {
+            // Update character height information
             if (this._controls.height_controller) {
                 this._controls.height_controller.update(this._ground_objects);
             }
@@ -352,6 +376,7 @@ class LevelController {
                 this._level.update(time_elapsed_in_seconds);
             }
 
+            // Update character interactions
             if (this._controls._interaction_controller) {
                 this._controls._interaction_controller.update(this._interactable_objects);
             }   
