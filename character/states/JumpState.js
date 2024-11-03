@@ -1,3 +1,10 @@
+/**
+ * File: JumpState.js
+ * 
+ * Description:
+ *  State to handle character jump
+ */
+
 import State from "../State";
 
 class JumpState extends State {

@@ -1,3 +1,10 @@
+/**
+ * File: InteractableButton.js
+ * 
+ * Description:
+ *  Interactable component to link button to player interactions
+ */
+
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import interactableObject from "../engine/interactableObject";
 import * as THREE from 'three';
@@ -19,16 +26,19 @@ class InteractableButton extends interactableObject {
 
     }
     
+    // No requirement for using the object
     use_object_static(controls, object_to_use, level) {
         
     }
     
+    // Start interaction will start the placement matters level timer and declare that the button is pressed
     start_interaction_static(controls, object_interacted_with, level) {
         timer.show_timer();
         timer.update_time(20);
         object_interacted_with.object.pressed = true;
     }
 
+    // No requirement for ending the interaction
     end_interaction_static(controls, object_to_drop, level) {
         
     }

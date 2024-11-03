@@ -1,3 +1,10 @@
+/**
+ * File: PushabbleBox.js
+ * 
+ * Description:
+ *  Original pushable box file for testing purposes
+ */
+
 import * as THREE from 'three';
 import Component from "../Component";
 

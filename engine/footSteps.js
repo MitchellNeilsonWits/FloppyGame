@@ -1,3 +1,10 @@
+/**
+ * File: footSteps.js
+ * 
+ * Description:
+ *  Handles playing foot step sounds using ray casting
+ */
+
 import * as THREE from 'three';
 
 class FootstepSound {
@@ -52,6 +59,7 @@ class FootstepSound {
         window.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
 
+    // When pressing space play jump sound
     handleKeyDown(event) {
         if (event.code === 'Space') {
             event.preventDefault(); 
@@ -59,10 +67,12 @@ class FootstepSound {
         }
     }
 
+    // Trigger jump sound
     triggerJump() {
         this.playJumpSound();
     }
 
+    // Update function to handle footstep sounds
     update() {
 
         // No footsteps on idle state
@@ -79,7 +89,6 @@ class FootstepSound {
             const playerPos = this.character_controller._target.position;
 
             // Loop through all objects in the level
-            // console.log(this.level);
             let isOnSurface = false;
             if (this.level.children[2]) {
                 const objectsInLevel = this.level.children[2].children; 
@@ -123,6 +132,7 @@ class FootstepSound {
         }
     }
 
+    // Function to heck player-surface contact
     checkIfOnSurface(playerPos, targetObject) {
         const rayOrigin = new THREE.Vector3(playerPos.x, playerPos.y + 1, playerPos.z);
         const rayDirection = new THREE.Vector3(0, -1, 0);  
@@ -142,6 +152,7 @@ class FootstepSound {
         return false;
     }
 
+    // Function to play a specific sound
     playFootstepSound(playerPos, playbackRate, surfaceType) {
         const sound = this.getSoundBySurfaceType(surfaceType);
         this.updatePlaybackRate(playbackRate, surfaceType);
@@ -153,6 +164,7 @@ class FootstepSound {
         }
     }
 
+    // Function to stop all sounds
     stopFootstepSound() {
         // Stop all sounds in case any is playing
         if (this.metalSound.isPlaying) {
@@ -171,6 +183,7 @@ class FootstepSound {
         this.isPlaying = false;
     }
 
+    // Function to change playback rate
     updatePlaybackRate(rate, surfaceType) {
         const sound = this.getSoundBySurfaceType(surfaceType);
         let adjustedRate = rate;
@@ -189,13 +202,14 @@ class FootstepSound {
         }
     }
     
-
+    // Function to play jump sound
     playJumpSound() {
         if (!this.jumpSound.isPlaying) {
             this.jumpSound.play();
         }
     }
 
+    // Function to retrieve type of surface and sound to play
     getSoundBySurfaceType(surfaceType) {
         switch (surfaceType) {
             case 'metal':

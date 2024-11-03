@@ -1,3 +1,11 @@
+/**
+ * File: Angle.js
+ * 
+ * Description:
+ *  State to give functions for retrieving angle information
+ */
+
+// Function to get a cartesian angle from an Euler rotation vector
 function get_cartesian_angle_from_rotation(rotation) {
     // need to handle different cases of the euler rotational values
     if (rotation.x === 0) {

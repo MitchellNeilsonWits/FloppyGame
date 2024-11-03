@@ -1,7 +1,15 @@
+/**
+ * File: GlassBreaker.js
+ * 
+ * Description:
+ *  Class to handle glass breaking
+ */
+
 import * as THREE from 'three';
 import { ConvexObjectBreaker } from 'three-stdlib';
 
 class GlassBreaker {
+    // Initialize important variables
     constructor(character_controller, scene, camera) {
         this.character_controller = character_controller; 
         this.glassName = "glass";
@@ -31,6 +39,7 @@ class GlassBreaker {
         });
     }
 
+    // Function to handle updates for breaking glass
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
@@ -55,6 +64,7 @@ class GlassBreaker {
         }
     }
 
+    // Function to break the glass
     breakGlass() {
         const glassMesh = this.scene.getObjectByName(this.glassName);
         if (glassMesh) {
@@ -87,10 +97,12 @@ class GlassBreaker {
         }
     }
 
+    // Function to show interactive message
     showInteractMessage() {
         this.interactMessage.style.display = 'block';
     }
 
+    // Function to hide interactive message
     hideInteractMessage() {
         this.interactMessage.style.display = 'none';
     }

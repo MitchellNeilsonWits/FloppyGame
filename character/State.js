@@ -1,12 +1,22 @@
+/**
+ * File: State.js
+ * 
+ * Description:
+ *  Main parent class for different types of states for the CharacterFSM
+ */
+
 class State {
     constructor(parent) {
         this._parent = parent;
     }
 
-    enter() {}
-    exit() {}
+    enter() {} // implemented uniquely
+    exit() {} // implemented uniquely
+
+    // Function to handle a state transition based on character input
     update(character_is_turning, input, height_state, current_power) {
 
+        // HANDLE FLYING TRANSITIONS
         if (current_power === "flight") {
             // Handle when player is in the air
             if (height_state == "in air") {
@@ -27,6 +37,8 @@ class State {
                 this._parent.set_state('idle');
             }
         } else {
+        // HANDLE OTHER TRANSITIONS
+
             // Handle when player is in the air
             if (height_state == "in air") {
                 this._parent.set_state('falling');
@@ -43,6 +55,7 @@ class State {
         }
     }
 
+    // Function to check if there is a movement update
     _requested_movement_update(input){
         return input._keys.forward || input._keys.backward || input._keys.left || input._keys.right;
     }

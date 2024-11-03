@@ -1,9 +1,17 @@
+/**
+ * File: CharacterControllerInput.js
+ * 
+ * Description:
+ *  File used to handle user input for the character
+ */
+
 class CharacterControllerInput {
     constructor() {
         this._init();
     }
 
     _init() {
+        // Setup each key
         this._keys = {
             forward: false,
             backward: false,
@@ -20,6 +28,7 @@ class CharacterControllerInput {
             left_click: false
         };
 
+        // Setup listeners
         document.addEventListener('keydown', (e) => this._on_key_down(e), false);
         document.addEventListener('keyup', (e) => this._on_key_up(e), false);
         document.addEventListener('mousedown', (e) => this._on_mouse_down(e), false);
@@ -28,6 +37,7 @@ class CharacterControllerInput {
 
     }
 
+    // Handle mouse clicks
     _on_mouse_down(event) {
         switch (event.button) {
             case 0:
@@ -43,7 +53,7 @@ class CharacterControllerInput {
         }
     }
     
-
+    // Handle mouse anti-clicks
     _on_mouse_up(event) {
         switch (event.button) {
             case 0:
@@ -59,6 +69,7 @@ class CharacterControllerInput {
         }
     }
 
+    // Handle key down for each key
     _on_key_down(event) {
         switch(event.keyCode) {
             case 87: // w
@@ -108,6 +119,7 @@ class CharacterControllerInput {
         }
     }
 
+    // Handle key up for each key
     _on_key_up(event) {
         switch(event.keyCode) {
             case 87: // w

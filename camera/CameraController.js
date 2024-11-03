@@ -1,3 +1,10 @@
+/**
+ * File: CameraController.js
+ * 
+ * Description:
+ *  Handles camera movements for third person perspective
+ */
+
 import * as THREE from 'three';
 
 class CameraController {
@@ -6,23 +13,25 @@ class CameraController {
         this._velocity = {x:0, y:0, z:0}
     }
 
+    // Initialize the camera by setting up the 3rd perspective system
     _init() {
+        // Declare important variables
         const WIDTH = window.innerWidth;
         const HEIGHT = window.innerHeight;
         this._mouse = new THREE.Vector2(0,0);
         this._mouse_movement = new THREE.Vector2(0,0);
-
         this._target = new THREE.Vector2(0,0);
         this._window_half = new THREE.Vector2( window.innerWidth / 2, window.innerHeight / 2 );
         
-        
+        // Create the camera
         this._camera = new THREE.PerspectiveCamera(70, WIDTH / HEIGHT);
         
+        // Declare the camera distance
         this._camera_distance = 3.5;
-        
         this._camera.position.set(0, 0.5, this._camera_distance);
+        
+        // Camera is created by attaching yaw, pitch and pivot together for seemless movement
         this._camera_target = new THREE.Vector3();
-
         this._yaw = new THREE.Object3D();
         this._pitch = new THREE.Object3D();
         this._pivot = new THREE.Object3D();
@@ -33,6 +42,7 @@ class CameraController {
         this._pitch.add(this._camera);
     }
 
+    // Some simple get functions for each component
     get_camera() {
         return this._camera;
     }
@@ -55,14 +65,17 @@ class CameraController {
         }
     }
 
+    // Function to move the pivot to the location of the player
     move_pivot(position) {
         this._pivot.position.lerp(position, 0.5);
     }
 
+    // Function to change the rotation manually at the beginning of each level
     set_rotation(rotation) {
         this._yaw.rotation.y = rotation;
     }
     
+    // Function to update the camera movement based on x and y mouse movement and scrolling
     update(mouse_movement_x, mouse_movement_y, mouse_zoom) {
         const mouse_sensitivity = 0.5;
 
@@ -73,14 +86,13 @@ class CameraController {
             this._pitch.rotation.x = v;
         }
 
-        // if (mouse_zoom != this._camera_distance) {
         this._camera_distance = mouse_zoom;
         this._camera.position.z = this._camera_distance; 
-        // }
-
+        
         return false;
     }
 
+    // Function to change the camera FOV from within the menu screen
     change_camera_fov(val) {
         this._camera.fov = val;
         this._camera.updateProjectionMatrix();

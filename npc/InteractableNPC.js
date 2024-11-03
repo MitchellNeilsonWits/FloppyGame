@@ -1,3 +1,10 @@
+/**
+ * File: InteractableNPC.js
+ * 
+ * Description:
+ *  Implements interactableObjects to handle character interactions with NPC
+ */
+
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import interactableObject from "../engine/interactableObject";
 import * as THREE from 'three';
@@ -9,6 +16,8 @@ import hud from "../hud/Hud";
 import './npc.css'
 
 class InteractableNPC extends interactableObject {
+
+    // Setup displays and other important variables
     constructor(interaction_display, object, textlines) {
         const distance_threshold = 1.5;
         const interaction_trigger = 'npc';
@@ -85,30 +94,28 @@ class InteractableNPC extends interactableObject {
         this.npc_lines_text = npcLinesContentText;
     }
     
+    // Use interaction: none
     use_object_static(controls, object_to_use, level) {
         
     }
 
+    // Function to update the lines for the NPC
     update_line_static(event, controls) {
-        // if (event.keyCode === 69 || event.keyCode === 101) {
-            this.line_being_read = this.line_being_read + 1;
+        this.line_being_read = this.line_being_read + 1;
             
-            if (this.line_being_read === this.lines.length) {
-                // window.removeEventListener('keypress',this)
-                controls._currently_reading_npc = false;
-                document.body.removeChild(this.npc_lines_root);
+        if (this.line_being_read === this.lines.length) {
+            controls._currently_reading_npc = false;
+            document.body.removeChild(this.npc_lines_root);
 
-                
+            return;
+        }
 
-                return;
-            }
+        this.npc_lines_text.innerHTML = this.lines[this.line_being_read];        
+        addOneTimeEventListener(window, 'keypress', (event) => this.update_line(event, controls));
 
-            this.npc_lines_text.innerHTML = this.lines[this.line_being_read];        
-            addOneTimeEventListener(window, 'keypress', (event) => this.update_line(event, controls));
-
-        // }
     }
     
+    // Function to start interaction with NPC: show lines and listen to keypresses to change line shown
     start_interaction_static(controls, object_interacted_with, level) {
         this.line_being_read = 0;
 
@@ -122,6 +129,7 @@ class InteractableNPC extends interactableObject {
         controls._currently_reading_npc = true;
     }
 
+    // End interaction
     end_interaction_static(controls, object_to_drop, level) {
         
     }

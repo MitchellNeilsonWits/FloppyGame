@@ -1,3 +1,10 @@
+/**
+ * File: TurningRightState.js
+ * 
+ * Description:
+ *  State to handle character walking and turning right
+ */
+
 import State from "../State";
 
 class TurningRightState extends State {

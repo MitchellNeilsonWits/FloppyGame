@@ -1,3 +1,10 @@
+/**
+ * File: IdleState.js
+ * 
+ * Description:
+ *  State to handle idle character
+ */
+
 import State from "../State";
 
 class IdleState extends State {

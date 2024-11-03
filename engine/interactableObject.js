@@ -1,3 +1,10 @@
+/**
+ * File: interactableObject.js
+ * 
+ * Description:
+ *  Parent class that is implemented by various objects for interaction handling
+ */
+
 class interactableObject {
     constructor(interaction_display, object, distance_threshold, interaction_trigger) {
         this.interaction_display = interaction_display;

@@ -11,6 +11,11 @@
     left: 0;
 }
 
+.loading_screen_img {
+    width: 80px;
+    height: 80px;
+}
+
 .loading_screen_text {
     color: white;
 }
@@ -31,4 +36,8 @@
     width: 100px;
     background: white;
     transition: 2s;
+}
+
+.loading_screen_sub_text {
+    color: gray;
 }

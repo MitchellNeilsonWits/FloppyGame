@@ -1,3 +1,10 @@
+/**
+ * File: NPC.js
+ * 
+ * Description:
+ *  Handles setup and objects of NPC
+ */
+
 import * as THREE from 'three';
 import { Object3D } from "three";
 import physic from "../engine/physic";
@@ -14,26 +21,25 @@ class NPC extends Object3D {
     this.position.copy(position);
     this.rotation.copy(rotation);
     this.show_marker = false;
-    // this.show_marker_changed = false;
   }
 
+  // Function to hide the NPC interaction marker
   hide_marker() {
     this.show_marker = false;
     this.remove(this._marker_mesh);
-    // this.remove(this._marker_light);
   }
 
+  // Function to show the NPC interaction marker
   show_marker() {
     this.show_marker = true;
     this.add(this._marker_mesh);
-    // this.add(this._marker_light);
   }
 
-
+  // Function to set the object using async
   async set_npc() {
     const manager = new THREE.LoadingManager();
     manager.onLoad = () => {
-      // console.log(this._screen);
+      // Create the PICTURE IN PICTURE for face when the model is loaded
       this.video = document.createElement('video');
       
       this.video.src = 'npc/npc_face_v2.mp4'; 
@@ -42,8 +48,6 @@ class NPC extends Object3D {
       this.video.volume = 0; 
       this.video.crossOrigin = 'anonymous';
       this.video.style.display = 'none';
-
-      // this._screen.material.color = new THREE.Color({r: 1, g:1, b:1});
 
       const existingMaterial = this._screen.material;
 
@@ -59,130 +63,99 @@ class NPC extends Object3D {
       existingMaterial.map = this.videoTexture;
       existingMaterial.needsUpdate = true;
 
+      // Play the video on-mute
       this.video.muted = false; 
       this.video.play(); 
       this.videoPlaying = true;
 
-      // console.log(this._screen.material);
+      // Load the marker above NPC head
+      const gltf_2 = (new GLTFLoader()).loadAsync("../models/npc_marker.glb").then((gltf) => {
+        
+        gltf.scene.children[0].scale.set(0.1,0.1,0.1);
+        this._marker_mesh = gltf.scene.children[0];
+        this._marker_mesh.position.set(0,3,0);
+        this.add(this._marker_mesh);
+        const loader = new GLTFLoader();
+        const action = this._mixer.clipAction(gltf.animations[0])
+        this._marker_animation = action;
+        this._marker_animation.play();
+        
+
+
+        this._marker_light = new THREE.PointLight(0xffffff,10,0);
+        this._marker_light.position.set(0,2,0);
+        this.add(this._marker_light);
+      }) 
     }
     
+    // Load the mesh for the NPC model
     const gltf = (new GLTFLoader(manager)).load("../models/npc_idle.glb", (gltf) => {
       gltf.scene.children[0].scale.set(0.3,0.3,0.3);
       this._pure_mesh = gltf.scene.children[0];
-      // console.log(this._pure_mesh);
+      
       this._screen = this._pure_mesh.children[0].children[0]
 
 
-        // this._mesh_p1 = gltf.scene.children[0].children[0].children[0];
-        // this._mesh_p2 = gltf.scene.children[0].children[0].children[1];
-        // this._mesh_p3 = gltf.scene.children[0].children[0].children[2];
-        // this._mesh_p4 = gltf.scene.children[0].children[0].children[3];
-
-        // this._animations = gltf.animations;
-        const animations = gltf.animations;
-        this.animations = {};
-        this._mixer = new THREE.AnimationMixer(this);
-        
-        const _on_load = (animation_name, animation) => {
-          const clip = animation.animations[0];
-          const action = this._mixer.clipAction(clip);
-          // action.play();
-
-          this.animations[animation_name] = {
-              clip: clip,
-              action: action
-          }
+      const animations = gltf.animations;
+      this.animations = {};
+      this._mixer = new THREE.AnimationMixer(this);
+      
+      // Handle animation load
+      const _on_load = (animation_name, animation) => {
+      const clip = animation.animations[0];
+      const action = this._mixer.clipAction(clip);
+      
+        this.animations[animation_name] = {
+            clip: clip,
+            action: action
         }
+      }
 
-        this._manager = new THREE.LoadingManager();
-        this._manager.onLoad = () => {
-          this.state_machine.set_state('wave');
-        }
+      this._manager = new THREE.LoadingManager();
+      this._manager.onLoad = () => {
+        this.state_machine.set_state('wave');
+      }
 
-        const loader = new GLTFLoader(this._manager);
-        loader.setPath('models/');
-        loader.load('npc_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
-        loader.load('npc_wave.glb', (a) => {_on_load('wave', a);}); // idle animation
+      // Load the wave and idle animations
+      const loader = new GLTFLoader(this._manager);
+      loader.setPath('models/');
+      loader.load('npc_idle.glb', (a) => {_on_load('idle', a);}); // idle animation
+      loader.load('npc_wave.glb', (a) => {_on_load('wave', a);}); // wave animation
 
 
-        this.state_machine = new NPCFSM(this.animations);
+      this.state_machine = new NPCFSM(this.animations);
 
-        this.initPhysic();
-        this.initVisual();
+      this.initPhysic();
+      this.initVisual();
+
+      
     })
 
-    // Load the marker
-    const gltf_2 = (new GLTFLoader()).load("../models/npc_marker.glb", (gltf) => {
-      // console.log(gltf.scene);
-      gltf.scene.children[0].scale.set(0.1,0.1,0.1);
-      this._marker_mesh = gltf.scene.children[0];
-      this._marker_mesh.position.set(0,3,0);
-      this.add(this._marker_mesh);
-      
-      const loader = new GLTFLoader();
-      loader.load('../models/npc_marker.glb', (a) => {
-        const action = this._mixer.clipAction(a.animations[0])
-        this._marker_animation = action;
-        this._marker_animation.play();
-      }); // idle animation
-
-
-      this._marker_light = new THREE.PointLight(0xffffff,10,0);
-      this._marker_light.position.set(0,2,0);
-      this.add(this._marker_light);
-  }) 
+    
   }
 
+
+  // Function to initialize the physic for the model
   initPhysic() {
-    // const { rigidBody, collider } = createRigidBodyFixed(this._mesh_p2, physic);
-    // this.rigidBody = rigidBody;
-    // this.collider = collider;
   }
 
+  // Function to initialize the visual for the model
   initVisual() {
-    // this._mesh_p1.position.set(0, 0, 0);
-    // this._mesh_p2.position.set(0, 0, 0);
-    // this._mesh_p3.position.set(0, 0, 0);
-    // this._mesh_p4.position.set(0, 0, 0);
-    
     this.add(this._pure_mesh);
-    
-    // this.add(this._mesh_p1);
-    // this.add(this._mesh_p2);
-    // this.add(this._mesh_p3);
-    // this.add(this._mesh_p4);
-
   }
 
-
+  // Function to update the animation and visual for the model
   update(time_elapsed_in_seconds) {
     this._mixer.update(time_elapsed_in_seconds)
     this.updateVisual();
   }
 
+  // Update physic
   updatePhysic(x_vel, y_vel, z_vel) {
-    // const x = x_vel;
-    // const y = this.rigidBody.linvel().y;
-    // const z = z_vel;
-    // this.rigidBody.setLinvel({ x, y, z }, true);
   }
 
+  // Update the visual
   updateVisual() {
-    // console.log(this._lever_handle.rotation);
-    // // this._lever_handle.rotation.y = 0.6698107603586773;
-    // if (this.lever_on && this._lever_handle.rotation.z < 0.8698107603586773) {
-    //     // this.current_lever_rotation -= Math.PI/12; 
-    //     this._lever_handle.rotateZ(Math.PI/150);
-    //     this.lever_busy_changing = true;
-    // } else if (!this.lever_on && this._lever_handle.rotation.z > -0.2698107603586773) {
-    //     // this.current_lever_rotation += Math.PI/12; 
-    //     this._lever_handle.rotateZ(-Math.PI/150);
-    //     this.lever_busy_changing = true;
-    // } else {
-    //   this.lever_busy_changing = false;
-    // }
-    
-    // this.position.copy(this.rigidBody.translation());
   }
 }
 

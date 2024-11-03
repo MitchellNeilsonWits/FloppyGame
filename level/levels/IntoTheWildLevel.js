@@ -1,3 +1,10 @@
+/**
+ * File: IntoTheWildLevel.js
+ * 
+ * Description:
+ *  Into the wild level
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
@@ -28,7 +35,7 @@ class IntoTheWildLevel extends Level {
         ]
 
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/intothewildlevel_v2.glb');
+        const meshes = await loadAssets('assets/intothewildlevel.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
         
@@ -84,6 +91,7 @@ class IntoTheWildLevel extends Level {
         this.render_main_level_components(this);
     }
 
+    // Function to handle level updates
     update(time_elapsed_in_seconds) {
         // ---------------- LEVEL SPECIFIC UPDATES --------------------
         if (this._footstepSound) {

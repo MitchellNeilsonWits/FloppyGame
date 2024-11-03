@@ -1,3 +1,10 @@
+/**
+ * File: LobbyLevel.js
+ * 
+ * Description:
+ *  Lobby level
+ */
+
 import Level from "../Level";
 import ProximityScreenRenderer from '../../engine/proxRender';
 import loadAssets from '../../engine/loader';
@@ -81,6 +88,8 @@ class LobbyLevel extends Level {
             'sounds/zapsplat_foley_footstep_single_boys_sneaker_wood_004_50920.mp3',
             'sounds/zapsplat_foley_rock_heavy_chunk_set_down_onto_rubble_002_110534.mp3'
         );
+
+        // Select level menu
         this._levelSelectRenderer = new LevelSelectRender(character_controller, this._scene, (levelNumber) => {
             this.change_level(levelNumber);
         });
@@ -141,6 +150,7 @@ class LobbyLevel extends Level {
             this._prox.update();
         }
 
+        // Tutorial level message
         if (this._tutorialRenderer) {
             this._tutorialRenderer.update();
         }
@@ -155,9 +165,6 @@ class LobbyLevel extends Level {
             this._levelSelectRenderer.update();
         }
 
-        // if (this._meme) {
-        //     this._meme.update();
-        // }
         
 
         this._skybox.rotateX(Math.PI/10000);

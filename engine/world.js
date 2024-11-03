@@ -1,3 +1,10 @@
+/**
+ * File: world.js
+ * 
+ * Description:
+ *  Main class to load colliders for the level to the engine
+ */
+
 import { Object3D } from 'three'
 import { createRigidBodyDynamic, createRigidBodyFixed } from './function'
 
@@ -9,15 +16,14 @@ export default class World extends Object3D {
     this.ground_colliders = [];
     this.initPhysic(colliders, physic)
     this.initVisual(visuals)
-    // this.initPhysicDynamic(colliders_dynamic, physic);
-    // this.initVisualDynamic(visuals_dynamic);
-    
   }
 
+  // Function to retrieve ground colliders
   get_ground_colliders() {
     return this.ground_colliders;
   }
 
+  // Function to intialize the physic
   initPhysic(meshes, physic) {
     for (const mesh of meshes) {
       const {rigidBody, collider} = createRigidBodyFixed(mesh, physic)
@@ -29,6 +35,7 @@ export default class World extends Object3D {
     }
   }
 
+  // Function to initialize the visual
   initVisual(meshes) {
     for (const mesh of meshes) {
       mesh.receiveShadow = true
@@ -36,19 +43,4 @@ export default class World extends Object3D {
       this.add(mesh)
     }
   }
-
-  // initPhysicDynamic(meshes, physic) {
-  //   for (const mesh of meshes) {
-  //     // createRigidBodyDynamic(mesh, physic)
-  //     // createRigidBodyFixed(mesh, physic)  
-  //   }
-  // }
-
-  // initVisualDynamic(meshes) {
-  //   for (const mesh of meshes) {
-  //     mesh.receiveShadow = true
-  //     mesh.castShadow = true
-  //     this.add(mesh)
-  //   }
-  // }
 }

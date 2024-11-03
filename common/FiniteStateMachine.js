@@ -1,3 +1,10 @@
+/**
+ * File: FiniteStateMachine.js
+ * 
+ * Description:
+ *  Parent class to be implemented by CharacterFSM: handles state creation and updates to FSM
+ */
+
 class FiniteStateMachine {
     constructor() {
         this._states = {}

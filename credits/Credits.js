@@ -1,3 +1,10 @@
+/**
+ * File: Credits.js
+ * 
+ * Description:
+ *  Credits class to handle showing credits at the end of the game
+ */
+
 import './Credits.css'
 
 class Credits {
@@ -27,6 +34,7 @@ class Credits {
             'Martin Shilenge (2557606)'
         ];
 
+        // Add to the list
         members.forEach(member => {
             const memberItem = document.createElement('li');
             memberItem.className = 'credits-members-item';
@@ -47,7 +55,8 @@ class Credits {
 
         const ccItems = [
             'Models: Sketchfab (various creators)',
-            'Icons: SVGRepo'
+            'Icons: SVGRepo',
+            'Music: Youtube and Spotify (various artists)'
         ];
 
         ccItems.forEach(ccItem => {
@@ -64,17 +73,16 @@ class Credits {
         creditsRoot.append(creditsHeader, creditsMembers, creditsCC);
 
         this.root = creditsRoot;
-
-        // Append the root element to the body
-        // document.body.append(pmlDisplayRoot);
     }
 
+    // Function to show the credits
     show_credits() {
         if (!document.getElementById('pml-display-root')) {
             document.body.appendChild(this.root);
         }
     }
 
+    // Function to hide the credits
     hide_credits() {
         if (document.getElementById('pml-display-root')) {
             document.body.removeChild(this.root);

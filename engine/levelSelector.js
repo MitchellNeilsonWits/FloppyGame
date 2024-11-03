@@ -1,6 +1,15 @@
+/**
+ * File: levelSelector.js
+ * 
+ * Description:
+ *  Handles level selection console in the lobby level
+ */
+
 import * as THREE from 'three';
 
 class LevelSelectRender {
+
+    // Initialize important variables
     constructor(character_controller, level, onLevelSelect) {
         this.character_controller = character_controller;
         this.targetObjectName = "lvlSelect"; 
@@ -23,8 +32,7 @@ class LevelSelectRender {
             this.levelSelectScreen.style.color = 'white';
             this.levelSelectScreen.style.fontSize = '24px';
             this.levelSelectScreen.style.textAlign = 'center';
-            // this.levelSelectScreen.style.display = 'none'; // Hide initially
-
+            
             // Instruction popup
             this.levelSelectScreen.innerHTML = `
                 <p>Use arrow keys to select a level:</p>
@@ -36,7 +44,6 @@ class LevelSelectRender {
                 </div>
                 <p>Press Enter to select the level</p>
             `;
-            // document.body.appendChild(this.levelSelectScreen);
         }
 
         // Listen for arrow key navigation
@@ -53,6 +60,7 @@ class LevelSelectRender {
         });
     }
 
+    // Update function to show or hide based on character distance
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;

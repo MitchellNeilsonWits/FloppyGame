@@ -1,3 +1,10 @@
+/**
+ * File: camera.js
+ * 
+ * Description:
+ *  Sample camera file
+ */
+
 import * as THREE from 'three';
 
 const WIDTH = window.innerWidth;

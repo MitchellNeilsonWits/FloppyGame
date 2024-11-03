@@ -1,5 +1,9 @@
-// FILE IS DEPRECATED DO NOT USE!!!!//
-
+/**
+ * File: proxRender.js
+ * 
+ * Description:
+ *  Main class to handle rendering based on proximity
+ */
 
 import * as THREE from 'three';
 
@@ -53,6 +57,7 @@ class ProximityScreenRenderer {
         });
     }
 
+    // Function to update based on character distance
     update() {
         if (this.character_controller._target) {
             const playerPos = this.character_controller._target.position;
@@ -69,8 +74,7 @@ class ProximityScreenRenderer {
                 const areaDepth = 5;
 
                 if (xDiff < areaWidth / 2 && zDiff < areaDepth / 2) {
-                    if (!this.isPlayerNear) { 
-                        // console.log("Player is near the platform, press 'E' to play the video");
+                    if (!this.isPlayerNear) {
                         this.showInteractMessage();
                         this.isPlayerNear = true; //PLayer near the platform run what we want to run
                     }
@@ -140,12 +144,7 @@ class ProximityScreenRenderer {
         }
     }
     
-    
-    
-    
-    
-    
-
+    // Function to stop the video
     stopVideo() {
         const screenMesh = this.scene.getObjectByName(this.screenName);
     
@@ -159,15 +158,16 @@ class ProximityScreenRenderer {
             this.video.currentTime = 0;
             this.videoPlaying = false; 
         } else {
-            // console.log("Screen mesh not found for stopping the video");
+            // --
         }
     }
 
+    // Function to show the message
     showInteractMessage() {
         this.interactMessage.style.display = 'block';
     }
 
-
+    // Function to hide the message
     hideInteractMessage() {
         this.interactMessage.style.display = 'none';
     }

@@ -1,3 +1,10 @@
+/**
+ * File: TutorialLevel.js
+ * 
+ * Description:
+ *  Tutorial level
+ */
+
 import Level from "../Level";
 import loadAssets from '../../engine/loader';
 import { Euler, Vector3 } from "three";
@@ -19,7 +26,7 @@ class TutorialLevel extends Level {
     // Function to set the components for the scene
     async set_level(character_controller, camera, _callback) {
         // Load the meshes for the lobby and load the base of the level's scene and other objects
-        const meshes = await loadAssets('assets/tutorialLevel_withAll4.glb');
+        const meshes = await loadAssets('assets/tutoriallevel.glb');
         
         await this.base_load(this, meshes, character_controller, camera, this._scene);
 
@@ -71,6 +78,9 @@ class TutorialLevel extends Level {
         return this._ground_colliders;
     }
     // --------------------------------------------------------------------------
+    reset_level() {
+        this._tutInstructions.hideTutorialMessage();
+    }
 
     render_level() {
         music_controller.load_music('sounds/TutLevel.mp3');
@@ -89,7 +99,6 @@ class TutorialLevel extends Level {
         if (this._footstepSound) {
             this._footstepSound.update();  // Update footstep sound system
         }
-        //Done audio update
         // -------------------------------------------------------------
 
         // Call main update function to handle standard level updates

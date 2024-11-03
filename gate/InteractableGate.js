@@ -1,3 +1,10 @@
+/**
+ * File: InteractableGate.js
+ * 
+ * Description:
+ *  Class to handle interactions with a gate
+ */
+
 import { get_cartesian_angle_from_rotation } from "../common/Angle";
 import interactableObject from "../engine/interactableObject";
 import * as THREE from 'three';

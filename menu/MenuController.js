@@ -1,3 +1,10 @@
+/**
+ * File: Menu.js
+ * 
+ * Description:
+ *  Handles display and functionality of pause menu
+ */
+
 import './Menu.css';
 
 class MenuController {
@@ -11,6 +18,7 @@ class MenuController {
         this.restart_button_function = () => {};
     }
 
+    // Setup menu screen and funcitons
     _init() {
         // --------- SETUP COMPONENTS HERE ----------
         
@@ -93,25 +101,25 @@ class MenuController {
         this._components = this.menu_root;
     }
 
-    // Placeholder methods for buttons
+    // Function to continue the game
     continue_game() {
-        // console.log('Continuing the game...');
         this.hide_menu(this._pointer_lock_target);
     }
 
+    // Function to restart the level
     restart_level() {
-        // console.log('Restarting the level...');
         this.handle_restart_level();
     }
 
+    // Function to exit to the lobby
     exit_to_lobby() {
-        // console.log('Exiting to the lobby...');
         if (this.exit_function) {
             this.hide_menu();
             this.exit_function();
         }
     }
 
+    // Function to show the pause menu
     show_menu() {
         if (this.menu_is_active) {
             document.exitPointerLock();
@@ -126,7 +134,7 @@ class MenuController {
         }
     }
     
-
+    // Function to hide the pause menu
     hide_menu(pointer_lock_target) {
         if (pointer_lock_target) {
             pointer_lock_target.requestPointerLock().then(() => {
@@ -138,6 +146,7 @@ class MenuController {
         }
     }
 
+    // Function to handle level restart
     handle_restart_level() {
         this.restart_confirm_root = document.createElement('div');
         this.restart_confirm_root.id = 'restart_confirm_root';
@@ -170,26 +179,29 @@ class MenuController {
         document.getElementsByTagName('body')[0].appendChild(this.restart_confirm_root);
     }
 
+    // Function to cancel level restart from confirmation card
     cancel_restart_level() {
         document.getElementsByTagName('body')[0].removeChild(this.restart_confirm_root);
     }
 
+    // Function to confirm level restart from confirmation card
     confirm_restart_level() {
         this.restart_button_function();
         document.getElementsByTagName('body')[0].removeChild(this.restart_confirm_root);
         this.hide_menu(this._pointer_lock_target);
     }
 
+    // Function to manually set the level restart function externally
     set_restart_level_function(func) {
-        // this.restart_confirm_yes.onclick = func;
         this.restart_button_function = func.bind(this);
     }
 
+    // Function to manually set the exit function externally
     set_exit_function(func) {
         this.exit_function = func.bind(this);
     }
 
-
+    // Function to change the sensitivity using the slider
     change_sensitivity(val) {
         // middle is 50%
         var change_val; 
@@ -206,16 +218,17 @@ class MenuController {
         this.mouse_listener.change_update_speed(change_val);
     }
 
+    // Function to change the FOV using the slider
     change_fov(val) {
-        // middle is 50%
         this.camera.change_camera_fov(val);
     }
 
-
+    // Function to disable the menu
     disable_menu() {
         this.menu_is_active = false;
     }
 
+    // Function to enable the menu
     enable_menu() {
         this.menu_is_active = true;
     }

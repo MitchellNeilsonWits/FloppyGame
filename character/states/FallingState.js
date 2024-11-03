@@ -1,3 +1,10 @@
+/**
+ * File: FallingState.js
+ * 
+ * Description:
+ *  State to handle user falling
+ */
+
 import State from "../State";
 
 class FallingState extends State {

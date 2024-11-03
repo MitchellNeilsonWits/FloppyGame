@@ -1,23 +1,25 @@
-import { DRACOLoader, KTX2Loader } from 'three-stdlib';
+/**
+ * File: loader.js
+ * 
+ * Description:
+ *  Main function file to load different types of objects from a glb file
+ */
+
+import { DRACOLoader } from 'three-stdlib';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
+// Compression reader
 const dracoLoader = new DRACOLoader();
-// dracoLoader.setDecoderPath( '/examples/jsm/libs/draco/' );
-// loader.setDRACOLoader( dracoLoader );
 dracoLoader.setDecoderConfig({ type: 'js' });
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 const loaderGlb = new GLTFLoader()
 
-// const ktx2Loader = new KTX2Loader();
-// ktx2Loader.setTranscoderPath('three-stdlib')
-
-
-// loaderGlb.setKTX2Loader(ktx2Loader);
 loaderGlb.setDRACOLoader(dracoLoader);
 
 export default async function loadAssets(path) {
   const glb = await loaderGlb.loadAsync(path)
 
+  // Variables to use
   const animations = glb.animations
   const visuals = []
   const colliders = []
@@ -30,7 +32,6 @@ export default async function loadAssets(path) {
   const ground_objects = [];
   const spotLights = [];
   const directionalLights = [];
-  
   let skybox;
   let player_spawn;
   let strength_disk_spawn;
@@ -38,17 +39,13 @@ export default async function loadAssets(path) {
   let shrink_disk_spawn;
   let npc_spawn;
   let portal;
-
   let placement_matters_meshes = {};
-
   const lever_gates = {}
-
-
   const glass = []
   const finale_point_lights = {}
   let finale_platform;
 
-  // console.log(glb.scene.children);
+  // Go through each child and update relevant variables
   for (const mesh of glb.scene.children) {
     if (mesh.name.includes("finaleplatform")) {
       finale_platform = mesh;
@@ -60,31 +57,21 @@ export default async function loadAssets(path) {
     } else if (mesh.name.includes("strength_platform")) {
       placement_matters_meshes['strength_platform'] = mesh;
       ground_objects.push(mesh);
-      // colliders.push(mesh);
-      // visuals.push(mesh);
     } else if (mesh.name.includes("flight_platform")) {
       placement_matters_meshes['flight_platform'] = mesh;
       ground_objects.push(mesh);
-      // colliders.push(mesh);
-      // visuals.push(mesh);  
     } else if (mesh.name.includes("shrink_platform")) {
       placement_matters_meshes['shrink_platform'] = mesh;
       ground_objects.push(mesh);
-      // colliders.push(mesh);
-      // visuals.push(mesh);  
     } else if (mesh.name.includes("strength_light")) {
       placement_matters_meshes['strength_light'] = mesh;
-      // pointLights.push(mesh);
     } else if (mesh.name.includes("flight_light")) {
       placement_matters_meshes['flight_light'] = mesh;
-      // pointLights.push(mesh);
     } else if (mesh.name.includes("shrink_light")) {
       placement_matters_meshes['shrink_light'] = mesh;
-      // pointLights.push(mesh);
     } else if (mesh.name.includes("level_end")) {
       portal = mesh;
     } else if (mesh.name.includes("npc_spawn")) {
-      // console.log("GOT AN NPC_SPAWN")
       npc_spawn = mesh;
     } else if (mesh.name.includes("glass")) {
       glass.push(mesh);
@@ -100,7 +87,6 @@ export default async function loadAssets(path) {
       skybox = mesh;
       visuals.push(mesh);
       colliders.push(mesh);
-      
     } else if (mesh.type === 'PointLight') {
       pointLights.push(mesh);
     } else if (mesh.type === 'SpotLight') {
@@ -110,7 +96,6 @@ export default async function loadAssets(path) {
     } else if (mesh.type === 'Mesh') {
       if (mesh.name.includes("lever")) {
         const lever_name = mesh.name.split('_')[1];
-        // console.log("NEW LEVER!", lever_name)
         if (!lever_gates[lever_name]) {
           lever_gates[lever_name] = {
             name: lever_name,
@@ -133,9 +118,6 @@ export default async function loadAssets(path) {
         
       } else if (mesh.name.includes("pushbox")) {
         pushboxes.push(mesh);
-        // visuals.push(mesh)
-        // colliders.push(mesh)
-      
       } else if (!mesh.name.includes("dynamic")) {
         if (mesh.name.includes("interactable")) {
           interactable[mesh.name] = {
@@ -144,7 +126,6 @@ export default async function loadAssets(path) {
           };
         }
         if (mesh.name.includes("ground")) {
-          // console.log("new ground: ", mesh);
           ground_objects.push(mesh);
         }
         visuals.push(mesh)

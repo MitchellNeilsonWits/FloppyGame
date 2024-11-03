@@ -1,3 +1,10 @@
+/**
+ * File: FlyingIdleState.js
+ * 
+ * Description:
+ *  State to handle user flying in idle
+ */
+
 import State from "../State";
 
 class FlyingIdleState extends State {

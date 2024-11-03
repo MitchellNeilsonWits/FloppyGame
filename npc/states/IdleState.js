@@ -1,3 +1,10 @@
+/**
+ * File: IdleState.js
+ * 
+ * Description:
+ *  Implements NPC State to handle idle animations
+ */
+
 import State from "../State";
 
 class IdleState extends State {
@@ -10,7 +17,6 @@ class IdleState extends State {
     }
 
     enter(prev_state){ 
-        // console.log(this);
         const idle_action = this._parent._animations['idle'].action;
         
         if (prev_state) {
