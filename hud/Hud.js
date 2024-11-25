@@ -5,6 +5,7 @@
  *  Handles the HUD (overlay interface) display to the user
  */
 
+import { get_display } from '../displays/Displays.js'
 import './Hud.css'
 
 class HUD {
@@ -80,7 +81,7 @@ class HUD {
 
         const hudLoadedUnload = document.createElement('div');
         hudLoadedUnload.id = 'hud-loaded-unload';
-        hudLoadedUnload.textContent = 'Press Z to unload';
+        hudLoadedUnload.innerHTML = '<div>Press Z to unload</div>';
 
         const hudLoadedHeader = document.createElement('div');
         hudLoadedHeader.id = 'hud-loaded-header';
@@ -115,11 +116,11 @@ class HUD {
 
         const hudHoldingLoad = document.createElement('div');
         hudHoldingLoad.id = 'hud-holding-load';
-        hudHoldingLoad.textContent = 'Press Q to load disk';
+        hudHoldingLoad.innerHTML = '<div>Press Q to load disk</div>';
 
         const hudHoldingDrop = document.createElement('div');
         hudHoldingDrop.id = 'hud-holding-drop';
-        hudHoldingDrop.textContent = 'Press F to drop disk';
+        hudHoldingDrop.innerHTML = '<div>Press F to drop disk</div>';
 
         const hudHoldingHeader = document.createElement('div');
         hudHoldingHeader.id = 'hud-holding-header';
@@ -156,6 +157,11 @@ class HUD {
 
 
         // Setup necessary variables for use in the class
+        this.button_indicators = {
+            unload: hudLoadedUnload,
+            load: hudHoldingLoad,
+            drop: hudHoldingDrop
+        }
         this.hud_root = hudRoot;
         this.loaded = hudLoadedImg;
         this.holding = hudHoldingImg;
@@ -224,25 +230,30 @@ class HUD {
         // Set the relevant powers for each ability
         if (main_power === "strength") {
             this.add_power('Push boxes', 'strength');
-            this.add_description("Walk into boxes to push");
+            this.add_description(`Walk into boxes to push`);
             // -- Break glass was deprecated: not needed in any level
             // this.add_power('Break glass', 'strength');
             // this.add_description("Left click glass to break");
             this.add_power('Pull levers', 'strength');
-            this.add_description("Click E next to levers to use");
+            this.add_description(get_display('E','Y',`next to levers to use`));
         } else if (main_power === "flight") {
             this.add_power('Flight', 'flight');
-            this.add_description("Space to go up");
-            this.add_description("C to go down");
+            this.add_description(get_display("Space","A","to go up"));
+            this.add_description(get_display("C","DPAD_DOWN",`to go down`));
         } else if (main_power === "shrink") {
             this.add_power('Shrink in size', 'shrink');
-            this.add_description("Walk into small pipes");
+            this.add_description(`Walk into small pipes`);
         }
     }
 
     // Function to update the HUD after changes made
     update() {
         this.clear_powers();
+
+        this.button_indicators.unload.innerHTML = get_display('Z','B','to unload');
+        this.button_indicators.load.innerHTML = get_display('Q','RT','to load disk');
+        this.button_indicators.drop.innerHTML = get_display('F','LT','to drop disk');
+
         if (!this.loaded_disk) {
             this.loaded.src = 'hud/disk_none.png'
             this.loaded.style.opacity = 0.2;
@@ -290,8 +301,8 @@ class HUD {
             this.holding.src = 'hud/disk_none.png'
             this.holding.style.opacity = 0.2
             this.holding_header_disk.innerHTML = "none";
-            this.load_indicator.style.transform = "translateX(140px)";
-            this.drop_indicator.style.transform = "translateX(140px)";
+            this.load_indicator.style.transform = "translateX(180px)";
+            this.drop_indicator.style.transform = "translateX(180px)";
             this.holding_header_disk.style.color = "gray";
 
         } else {

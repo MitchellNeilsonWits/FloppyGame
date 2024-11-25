@@ -45,7 +45,7 @@
     padding: 0;
     font-size: 15px;
     color: white;
-    mix-blend-mode: difference;
+    /* mix-blend-mode: difference; */
 }
 
 .hud-level-name-subheader-container {
@@ -61,7 +61,7 @@
     height: 50%;
     width: 100px;
     border-bottom: 1px solid white;
-    mix-blend-mode: difference;
+    /* mix-blend-mode: difference; */
     animation: bar-load 5s ease-in-out;
 }
 
@@ -80,7 +80,7 @@
 
     font-size: 22px;
     color: white;
-    mix-blend-mode: difference;
+    /* mix-blend-mode: difference; */
 }
 
 
@@ -165,21 +165,21 @@
 #hud-loaded-unload {
     transition: 0.4s;
     color: white;
-    mix-blend-mode: difference;
+    /* mix-blend-mode: difference; */
     font-size: 20px;
 }
 
 #hud-holding-load {
     transition: 0.4s;
     color: white;
-    mix-blend-mode: difference;
+    /* mix-blend-mode: difference; */
     font-size: 20px;
 }
 
 #hud-holding-drop {
     transition: 0.4s;
     color: white;
-    mix-blend-mode: difference;
+    /* mix-blend-mode: difference; */
     font-size: 20px;
 }
 

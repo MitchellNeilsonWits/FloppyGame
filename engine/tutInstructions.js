@@ -6,6 +6,7 @@
  */
 
 import * as THREE from 'three';
+import control_settings from '../control_settings/ControlSettings';
 
 class TutInstructions {
     constructor(character_controller, level) {
@@ -13,17 +14,32 @@ class TutInstructions {
         this.level = level;
         this.isPlayerOnObject = null; // Track which object the player is currently on
 
-        this.targetObjects = {
-            "tut_1": "<strong>Welcome to the tutorial! Use WASD to move!</strong>",
-            "tut_2": "<strong>Now, try jumping to reach the next platform. Press Space to jump and Shift to sprint.</strong>",
-            "tut_3": "<strong>Hmmm, this gap is too wide to jump across. Press E to pick up the flight disk! We can hold 2 disks at once. Press Q to swith the disks while you have a disk loaded! Press Space to ascend and C to descend!</strong>",
-            "tut_4": "<strong>Great! Press Z to drop the disk and continue!</strong>",
-            "tut_5": "<strong>Oh no! We can't get through! Have strength disk equiped by pressing Q and break through the walls!</strong>",
-            "tut_6": "<strong>Another obstacle! Pick up the shrink disk to shrink down and get through!</strong>",
-            "tut_7": "<strong>Great! All levels will have the same goal as in front of you. Good luck!</strong>",
-            "tut_8": "<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>",
-            "tut_9": "<strong>Alas! We cannot move the lever without our strength disk! Walk up to the strength disk and press E to pick it up. Press Q to equip it!<strong>"
-        };
+        if (control_settings.control_input === "keyboard_and_mouse") {
+            this.targetObjects = {
+                "tut_1": "<strong>Welcome to the tutorial! Use WASD to move!</strong>",
+                "tut_2": "<strong>Now, try jumping to reach the next platform. Press Space to jump and Shift to sprint.</strong>",
+                "tut_3": "<strong>Hmmm, this gap is too wide to jump across. Press E to pick up the flight disk! We can hold 2 disks at once. Press Q to swith the disks while you have a disk loaded! Press Space to ascend and C to descend!</strong>",
+                "tut_4": "<strong>Great! Press Z to drop the disk and continue!</strong>",
+                "tut_5": "<strong>Oh no! We can't get through! Have strength disk equiped by pressing Q and break through the walls!</strong>",
+                "tut_6": "<strong>Another obstacle! Pick up the shrink disk to shrink down and get through!</strong>",
+                "tut_7": "<strong>Great! All levels will have the same goal as in front of you. Good luck!</strong>",
+                "tut_8": "<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>",
+                "tut_9": "<strong>Alas! We cannot move the lever without our strength disk! Walk up to the strength disk and press E to pick it up. Press Q to equip it!<strong>"
+            };
+        } else {
+            this.targetObjects = {
+                "tut_1": "<strong>Welcome to the tutorial! Use the left analog stick to move!</strong>",
+                "tut_2": `<strong>Now, try jumping to reach the next platform. Press </strong><img src='controller_icons/controller_A.svg' style="width:25px;height:25px"></img><strong>to jump. Push the analog stick harder to sprint and softer to walk.</strong>`,
+                "tut_3": `<strong>Hmmm, this gap is too wide to jump across. Press </strong><img src='controller_icons/controller_Y.svg' style="width:25px;height:25px"></img><strong> to pick up the flight disk! We can hold 2 disks at once. Press </strong><img src='controller_icons/controller_RT.svg' style="width:25px;height:25px"></img><strong> to swith the disks while you have a disk loaded! Press </strong><img src='controller_icons/controller_A.svg' style="width:25px;height:25px"></img><strong> to ascend and </strong><img src='controller_icons/controller_DPAD_DOWN.svg' style="width:25px;height:25px"></img><strong> to descend!</strong>`,
+                "tut_4": `<strong>Great! Press </strong><img src='controller_icons/controller_B.svg' style="width:25px;height:25px"></img><strong> to drop the disk and continue!</strong>`,
+                "tut_5": `<strong>Oh no! We can't get through! Have strength disk equiped by pressing </strong><img src='controller_icons/controller_RT.svg' style="width:25px;height:25px"></img><strong> and break through the walls!</strong>`,
+                "tut_6": `<strong>Another obstacle! Pick up the shrink disk to shrink down and get through!</strong>`,
+                "tut_7": `<strong>Great! All levels will have the same goal as in front of you. Good luck!</strong>`,
+                "tut_8": `<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>`,
+                "tut_9": `<strong>Alas! We cannot move the lever without our strength disk! Walk up to the strength disk and press </strong><img src='controller_icons/controller_Y.svg' style="width:25px;height:25px"></img><strong> to pick it up. Press </strong><img src='controller_icons/controller_RT.svg' style="width:25px;height:25px"></img><strong> to equip it!<strong`
+            };
+        }
+        
 
         // Create tutorial HTML element
         this.tutorialMessage = document.createElement('div');
@@ -43,9 +59,38 @@ class TutInstructions {
         document.body.appendChild(this.tutorialMessage);
     }
 
+    reset_instructions() {
+        if (control_settings.control_input === "keyboard_and_mouse") {
+            this.targetObjects = {
+                "tut_1": "<strong>Welcome to the tutorial! Use WASD to move!</strong>",
+                "tut_2": "<strong>Now, try jumping to reach the next platform. Press Space to jump and Shift to sprint.</strong>",
+                "tut_3": "<strong>Hmmm, this gap is too wide to jump across. Press E to pick up the flight disk! We can hold 2 disks at once. Press Q to swith the disks while you have a disk loaded! Press Space to ascend and C to descend!</strong>",
+                "tut_4": "<strong>Great! Press Z to drop the disk and continue!</strong>",
+                "tut_5": "<strong>Oh no! We can't get through! Have strength disk equiped by pressing Q and break through the walls!</strong>",
+                "tut_6": "<strong>Another obstacle! Pick up the shrink disk to shrink down and get through!</strong>",
+                "tut_7": "<strong>Great! All levels will have the same goal as in front of you. Good luck!</strong>",
+                "tut_8": "<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>",
+                "tut_9": "<strong>Alas! We cannot move the lever without our strength disk! Walk up to the strength disk and press E to pick it up. Press Q to equip it!<strong>"
+            };
+        } else {
+            this.targetObjects = {
+                "tut_1": "<strong>Welcome to the tutorial! Use the left analog stick to move!</strong>",
+                "tut_2": `<strong>Now, try jumping to reach the next platform. Press </strong><img src='controller_icons/controller_A.svg' style="width:25px;height:25px"></img><strong>to jump. Push the analog stick harder to sprint and softer to walk.</strong>`,
+                "tut_3": `<strong>Hmmm, this gap is too wide to jump across. Press </strong><img src='controller_icons/controller_Y.svg' style="width:25px;height:25px"></img><strong> to pick up the flight disk! We can hold 2 disks at once. Press </strong><img src='controller_icons/controller_RT.svg' style="width:25px;height:25px"></img><strong> to swith the disks while you have a disk loaded! Press </strong><img src='controller_icons/controller_A.svg' style="width:25px;height:25px"></img><strong> to ascend and </strong><img src='controller_icons/controller_DPAD_DOWN.svg' style="width:25px;height:25px"></img><strong> to descend!</strong>`,
+                "tut_4": `<strong>Great! Press </strong><img src='controller_icons/controller_B.svg' style="width:25px;height:25px"></img><strong> to drop the disk and continue!</strong>`,
+                "tut_5": `<strong>Oh no! We can't get through! Have strength disk equiped by pressing </strong><img src='controller_icons/controller_RT.svg' style="width:25px;height:25px"></img><strong> and break through the walls!</strong>`,
+                "tut_6": `<strong>Another obstacle! Pick up the shrink disk to shrink down and get through!</strong>`,
+                "tut_7": `<strong>Great! All levels will have the same goal as in front of you. Good luck!</strong>`,
+                "tut_8": `<strong>Oh no! We can't get through! Pick up the strength disk and equip it to push the box out of the way!</strong>`,
+                "tut_9": `<strong>Alas! We cannot move the lever without our strength disk! Walk up to the strength disk and press </strong><img src='controller_icons/controller_Y.svg' style="width:25px;height:25px"></img><strong> to pick it up. Press </strong><img src='controller_icons/controller_RT.svg' style="width:25px;height:25px"></img><strong> to equip it!<strong`
+            };
+        }
+    }
+
     // Function to handle instruction updates based on player proximity
     update() {
         if (this.character_controller._target) {
+            this.reset_instructions();
             const playerPos = this.character_controller._target.position;
 
             // Loop through each target object to check if the player is standing on it

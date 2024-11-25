@@ -11,8 +11,8 @@ import interactableObject from "../engine/interactableObject";
 import * as THREE from 'three';
 
 class InteractableLever extends interactableObject {
-    constructor(interaction_display, object, distance_threshold, interaction_trigger) {
-        super(interaction_display, object, distance_threshold, interaction_trigger);
+    constructor(interaction_display, interaction_display_controller, object, distance_threshold, interaction_trigger) {
+        super(interaction_display, interaction_display_controller, object, distance_threshold, interaction_trigger);
     }
 
     // No interaction for using the object

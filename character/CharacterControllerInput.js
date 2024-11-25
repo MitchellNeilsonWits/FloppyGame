@@ -10,6 +10,10 @@ class CharacterControllerInput {
         this._init();
     }
 
+    get_input_from_controller(keys) {
+        this._keys = keys;
+    }
+
     _init() {
         // Setup each key
         this._keys = {

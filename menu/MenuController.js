@@ -5,6 +5,9 @@
  *  Handles display and functionality of pause menu
  */
 
+import control_settings from '../control_settings/ControlSettings';
+import gamepad_controller from '../gamepad/GamePadController';
+import hud from '../hud/Hud';
 import './Menu.css';
 
 class MenuController {
@@ -27,10 +30,10 @@ class MenuController {
         this.menu_root.id = 'menu_root';
 
         // Continue Game button
-        var continue_game_button = document.createElement('button');
-        continue_game_button.id = 'continue_game_button';
-        continue_game_button.textContent = 'Continue Game';
-        continue_game_button.onclick = this.continue_game.bind(this);
+        this.continue_game_button = document.createElement('button');
+        this.continue_game_button.id = 'continue_game_button';
+        this.continue_game_button.textContent = 'Continue Game';
+        this.continue_game_button.onclick = this.continue_game.bind(this);
 
         // Restart Level button
         this.restart_button = document.createElement('button');
@@ -38,50 +41,76 @@ class MenuController {
         this.restart_button.textContent = 'Restart Level';
         this.restart_button.onclick = this.restart_level.bind(this);
 
+        // Type of input checkbox
+        this.use_gamepad_input = document.createElement("input");
+
+        this.use_gamepad_input.type = "checkbox";
+        this.use_gamepad_input.id = "use_gamepad_input";
+
+        this.use_gamepad_input.addEventListener("change", (() => {
+            if (this.use_gamepad_input.checked) {
+                control_settings.change_input('gamepad');
+                hud.update();
+            } else {
+                control_settings.change_input('keyboard_and_mouse');
+                hud.update();
+            }
+        }).bind(this));
+
+        const use_gamepad_text = document.createElement('div');
+        use_gamepad_text.innerText = "Use gamepad/controller input";
+        use_gamepad_text.className = "use_gamepad_text";
+
+        const use_gamepad_container = document.createElement('div');
+        use_gamepad_container.id = "use_gamepad_container";
+
+        use_gamepad_container.appendChild(this.use_gamepad_input);
+        use_gamepad_container.appendChild(use_gamepad_text);
+
         // Sensitivity slider
         var sensitivity_container = document.createElement('div');
         var sensitivity_label = document.createElement('label');
         sensitivity_label.textContent = 'Sensitivity: ';
-        var sensitivity_slider = document.createElement('input');
-        sensitivity_slider.type = 'range';
-        sensitivity_slider.id = 'sensitivity_slider';
-        sensitivity_slider.min = '0';
-        sensitivity_slider.max = '100';
-        sensitivity_slider.value = '50';
-        sensitivity_slider.ondrag = 'none';
+        this.sensitivity_slider = document.createElement('input');
+        this.sensitivity_slider.type = 'range';
+        this.sensitivity_slider.id = 'sensitivity_slider';
+        this.sensitivity_slider.min = '0';
+        this.sensitivity_slider.max = '100';
+        this.sensitivity_slider.value = '50';
+        this.sensitivity_slider.ondrag = 'none';
 
-        var sensitivity_value = document.createElement('span');
-        sensitivity_value.className='sensitivity_value';
-        sensitivity_value.textContent = sensitivity_slider.value;
-        sensitivity_slider.oninput = () => {
-            this.change_sensitivity(sensitivity_slider.value);
-            sensitivity_value.textContent = sensitivity_slider.value;
+        this.sensitivity_value = document.createElement('span');
+        this.sensitivity_value.className='sensitivity_value';
+        this.sensitivity_value.textContent = this.sensitivity_slider.value;
+        this.sensitivity_slider.oninput = () => {
+            this.change_sensitivity(this.sensitivity_slider.value);
+            this.sensitivity_value.textContent = this.sensitivity_slider.value;
         };
         sensitivity_container.appendChild(sensitivity_label);
-        sensitivity_container.appendChild(sensitivity_slider);
-        sensitivity_container.appendChild(sensitivity_value);
+        sensitivity_container.appendChild(this.sensitivity_slider);
+        sensitivity_container.appendChild(this.sensitivity_value);
 
         // Field of View slider
         var fov_container = document.createElement('div');
         var fov_label = document.createElement('label');
         fov_label.textContent = 'Field of View: ';
-        var fov_slider = document.createElement('input');
-        fov_slider.type = 'range';
-        fov_slider.id = 'fov_slider';
-        fov_slider.min = '30';
-        fov_slider.max = '110';
-        fov_slider.value = '70';
-        fov_slider.ondrag = 'none';
-        var fov_value = document.createElement('span');
-        fov_value.className='fov_value';
-        fov_value.textContent = fov_slider.value;
-        fov_slider.oninput = () => {
-            this.change_fov(fov_slider.value);
-            fov_value.textContent = fov_slider.value;
+        this.fov_slider = document.createElement('input');
+        this.fov_slider.type = 'range';
+        this.fov_slider.id = 'fov_slider';
+        this.fov_slider.min = '30';
+        this.fov_slider.max = '110';
+        this.fov_slider.value = '70';
+        this.fov_slider.ondrag = 'none';
+        this.fov_value = document.createElement('span');
+        this.fov_value.className='fov_value';
+        this.fov_value.textContent = this.fov_slider.value;
+        this.fov_slider.oninput = () => {
+            this.change_fov(this.fov_slider.value);
+            this.fov_value.textContent = this.fov_slider.value;
         };
         fov_container.appendChild(fov_label);
-        fov_container.appendChild(fov_slider);
-        fov_container.appendChild(fov_value);
+        fov_container.appendChild(this.fov_slider);
+        fov_container.appendChild(this.fov_value);
 
         // Exit to Lobby button
         var exit_button = document.createElement('button');
@@ -90,15 +119,182 @@ class MenuController {
         exit_button.onclick = this.exit_to_lobby.bind(this);
 
         // Add components to the base Menu element
-        this.menu_root.appendChild(continue_game_button);
+        this.menu_root.appendChild(this.continue_game_button);
         this.menu_root.appendChild(this.restart_button);
+        this.menu_root.appendChild(use_gamepad_container);
         this.menu_root.appendChild(sensitivity_container);
         this.menu_root.appendChild(fov_container);
         this.menu_root.appendChild(exit_button);
+
+        this.menu_items = [
+            this.continue_game_button,
+            this.restart_button,
+            this.sensitivity_slider,
+            this.fov_slider,
+            exit_button
+        ]
+
+        this.focused_item = 0;
         
         // ------------------------------------------
 
         this._components = this.menu_root;
+
+
+        // APPLY GAMEPAD INPUT
+        gamepad_controller.add_button_callback(this.handle_gamepad_button.bind(this));
+
+        // Set up variable to make sure button presses are separated between update calls
+        this.can_press = true;
+        this.menu_shown = false;
+    }
+
+    update_focus() {
+        this.menu_items[this.focused_item].focus();
+    }
+
+    handle_gamepad_button(index, value) {
+        if (this.menu_shown) {
+            if (value > 0) {
+                switch (index) {
+                    case 0:
+                        if (this.can_press) {
+                            switch (this.focused_item) {
+                                case 0:
+                                    this.continue_game();
+                                    break;
+                                case 1:
+                                    this.confirm_restart_level();
+                                    break;
+                                case 4:
+                                    this.exit_to_lobby();
+                                    break;
+                                default:
+                                    break;
+                            }
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 500)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 12:
+                        if (this.can_press) {
+                            if (this.focused_item > 0) {
+                                this.focused_item = this.focused_item - 1;
+                            }
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 500)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 13:
+                        if (this.can_press) {
+                            if (this.focused_item < this.menu_items.length - 1) {
+                                this.focused_item = this.focused_item + 1;
+                            }
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 500)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 14: // left d pad
+                        if (this.can_press) {
+                            // Check if we are on sensitivity slider
+                            if (this.focused_item == 2) {
+                                if (this.sensitivity_slider.value > 0) {
+                                    this.sensitivity_slider.value = this.sensitivity_slider.value - 5;
+                                    this.sensitivity_value.textContent = this.sensitivity_slider.value;
+                                    this.sensitivity_slider.oninput();
+                                }
+                            } else if (this.focused_item == 3) {
+                                if (this.fov_slider.value > 30) {
+                                    this.fov_slider.value = this.fov_slider.value - 5;
+                                    this.fov_value.textContent = this.fov_slider.value;
+                                    this.fov_slider.oninput();
+                                }
+                            }
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 200)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 15: // right d-pad
+                        if (this.can_press) {
+                            // Check if we are on sensitivity slider
+                            if (this.focused_item == 2) {
+                                if (this.sensitivity_slider.value > 0) {
+                                    const amt = parseInt(this.sensitivity_slider.value) + 5;
+                                    this.sensitivity_slider.value = amt;
+                                    this.sensitivity_value.textContent = this.sensitivity_slider.value;
+                                    this.sensitivity_slider.oninput();
+                                }
+                            } else if (this.focused_item == 3) {
+                                if (this.fov_slider.value > 30) {
+                                    const amt = parseInt(this.fov_slider.value) + 5;
+                                    this.fov_slider.value = amt;
+                                    this.fov_value.textContent = this.fov_slider.value;
+                                    this.fov_slider.oninput();
+                                }
+                            }
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 200)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 8: // back
+                        if (this.can_press) {
+                            this.hide_menu(this._pointer_lock_target);
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 500)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 9: // start
+                        if (this.can_press) {
+                            this.hide_menu(this._pointer_lock_target);
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 500)
+                        }
+                        this.can_press = false;
+                        break;
+                    case 1: // B
+                        if (this.can_press) {
+                            this.hide_menu(this._pointer_lock_target);
+                            setTimeout(() => {
+                                this.can_press = true;
+                            }, 500)
+                        }
+                        this.can_press = false;
+                        break;
+                }
+            }
+            this.update_focus();
+        } else {
+            if (value > 0) {
+                switch (index) {
+                    case 9: // start
+                        if (!this.menu_shown) {
+                            if (this.can_press) {
+                                this.show_menu();
+                                setTimeout(() => {
+                                    this.can_press = true;
+                                }, 500)
+                            }
+                            this.can_press = false;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     // Function to continue the game
@@ -114,14 +310,15 @@ class MenuController {
     // Function to exit to the lobby
     exit_to_lobby() {
         if (this.exit_function) {
-            this.hide_menu();
             this.exit_function();
+            this.hide_menu(this._pointer_lock_target);
         }
     }
 
     // Function to show the pause menu
     show_menu() {
         if (this.menu_is_active) {
+            this.menu_shown = true;
             document.exitPointerLock();
             document.getElementsByTagName('body')[0].appendChild(this._components);
             
@@ -130,6 +327,9 @@ class MenuController {
             menu.style.opacity = '0'; // Ensure it's hidden at first
             setTimeout(() => {
                 menu.style.opacity = '1'; // Animate in
+                if (this.continue_game_button) {
+                    this.continue_game_button.focus();
+                }
             }, 100); // Small delay to ensure DOM update
         }
     }
@@ -137,6 +337,7 @@ class MenuController {
     // Function to hide the pause menu
     hide_menu(pointer_lock_target) {
         if (pointer_lock_target) {
+            this.menu_shown = false;
             pointer_lock_target.requestPointerLock().then(() => {
                 const menu_item = document.getElementById('menu_root');
                 if (menu_item){
@@ -187,7 +388,10 @@ class MenuController {
     // Function to confirm level restart from confirmation card
     confirm_restart_level() {
         this.restart_button_function();
-        document.getElementsByTagName('body')[0].removeChild(this.restart_confirm_root);
+        
+        if (document.getElementById('restart_confirm_root')) {
+            document.getElementsByTagName('body')[0].removeChild(this.restart_confirm_root);
+        }
         this.hide_menu(this._pointer_lock_target);
     }
 

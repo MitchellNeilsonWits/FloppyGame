@@ -71,7 +71,7 @@
     transition: all 0.3s ease;
   }
   
-  #menu_root button:hover {
+  #menu_root button:hover, #menu_root button:focus  {
     background-color: var(--green);
     color: var(--black);
   }
@@ -81,6 +81,12 @@
     width: 100%;
     /* accent-color: var(--blue); Neon blue sliders */
     accent-color: rgb(125, 212, 168);
+  }
+
+  #menu_root input[type="range"]:focus {
+    width: 100%;
+    accent-color: rgb(0, 203, 101);
+    
   }
   
   /* Horizontal rule styling */
@@ -119,7 +125,10 @@
 
 .fov_value{
   color: #ffffff;
+}
 
+.use_gamepad_text {
+  color: rgb(125, 212, 168);;
 }
 
   
@@ -187,4 +196,9 @@
   border-radius: 5px;
   text-transform: uppercase;
   box-shadow: 0 0 10px var(--green); /* Glowing effect */
+}
+
+#use_gamepad_container {
+  display: flex;
+  flex-direction: row;
 }

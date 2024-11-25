@@ -23,6 +23,8 @@ import Player from '../engine/player';
 import MenuController from '../menu/MenuController';
 import hud from '../hud/Hud';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import gamepad_controller from '../gamepad/GamePadController';
+import control_settings from '../control_settings/ControlSettings';
 
 
 
@@ -154,6 +156,12 @@ class GameController {
     /* Step to update important rendering information */
     _step(time_elapsed) {
         // this.stats.update();
+
+        // UPDATE THE GAMEPAD CONTROLS
+        if (control_settings.control_input === "gamepad") {
+            gamepad_controller.update();
+        }
+
         if (this._playing_game) {
             // CONVERT TIME TO SECONDS
             const time_elapsed_in_seconds = time_elapsed * 0.001;

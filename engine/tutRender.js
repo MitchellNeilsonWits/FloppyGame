@@ -6,6 +6,8 @@
  */
 
 import * as THREE from 'three';
+import { get_display } from '../displays/Displays';
+import gamepad_controller from '../gamepad/GamePadController';
 
 class TutRender {
     constructor(character_controller, level, onStartTutorial) {
@@ -28,10 +30,25 @@ class TutRender {
         this.tutorialMessage.style.fontSize = '24px';
         this.tutorialMessage.style.textAlign = 'center';
         this.tutorialMessage.style.display = 'none'; // Hide initially
-        this.tutorialMessage.innerHTML = '<p>Press E go to the tutorial level</p>';
+        
+        
+        this.tutorialMessage.innerHTML = get_display('E','A','to go to the tutorial level');
         document.body.appendChild(this.tutorialMessage);
-
+        gamepad_controller.add_button_callback(this.handle_gamepad_button.bind(this));
     }
+
+    handle_gamepad_button(index, value) {
+        if (value > 0) {
+            if (this.isPlayerNear) {
+                if (index === 0) {
+                    this.hideTutorialMessage();
+                    this.onStartTutorial();
+                }
+            }
+        }
+    }
+
+
 
     // Function to handle display based on character distance
     update() {
@@ -69,11 +86,13 @@ class TutRender {
 
     // Function to handle show message
     showTutorialMessage() {
+        this.tutorialMessage.innerHTML = get_display('E','A','to go to the tutorial level');
         this.tutorialMessage.style.display = 'block';
     }
 
     // Function to hide message
     hideTutorialMessage() {
+        this.isPlayerNear = false;
         this.tutorialMessage.style.display = 'none';
     }
 }

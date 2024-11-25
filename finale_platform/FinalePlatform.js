@@ -11,6 +11,8 @@ import { createRigidBodyFixed } from "../engine/function";
 import credits from "../credits/Credits";
 import hud from "../hud/Hud";
 import music_controller from "../music/MusicController";
+import { get_display } from "../displays/Displays";
+import gamepad_controller from "../gamepad/GamePadController";
 
 class FinalePlatform extends Object3D {
     constructor(controls, platform, level) {
@@ -33,11 +35,33 @@ class FinalePlatform extends Object3D {
         this.next_level.style.fontSize = '24px';
         this.next_level.style.textAlign = 'center';
         this.next_level.style.zIndex = '4';
-        this.next_level.innerHTML = '<p>Press E to switch off your motherboard</p>';
+        
+        this.next_level.innerHTML = get_display('E','Y',`to switch off your motherboard`);
 
 
         this.message_shown = false;
         this.change_level = this.change_level_unbound.bind(this);
+    
+        // Add gamepad support
+        gamepad_controller.add_button_callback(this.handle_gamepad_button.bind(this));
+    }
+
+    handle_gamepad_button(index, value) {
+        if (this.message_shown) {
+            if (value > 0) {
+                if (index === 3) {
+                    window.removeEventListener('keypress', this.change_level);
+                    this.hide_message();
+                    credits.show_credits();
+                    this.level_controller.clear_level();
+                    hud.remove_hud();
+                    music_controller.pause_music();
+                    music_controller.load_music('sounds/TitleSong.mp3');
+                    music_controller.play_music();
+                    music_controller.change_volume(0.5);
+                }
+            }
+        }
     }
 
     // Change level function is just loading the credits and clearing everythinf
@@ -56,6 +80,7 @@ class FinalePlatform extends Object3D {
 
     // Show message function
     show_message() {
+        this.next_level.innerHTML = get_display('E','Y',`to switch off your motherboard`);
         this.message_shown = true;
         document.body.appendChild(this.next_level);
 

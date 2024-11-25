@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import { get_cartesian_angle_from_rotation } from '../common/Angle';
 import physic from '../engine/physic';
 import hud from '../hud/Hud';
+import control_settings from '../control_settings/ControlSettings';
 
 class CharacterInteractionController {
 
@@ -162,8 +163,11 @@ class CharacterInteractionController {
                     this._object_to_interact_with = interactable_object; 
                     this._start_interaction = interactable_object.interactable_object.start_interaction;
 
-                    
-                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    if (control_settings.control_input === "keyboard_and_mouse") {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    } else {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display_controller);
+                    }
                 }
                 return true;
             }
@@ -255,7 +259,12 @@ class CharacterInteractionController {
                     
                     if (this._controls.power_controller.power === "strength") {
                         this._start_interaction = interactable_object.interactable_object.start_interaction;
-                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                        // this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                        if (control_settings.control_input === "keyboard_and_mouse") {
+                            this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                        } else {
+                            this._show_interact_message(interactable_object.interactable_object.interaction_display_controller);
+                        }
                     } else {
                         this._show_interact_message("You cannot pull levers without the strength floppy disk");
                     }
@@ -283,8 +292,12 @@ class CharacterInteractionController {
                     this._object_to_interact_with = interactable_object; 
                     this._start_interaction = interactable_object.interactable_object.start_interaction;
 
-                    
-                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    if (control_settings.control_input === "keyboard_and_mouse") {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    } else {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display_controller);
+                    }   
+                    // this._show_interact_message(interactable_object.interactable_object.interaction_display);
                 }
                 return true;
             
@@ -358,8 +371,12 @@ class CharacterInteractionController {
                     this._object_to_interact_with = interactable_object; 
                     this._start_interaction = interactable_object.interactable_object.start_interaction;
 
-                    
-                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    if (control_settings.control_input === "keyboard_and_mouse") {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    } else {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display_controller);
+                    }
+                    // this._show_interact_message(interactable_object.interactable_object.interaction_display);
                 }
                 return true;
             }
@@ -393,8 +410,12 @@ class CharacterInteractionController {
                     this._object_to_interact_with = interactable_object; 
                     this._start_interaction = interactable_object.interactable_object.start_interaction;
 
-                    
-                    this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    if (control_settings.control_input === "keyboard_and_mouse") {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display);
+                    } else {
+                        this._show_interact_message(interactable_object.interactable_object.interaction_display_controller);
+                    }   
+                    // this._show_interact_message(interactable_object.interactable_object.interaction_display);
                 }
                 return true;
             }

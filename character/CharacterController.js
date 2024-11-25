@@ -16,6 +16,9 @@ import CharacterHeightController from './CharacterHeightController';
 import CharacterPowerController from './CharacterPowerController';
 import CharacterSkinController from './CharacterSkinController';
 import loading_screen from '../loading_screen/LoadingScreen';
+import CharacterGamepadInputController from './CharacterGamepadInputController';
+import control_settings from '../control_settings/ControlSettings';
+import gamepad_controller from '../gamepad/GamePadController';
 
 class CharacterController {
     constructor(params) {
@@ -24,12 +27,17 @@ class CharacterController {
 
     /* Initialization function */
     _init(params) {
+
+        // INITIALIZE CONTROL SETTINGS
+        control_settings.change_input("keyboard_and_mouse");
+
         
         // SET IMPORTANT VARIABLES
         this.character_is_loaded = false;
         this._currently_reading_npc = false;
         this._halt_movement = false;
         this._params = params;
+        console.log(params);
         this._decceleration = new THREE.Vector3(-0.5, 0, -0.5);
         this._acceleration = new THREE.Vector3(1.0, 0, 1.0);
         this._velocity = new THREE.Vector3(0, 0, 0);
@@ -42,6 +50,7 @@ class CharacterController {
         // INITIALIZE ANIMATIONS
         this._animations = {};
         this._input = new CharacterControllerInput(); // handling input for character
+        this._gamepad_input = new CharacterGamepadInputController();
         
         // FINITE STATE MACHINE FOR STATE OF CHARACTER: assists in shifting between animations
         this._state_machine = new CharacterFSM(
@@ -681,6 +690,18 @@ class CharacterController {
             this._target.rigidBody.setGravityScale(1);
         }
 
+        if (control_settings.control_input === "gamepad") {
+            if (this._gamepad_input) {
+                // gamepad_controller.update();
+                // this._gamepad_input.update();
+                this._input.get_input_from_controller(this._gamepad_input._keys);
+                this._params.mouse_listener.update_movement(this._gamepad_input._camera_movement.x, this._gamepad_input._camera_movement.y);
+                if (this._gamepad_input._mouse_zoom) {
+                    this._params.mouse_listener.update_zoom_manual(this._gamepad_input._mouse_zoom);
+                }
+            }
+        }
+
         // Update based on character's loaded disk
         if (this.power_controller.power === "none") {
             this.update_no_ability(time_in_seconds, mouse_movement_x, mouse_movement_y);
@@ -695,6 +716,13 @@ class CharacterController {
         // If we have created the power controller, update it
         if (this.power_controller) {
             this.power_controller.update();
+        }
+
+
+        if (control_settings.control_input === "gamepad") {
+            if (this._gamepad_input) {
+                this._gamepad_input.manually_reset_keys();
+            }
         }
     }
 }

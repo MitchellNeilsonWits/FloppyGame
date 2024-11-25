@@ -8,6 +8,8 @@
 import { Object3D } from "three";
 import physic from "../engine/physic";
 import { createRigidBodyFixed } from "../engine/function";
+import { get_display } from "../displays/Displays";
+import gamepad_controller from "../gamepad/GamePadController";
 
 class Portal extends Object3D {
     // Setup display to go to next level and other important variables
@@ -31,11 +33,26 @@ class Portal extends Object3D {
         this.next_level.style.fontSize = '24px';
         this.next_level.style.textAlign = 'center';
         this.next_level.style.zIndex = '4';
-        this.next_level.innerHTML = '<p>Press E to go to the next level</p>';
+        this.next_level.innerHTML = get_display('E','Y',`to go to the next level`);
 
 
         this.message_shown = false;
         this.change_level = this.change_level_unbound.bind(this);
+
+        // Add gamepad support
+        gamepad_controller.add_button_callback(this.handle_gamepad_button.bind(this));
+    }
+
+    handle_gamepad_button(index, value) {
+        if (this.message_shown) {
+            if (value > 0) {
+                if (index === 3) {
+                    window.removeEventListener('keypress', this.change_level);
+                    this.level_controller.change_level(this.level_controller._current_level + 1);
+                    this.hide_message();
+                }
+            }
+        }
     }
 
     // Function to change to the next level on keypress
@@ -48,19 +65,25 @@ class Portal extends Object3D {
 
     // Function to show message
     show_message() {
-        this.message_shown = true;
-        document.body.appendChild(this.next_level);
+        if (this.message_shown == false) {
+            this.next_level.innerHTML = get_display('E','Y',`to go to the next level`);
+            this.message_shown = true;
+            document.body.appendChild(this.next_level);
 
-        window.addEventListener('keypress', this.change_level)
+            window.addEventListener('keypress', this.change_level)
+        }
     }
 
     // Function to hide message
     hide_message() {
-        this.message_shown = false;
-        document.body.removeChild(this.next_level);
+        if (this.message_shown == true) {
+            this.message_shown = false;
+            document.body.removeChild(this.next_level);
     
-        window.removeEventListener('keypress', this.change_level)
+            window.removeEventListener('keypress', this.change_level)
+        }
     }
+    
 
     // Function to initialize the physic of the portal
     initPhysic() {

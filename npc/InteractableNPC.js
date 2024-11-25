@@ -14,14 +14,15 @@ import { create_collider_for_disk } from "../engine/function";
 import addOneTimeEventListener from "../common/SingleUseListener";
 import hud from "../hud/Hud";
 import './npc.css'
+import gamepad_controller from "../gamepad/GamePadController";
 
 class InteractableNPC extends interactableObject {
 
     // Setup displays and other important variables
-    constructor(interaction_display, object, textlines) {
+    constructor(interaction_display, interaction_display_controller, object, textlines) {
         const distance_threshold = 1.5;
         const interaction_trigger = 'npc';
-        super(interaction_display, object, distance_threshold, interaction_trigger);
+        super(interaction_display,interaction_display_controller, object, distance_threshold, interaction_trigger);
         this.start_interaction = this.start_interaction_static.bind(this);
         this.end_interaction = this.end_interaction_static.bind(this);
         this.use_object = this.use_object_static.bind(this);
@@ -92,6 +93,44 @@ class InteractableNPC extends interactableObject {
     
         this.npc_lines_root = npcLinesRoot;
         this.npc_lines_text = npcLinesContentText;
+
+
+        // Add listener for gamepad
+        gamepad_controller.add_button_callback(this.handle_gamepad_button.bind(this));
+
+        // Add variable to handle gamepad press timing
+        this.can_press = true;
+        // Also bug fix with first press
+        this.first_press_handled = false;
+
+        // Show npc lines variable
+        this.showing_lines = false;
+    }
+
+    handle_gamepad_button(index, value) {
+        if (this.showing_lines) {
+            if (value > 0) {
+                if (this.first_press_handled) {
+                    if (this.can_press) {
+                        console.log("pressing here!");
+                        
+                        window.dispatchEvent(new KeyboardEvent("keypress", { key: "W" }));
+                        setTimeout(() => {
+                            this.can_press = true;
+                        }, 200);
+                    }
+                    this.can_press = false;
+                } else {
+                    if (this.can_press) {
+                        setTimeout(() => {
+                            this.can_press = true;
+                        }, 200);
+                    }
+                    this.first_press_handled = true;
+                    this.can_press = false;
+                }
+            }
+        }
     }
     
     // Use interaction: none
@@ -102,14 +141,15 @@ class InteractableNPC extends interactableObject {
     // Function to update the lines for the NPC
     update_line_static(event, controls) {
         this.line_being_read = this.line_being_read + 1;
-            
+        
         if (this.line_being_read === this.lines.length) {
             controls._currently_reading_npc = false;
             document.body.removeChild(this.npc_lines_root);
-
+            this.showing_lines = false;
             return;
         }
-
+        
+        this.showing_lines = true;    
         this.npc_lines_text.innerHTML = this.lines[this.line_being_read];        
         addOneTimeEventListener(window, 'keypress', (event) => this.update_line(event, controls));
 
@@ -123,9 +163,10 @@ class InteractableNPC extends interactableObject {
         const npc = object_interacted_with.object;
         npc.state_machine.set_state('idle');
         npc.hide_marker();
-
+        
         document.body.appendChild(this.npc_lines_root);
         this.npc_lines_text.innerHTML = this.lines[this.line_being_read];
+        this.showing_lines = true;    
         controls._currently_reading_npc = true;
     }
 

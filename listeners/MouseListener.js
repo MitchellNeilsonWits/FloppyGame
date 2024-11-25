@@ -11,10 +11,27 @@ class MouseListener {
         this.update_speed = 1;
     }
 
+    update_movement(x, y) {
+        this._mouse_movement_x = x;
+        this._mouse_movement_y = y;
+    }
+
     // Update the mouse movement
     _update_mouse(event) {
         this._mouse_movement_x = event.movementX*this.update_speed;
         this._mouse_movement_y = event.movementY*this.update_speed;
+    }
+
+    update_zoom_manual(zoom_direction) {
+        if (zoom_direction === "zoom_out") {
+            if (!(this._zoom + 0.1 > 10)) {
+                this._zoom += 0.1;
+            }
+        } else {
+            if (!(this._zoom - 0.1 < 1)) {
+                this._zoom -= 0.1;
+            }
+        }
     }
 
     // Update zoom

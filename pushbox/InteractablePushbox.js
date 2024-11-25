@@ -11,7 +11,7 @@ import interactableObject from "../engine/interactableObject";
 class InteractablePushbox extends interactableObject {
 
     constructor(interaction_display, object, distance_threshold, interaction_trigger) {
-        super(interaction_display, object, distance_threshold, interaction_trigger);
+        super(interaction_display, interaction_display, object, distance_threshold, interaction_trigger);
 
         this.end_interaction = this.end_interaction_static.bind(this);
         this.start_interaction = this.start_interaction_static.bind(this);

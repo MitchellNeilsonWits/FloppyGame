@@ -18,7 +18,7 @@ class InteractableGate extends interactableObject {
     constructor(interaction_display, object) {
         const distance_threshold = 2;
         const interaction_trigger = 'gate';
-        super(interaction_display, object, distance_threshold, interaction_trigger);
+        super(interaction_display, interaction_display, object, distance_threshold, interaction_trigger);
         this.start_interaction = this.start_interaction_static.bind(this);
         this.end_interaction = this.end_interaction_static.bind(this);
         this.use_object = this.use_object_static.bind(this);

@@ -18,6 +18,9 @@ import physic from "../../engine/physic";
 import Platform from "../../platform/Platform";
 import music_controller from '../../music/MusicController';
 import addOneTimeEventListener from "../../common/SingleUseListener";
+import control_settings from "../../control_settings/ControlSettings";
+import { get_display, get_input_displays } from "../../displays/Displays";
+import gamepad_controller from "../../gamepad/GamePadController";
 
 class PlacementMattersLevel extends Level {
 
@@ -68,7 +71,23 @@ class PlacementMattersLevel extends Level {
         this.end_game = this.end_game_unbound.bind(this);
         // this._skybox = meshes.skybox;
         // -----------------------------------------------------------------------
+        
+        // Setup button for end of game
+        gamepad_controller.add_button_callback(this.handle_gamepad_button.bind(this));
+        
+
         _callback();
+    }
+
+    handle_gamepad_button(index, value) {
+        if (this.message_shown) {
+            if (value > 0) {
+                if (index === 3) {
+                    this.hide_end_screen();
+                    this.level_controller.change_level(this.level_controller._current_level + 1);
+                }
+            }
+        }
     }
 
     
@@ -160,8 +179,10 @@ class PlacementMattersLevel extends Level {
         this.non_player_rigid_bodies.push(this.button.rigidBody);
 
         // Setup interactable object
-        const button_interactable = new InteractableButton('Press E to start the timer', this.button);
-
+        
+        const displays = get_input_displays('E','Y','to start the timer');
+        const button_interactable = new InteractableButton(displays.keyboard, displays.gamepad, this.button);
+        
         this._interactable_objects[`pml_button`] = {
             name: `pml_button`,
             object: this.button,
@@ -278,8 +299,10 @@ class PlacementMattersLevel extends Level {
         this.game_completed.style.zIndex = '4';
         this.game_completed.style.display = 'flex';
         this.game_completed.style.flexDirection = 'column';
-        this.game_completed.innerHTML = '<p>Congratulations, Floppy! You have completed your challenges!</p> <p>Press any E to continue...</p>';
+        this.game_completed.innerHTML = '<p>Congratulations, Floppy! You have completed your challenges!</p>'+get_display('E','Y','to continue...');
     }
+
+
 
     // Setup end game screen
     end_game_unbound(event) {
@@ -291,6 +314,7 @@ class PlacementMattersLevel extends Level {
 
     // Show end game screen
     show_end_screen() {
+        this.game_completed.innerHTML = '<p>Congratulations, Floppy! You have completed your challenges!</p>'+get_display('E','Y','to continue...');
         this.message_shown = true;
         document.body.appendChild(this.game_completed);
 

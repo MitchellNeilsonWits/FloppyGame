@@ -24,6 +24,8 @@ import NPC from '../npc/NPC';
 import InteractableNPC from '../npc/InteractableNPC';
 import InteractableGate from '../gate/InteractableGate';
 import Portal from '../portal/Portal';
+import control_settings from '../control_settings/ControlSettings';
+import { get_display, get_input_displays } from '../displays/Displays';
 
 
 class Level {
@@ -155,7 +157,14 @@ class Level {
                 type: 'static',
                 name: `npc`
             }
-            level._interactable_objects[`npc`]['interactable_object'] = new InteractableNPC(`Press E to interact with N.P.C`, level._interactable_objects[`npc`].object, level.npc_lines);
+            // let npc_display;
+            // if (control_settings.control_input === "keyboard_and_mouse") {
+            //     npc_display = "<div>Press E to interact with N.P.C</div>";
+            // } else {
+            //     npc_display = `<div style="display:flex;flex-direction:row;gap:0px 2px"><div>Press</div><img src='controller_icons/controller_Y.svg' style="width:25px;height:25px"></img><div>to interact with N.P.C</div></div>`;
+            // }
+            const displays = get_input_displays('E','Y','to interact with N.P.C');
+            level._interactable_objects[`npc`]['interactable_object'] = new InteractableNPC(displays.keyboard, displays.gamepad, level._interactable_objects[`npc`].object, level.npc_lines);
             level.non_player_colliders.push(npc.collider);
             level.non_player_rigid_bodies.push(npc.rigidBody);
         }
@@ -271,7 +280,9 @@ class Level {
 
             const lever_object = new Lever(l_object.position, l_object.rotation, gate_object, level._level);
             await lever_object.set_lever();
-            const lever_interactable = new InteractableLever("Press E to pull lever",lever_object,1.5,"lever");
+
+            const displays = get_input_displays('E','Y',`to pull lever`);
+            const lever_interactable = new InteractableLever(displays.keyboard, displays.gamepad, lever_object,1.5,"lever");
 
             level.non_player_colliders.push(lever_object.collider);
             level.non_player_rigid_bodies.push(lever_object.rigidBody);
@@ -325,7 +336,9 @@ class Level {
                 name: `${disk_type}_disk`,
                 power: `${disk_type}`
             }
-            level._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk(`Press E to pickup ${disk_type} disk`, this._interactable_objects[`${disk_type}_disk`].object);
+
+            const displays = get_input_displays('E','Y',`to pickup ${disk_type} disk`)
+            level._interactable_objects[`${disk_type}_disk`]['interactable_object'] = new InteractableDisk(displays.keyboard, displays.gamepad, this._interactable_objects[`${disk_type}_disk`].object);
             level.non_player_colliders.push(disk.collider);
             level.non_player_rigid_bodies.push(disk.rigidBody);
         }
